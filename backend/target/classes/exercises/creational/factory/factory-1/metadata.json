@@ -2,7 +2,7 @@
   "id": "factory-1",
   "title": "Centralise shape creation in a factory",
   "difficulty": "Easy",
-  "description": "Refactor scattered shape-creation logic into a single ShapeFactory class so callers never need to know which concrete class to instantiate.",
+  "description": "ShapeFactory receives a type string and dimensions, and is expected to return the matching Shape — but the implementation is missing. The concrete shape classes (Circle, Rectangle, Triangle) already exist.",
   "editableFiles": [
     "ShapeFactory.java"
   ],
@@ -15,6 +15,7 @@
     "Every caller that needs a shape contains its own if/else block",
     "Adding a new shape type means updating every call site"
   ],
+  "overallGoal": "Use the Factory Method pattern to centralise all shape-creation logic inside ShapeFactory, removing the need for callers to know which concrete class to instantiate.",
   "goals": [
     "Create a ShapeFactory class with a static create() method",
     "All branching logic lives in one place",

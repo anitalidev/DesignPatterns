@@ -15,6 +15,7 @@
     "AppConfig can be instantiated freely with new AppConfig()",
     "Each caller gets its own separate config, so changes made in one place are invisible elsewhere"
   ],
+  "overallGoal": "Use the Singleton pattern to ensure AppConfig can only be instantiated once, so all callers share the same instance and configuration state is consistent across the application.",
   "goals": [
     "Only one AppConfig instance can ever exist",
     "getInstance() always returns the same object",

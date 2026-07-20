@@ -15,6 +15,7 @@
     "Every caller that needs a shape contains its own if/else block",
     "Adding a new shape type means updating every call site"
   ],
+  "overallGoal": "Use the Factory Method pattern to centralise all shape-creation logic inside ShapeFactory, removing the need for callers to know which concrete class to instantiate.",
   "goals": [
     "Create a ShapeFactory class with a static create() method",
     "All branching logic lives in one place",

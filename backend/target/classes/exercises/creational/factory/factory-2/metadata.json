@@ -2,7 +2,7 @@
   "id": "factory-2",
   "title": "Register creators in a factory map",
   "difficulty": "Medium",
-  "description": "Replace the switch-based VehicleFactory with a registry map so new vehicle types can be added by registering a creator function, without touching the factory itself.",
+  "description": "VehicleFactory creates vehicles via a switch statement keyed on a type string. Each supported vehicle type is a separate case, and the factory must be edited whenever a new type is introduced.",
   "editableFiles": [
     "VehicleFactory.java"
   ],
@@ -15,6 +15,7 @@
     "The factory uses a growing switch statement that must be edited for every new type",
     "Adding a vehicle type requires changing the factory itself rather than just registering one"
   ],
+  "overallGoal": "Use the Factory Method pattern with a registry map so new vehicle types can be added without ever modifying VehicleFactory itself.",
   "goals": [
     "Replace the switch with a Map of registered creator functions",
     "New vehicle types can be added by calling register() without touching the factory",

@@ -2,7 +2,7 @@
   "id": "observer-1",
   "title": "Decouple a tightly coupled Store",
   "difficulty": "Easy",
-  "description": "Refactor Store so it notifies subscribers through a common interface instead of calling specific objects directly, letting new listeners be added without changing Store.",
+  "description": "Store tracks stock levels and directly calls specific objects (a logger, a notifier) whenever stock changes. Each dependent is hardcoded into Store, so the class knows exactly who reacts to its state.",
   "editableFiles": [
     "Store.java"
   ],
@@ -15,6 +15,7 @@
     "Store directly calls specific dependent objects when its state changes",
     "Adding a new reaction to a stock change requires editing Store itself"
   ],
+  "overallGoal": "Use the Observer pattern to decouple Store from its dependents, so any number of observers can react to stock changes without Store knowing who they are.",
   "goals": [
     "Store knows nothing about its dependents beyond the Observer interface",
     "New observers can be added or removed at runtime without changing Store",

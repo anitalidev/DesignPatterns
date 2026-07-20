@@ -249,6 +249,13 @@
           el.classList.remove("hidden");
         }
 
+        // Overall goal
+        if (exercise.overallGoal) {
+          const sec = panel.querySelector(".ex-overall-goal");
+          sec.querySelector(".overall-goal-text").textContent = exercise.overallGoal;
+          sec.classList.remove("hidden");
+        }
+
         // Issues & goals
         if (exercise.issues?.length) {
           const sec = panel.querySelector(".ex-issues");
@@ -343,8 +350,12 @@
           <h3 class="ex-section-title">What's wrong</h3>
           <ul class="issues-list"></ul>
         </section>
+        <section class="ex-overall-goal hidden">
+          <h3 class="ex-section-title">Overall Goal</h3>
+          <p class="overall-goal-text"></p>
+        </section>
         <section class="ex-goals hidden">
-          <h3 class="ex-section-title">Goals</h3>
+          <h3 class="ex-section-title">Sub-goals</h3>
           <ul class="goals-list"></ul>
         </section>
         <div class="editor-wrap" style="display:none">

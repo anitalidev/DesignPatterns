@@ -72,6 +72,11 @@ async function loadExercise() {
     document.getElementById("exercise-issues").classList.remove("hidden");
   }
 
+  if (exercise.overallGoal) {
+    document.getElementById("overall-goal-text").textContent = exercise.overallGoal;
+    document.getElementById("exercise-overall-goal").classList.remove("hidden");
+  }
+
   if (exercise.goals?.length) {
     renderList(document.getElementById("goals-list"), exercise.goals, "goal-item");
     document.getElementById("exercise-goals").classList.remove("hidden");

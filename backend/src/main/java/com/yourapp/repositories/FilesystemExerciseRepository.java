@@ -86,8 +86,9 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
             List<String> hints = readStringList(meta, "hints");
             List<String> issues = readStringList(meta, "issues");
             List<String> goals = readStringList(meta, "goals");
+            String overallGoal = meta.has("overallGoal") ? meta.get("overallGoal").asText() : null;
 
-            return new Exercise(id, title, description, exerciseDescription, files, editableFiles, testFiles, hints, issues, goals);
+            return new Exercise(id, title, description, exerciseDescription, files, editableFiles, testFiles, hints, issues, goals, overallGoal);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load exercise at " + variantDir, e);
         }

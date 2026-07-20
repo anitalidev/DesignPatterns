@@ -14,8 +14,9 @@ public class Exercise {
     private final List<String> hints;
     private final List<String> issues;
     private final List<String> goals;
+    private final String overallGoal;
 
-    public Exercise(String id, String title, String description, String exerciseDescription, Map<String, String> files, List<String> editableFiles, Map<String, String> testFiles, List<String> hints, List<String> issues, List<String> goals) {
+    public Exercise(String id, String title, String description, String exerciseDescription, Map<String, String> files, List<String> editableFiles, Map<String, String> testFiles, List<String> hints, List<String> issues, List<String> goals, String overallGoal) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -26,6 +27,7 @@ public class Exercise {
         this.hints = hints;
         this.issues = issues;
         this.goals = goals;
+        this.overallGoal = overallGoal;
     }
 
     public String getId() { return id; }
@@ -38,4 +40,5 @@ public class Exercise {
     public List<String> getHints() { return hints; }
     public List<String> getIssues() { return issues; }
     public List<String> getGoals() { return goals; }
+    public String getOverallGoal() { return overallGoal; }
 }

@@ -15,6 +15,7 @@
     "The factory uses a growing switch statement that must be edited for every new type",
     "Adding a vehicle type requires changing the factory itself rather than just registering one"
   ],
+  "overallGoal": "Use the Factory Method pattern with a registry map so new vehicle types can be added without ever modifying VehicleFactory itself.",
   "goals": [
     "Replace the switch with a Map of registered creator functions",
     "New vehicle types can be added by calling register() without touching the factory",
