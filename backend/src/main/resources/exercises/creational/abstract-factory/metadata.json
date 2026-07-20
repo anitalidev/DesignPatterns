@@ -1,0 +1,6 @@
+{
+  "id": "abstract-factory",
+  "title": "Abstract Factory Pattern",
+  "overview": "Provide an interface for creating families of related objects without specifying their concrete classes.",
+  "exerciseIds": []
+}

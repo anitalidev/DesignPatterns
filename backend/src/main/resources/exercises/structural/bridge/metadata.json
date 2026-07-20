@@ -1,0 +1,6 @@
+{
+  "id": "bridge",
+  "title": "Bridge Pattern",
+  "overview": "Decouple an abstraction from its implementation so the two can vary independently.",
+  "exerciseIds": []
+}

@@ -1,0 +1,6 @@
+{
+  "id": "flyweight",
+  "title": "Flyweight Pattern",
+  "overview": "Share common state among many fine-grained objects to reduce memory usage.",
+  "exerciseIds": []
+}

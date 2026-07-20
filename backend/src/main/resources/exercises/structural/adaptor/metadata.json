@@ -1,0 +1,6 @@
+{
+  "id": "adaptor",
+  "title": "Adaptor Pattern",
+  "overview": "Convert the interface of a class into another interface clients expect, letting incompatible classes work together.",
+  "exerciseIds": []
+}

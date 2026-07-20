@@ -1,0 +1,6 @@
+{
+  "id": "mediator",
+  "title": "Mediator Pattern",
+  "overview": "Define an object that encapsulates how a set of objects interact, reducing direct dependencies between them.",
+  "exerciseIds": []
+}

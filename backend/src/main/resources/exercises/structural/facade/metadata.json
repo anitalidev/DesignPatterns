@@ -1,0 +1,6 @@
+{
+  "id": "facade",
+  "title": "Facade Pattern",
+  "overview": "Provide a simplified interface to a complex subsystem, reducing the number of dependencies clients need.",
+  "exerciseIds": []
+}

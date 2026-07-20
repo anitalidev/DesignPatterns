@@ -1,0 +1,6 @@
+{
+  "id": "marker-interface",
+  "title": "Marker Interface Pattern",
+  "overview": "Use an empty interface to tag classes and allow runtime type checking without adding methods.",
+  "exerciseIds": []
+}

@@ -1,0 +1,6 @@
+{
+  "id": "prototype",
+  "title": "Prototype Pattern",
+  "overview": "Create new objects by copying an existing object, avoiding the cost of creating from scratch.",
+  "exerciseIds": []
+}

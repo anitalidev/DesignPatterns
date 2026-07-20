@@ -1,5 +1,5 @@
 {
   "id": "structural",
   "name": "Structural",
-  "patternIds": []
+  "patternIds": ["adaptor", "decorator", "proxy", "marker-interface", "composite", "bridge", "facade", "flyweight"]
 }

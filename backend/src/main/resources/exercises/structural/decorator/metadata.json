@@ -1,0 +1,6 @@
+{
+  "id": "decorator",
+  "title": "Decorator Pattern",
+  "overview": "Attach additional responsibilities to an object dynamically by wrapping it in decorator objects.",
+  "exerciseIds": []
+}

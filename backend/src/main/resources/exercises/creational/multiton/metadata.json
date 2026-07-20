@@ -1,0 +1,6 @@
+{
+  "id": "multiton",
+  "title": "Multiton Pattern",
+  "overview": "Extend Singleton to allow a controlled number of named instances, each identified by a key.",
+  "exerciseIds": []
+}

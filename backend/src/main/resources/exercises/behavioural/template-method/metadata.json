@@ -1,0 +1,6 @@
+{
+  "id": "template-method",
+  "title": "Template Method Pattern",
+  "overview": "Define the skeleton of an algorithm in a base class, deferring some steps to subclasses.",
+  "exerciseIds": []
+}

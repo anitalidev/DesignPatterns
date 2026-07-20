@@ -1,5 +1,5 @@
 {
   "id": "behavioural",
   "name": "Behavioural",
-  "patternIds": ["observer"]
+  "patternIds": ["observer", "strategy", "command", "state", "template-method", "iterator", "visitor", "mediator", "memento", "chain-of-responsibility"]
 }

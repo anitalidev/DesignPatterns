@@ -1,0 +1,6 @@
+{
+  "id": "chain-of-responsibility",
+  "title": "Chain of Responsibility Pattern",
+  "overview": "Pass a request along a chain of handlers, each deciding whether to handle it or pass it on.",
+  "exerciseIds": []
+}

@@ -1,0 +1,6 @@
+{
+  "id": "object-pool",
+  "title": "Object Pool Pattern",
+  "overview": "Reuse a fixed set of initialised objects rather than creating and destroying them on demand.",
+  "exerciseIds": []
+}

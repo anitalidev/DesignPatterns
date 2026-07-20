@@ -1,0 +1,6 @@
+{
+  "id": "composite",
+  "title": "Composite Pattern",
+  "overview": "Compose objects into tree structures to represent part-whole hierarchies, letting clients treat individual objects and compositions uniformly.",
+  "exerciseIds": []
+}

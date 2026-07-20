@@ -1,5 +1,5 @@
 {
   "id": "creational",
   "name": "Creational",
-  "patternIds": ["factory", "singleton"]
+  "patternIds": ["singleton", "multiton", "factory", "abstract-factory", "builder", "fluent-builder", "prototype", "object-pool", "lazy-initialization"]
 }

@@ -1,0 +1,6 @@
+{
+  "id": "memento",
+  "title": "Memento Pattern",
+  "overview": "Capture and restore an object's internal state without violating encapsulation.",
+  "exerciseIds": []
+}

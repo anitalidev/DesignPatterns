@@ -1,0 +1,6 @@
+{
+  "id": "state",
+  "title": "State Pattern",
+  "overview": "Allow an object to alter its behaviour when its internal state changes, appearing to change its class.",
+  "exerciseIds": []
+}
