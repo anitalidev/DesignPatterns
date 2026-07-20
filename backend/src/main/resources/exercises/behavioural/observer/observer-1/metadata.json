@@ -2,6 +2,7 @@
   "id": "observer-1",
   "title": "Decouple a tightly coupled Store",
   "difficulty": "Easy",
+  "description": "Store tracks stock levels and directly calls specific objects (a logger, a notifier) whenever stock changes. Each dependent is hardcoded into Store, so the class knows exactly who reacts to its state.",
   "editableFiles": [
     "Store.java"
   ],

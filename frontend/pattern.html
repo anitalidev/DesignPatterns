@@ -242,6 +242,13 @@
 
         if (loadingEl) loadingEl.remove();
 
+        // Exercise description
+        if (exercise.exerciseDescription) {
+          const el = panel.querySelector(".ex-description");
+          el.textContent = exercise.exerciseDescription;
+          el.classList.remove("hidden");
+        }
+
         // Issues & goals
         if (exercise.issues?.length) {
           const sec = panel.querySelector(".ex-issues");
@@ -331,6 +338,7 @@
       panel.dataset.exerciseId = exerciseId;
       panel.innerHTML = `
         <p class="loading">Loading exercise…</p>
+        <p class="ex-description hidden"></p>
         <section class="ex-issues hidden">
           <h3 class="ex-section-title">What's wrong</h3>
           <ul class="issues-list"></ul>

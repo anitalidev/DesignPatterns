@@ -61,6 +61,12 @@ async function loadExercise() {
   document.getElementById("exercise-title").textContent = exercise.title;
   document.getElementById("exercise-description").innerHTML = marked.parse(exercise.description);
 
+  if (exercise.exerciseDescription) {
+    const el = document.getElementById("exercise-description-ex");
+    el.textContent = exercise.exerciseDescription;
+    el.classList.remove("hidden");
+  }
+
   if (exercise.issues?.length) {
     renderList(document.getElementById("issues-list"), exercise.issues, "issue-item");
     document.getElementById("exercise-issues").classList.remove("hidden");

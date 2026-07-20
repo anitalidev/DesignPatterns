@@ -2,6 +2,7 @@
   "id": "factory-1",
   "title": "Centralise shape creation in a factory",
   "difficulty": "Easy",
+  "description": "Refactor scattered shape-creation logic into a single ShapeFactory class so callers never need to know which concrete class to instantiate.",
   "editableFiles": [
     "ShapeFactory.java"
   ],

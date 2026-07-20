@@ -2,6 +2,7 @@
   "id": "factory-2",
   "title": "Register creators in a factory map",
   "difficulty": "Medium",
+  "description": "Replace the switch-based VehicleFactory with a registry map so new vehicle types can be added by registering a creator function, without touching the factory itself.",
   "editableFiles": [
     "VehicleFactory.java"
   ],

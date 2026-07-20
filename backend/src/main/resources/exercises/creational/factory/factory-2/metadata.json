@@ -2,6 +2,7 @@
   "id": "factory-2",
   "title": "Register creators in a factory map",
   "difficulty": "Medium",
+  "description": "VehicleFactory creates vehicles via a switch statement keyed on a type string. Each supported vehicle type is a separate case, and the factory must be edited whenever a new type is introduced.",
   "editableFiles": [
     "VehicleFactory.java"
   ],

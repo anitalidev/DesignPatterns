@@ -2,6 +2,7 @@
   "id": "observer-1",
   "title": "Decouple a tightly coupled Store",
   "difficulty": "Easy",
+  "description": "Refactor Store so it notifies subscribers through a common interface instead of calling specific objects directly, letting new listeners be added without changing Store.",
   "editableFiles": [
     "Store.java"
   ],

@@ -2,6 +2,7 @@
   "id": "singleton-1",
   "title": "Restrict AppConfig to a single instance",
   "difficulty": "Easy",
+  "description": "AppConfig holds application-wide settings in a plain class. It has a public constructor, so any caller can create its own independent instance — each with its own separate state.",
   "editableFiles": [
     "AppConfig.java"
   ],

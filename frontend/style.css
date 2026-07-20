@@ -228,6 +228,13 @@ body {
 /* ── issues & goals (Learn tab) ── */
 .hidden { display: none !important; }
 
+.ex-description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+}
+
 .ex-issues {
   margin-top: 2rem;
   padding: 1.5rem 0 0.5rem;

@@ -2,6 +2,7 @@
   "id": "singleton-1",
   "title": "Restrict AppConfig to a single instance",
   "difficulty": "Easy",
+  "description": "Turn AppConfig into a Singleton so the entire application shares one instance and config changes made anywhere are immediately visible everywhere.",
   "editableFiles": [
     "AppConfig.java"
   ],

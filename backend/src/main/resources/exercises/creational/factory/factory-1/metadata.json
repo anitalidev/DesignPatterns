@@ -2,6 +2,7 @@
   "id": "factory-1",
   "title": "Centralise shape creation in a factory",
   "difficulty": "Easy",
+  "description": "ShapeFactory receives a type string and dimensions, and is expected to return the matching Shape — but the implementation is missing. The concrete shape classes (Circle, Rectangle, Triangle) already exist.",
   "editableFiles": [
     "ShapeFactory.java"
   ],
