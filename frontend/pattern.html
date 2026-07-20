@@ -167,11 +167,11 @@
         if (!res.ok) throw new Error(res.statusText);
         const exercise = await res.json();
 
-        // Build ordered list of files: usage (read-only) first, then editable
-        const allFiles = [
-          ...Object.entries(exercise.usageFiles ?? {}).map(([name, code]) => ({ name, code, readonly: true })),
-          ...Object.entries(exercise.files ?? {}).map(([name, code]) => ({ name, code, readonly: false })),
-        ];
+        // Build ordered list: read-only files first, then editable
+        const editableSet = new Set(exercise.editableFiles ?? []);
+        const allFiles = Object.entries(exercise.files ?? {})
+          .map(([name, code]) => ({ name, code, readonly: !editableSet.has(name) }))
+          .sort((a, b) => a.readonly - b.readonly);
 
         const fileTabBar = panel.querySelector(".file-tabs");
         const editorsContainer = panel.querySelector(".editors-container");

@@ -19,7 +19,7 @@ public class CompilerService {
         // compile all .java files in the workspace
         cmd.add("*.java");
 
-        ProcessBuilder pb = new ProcessBuilder("sh", "-c", "javac -encoding UTF-8 *.java")
+        ProcessBuilder pb = new ProcessBuilder("sh", "-c", "javac -encoding UTF-8 -sourcepath \"\" *.java")
                 .directory(workspaceDir.toFile())
                 .redirectErrorStream(true);
 

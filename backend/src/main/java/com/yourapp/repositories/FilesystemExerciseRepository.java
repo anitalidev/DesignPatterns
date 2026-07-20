@@ -78,14 +78,14 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
             String description = Files.readString(patternDir.resolve("description.md"));
 
             Map<String, String> files = readJavaFiles(variantDir.resolve("exercise"));
-            Map<String, String> usageFiles = readJavaFiles(variantDir.resolve("usage"));
+            List<String> editableFiles = readStringList(meta, "editableFiles");
             Map<String, String> testFiles = readJavaFiles(variantDir.resolve("tests"));
 
             List<String> hints = readStringList(meta, "hints");
             List<String> issues = readStringList(meta, "issues");
             List<String> goals = readStringList(meta, "goals");
 
-            return new Exercise(id, title, description, files, usageFiles, testFiles, hints, issues, goals);
+            return new Exercise(id, title, description, files, editableFiles, testFiles, hints, issues, goals);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load exercise at " + variantDir, e);
         }

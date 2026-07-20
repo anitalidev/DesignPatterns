@@ -10,10 +10,10 @@ import java.util.Map;
 @Component
 public class WorkspaceManager {
 
-    public Path create(Map<String, String> userFiles, Map<String, String> usageFiles, Map<String, String> testFiles) throws IOException {
+    public Path create(Map<String, String> exerciseFiles, Map<String, String> userFiles, Map<String, String> testFiles) throws IOException {
         Path dir = Files.createTempDirectory("dp-run-");
-        writeFiles(dir, usageFiles);
-        writeFiles(dir, userFiles);
+        writeFiles(dir, exerciseFiles);  // all files (read-only + editable starters)
+        writeFiles(dir, userFiles);      // override editable ones with user's version
         writeFiles(dir, testFiles);
         return dir;
     }

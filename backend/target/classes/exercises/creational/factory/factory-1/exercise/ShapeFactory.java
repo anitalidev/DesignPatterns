@@ -1,8 +1,8 @@
-class ShapeCreator {
-    static Shape get(String type, double... args) {
-        if (type.equals("circle"))    return new Circle(args[0]);
-        if (type.equals("rectangle")) return new Rectangle(args[0], args[1]);
-        if (type.equals("triangle"))  return new Triangle(args[0], args[1]);
-        throw new IllegalArgumentException("Unknown shape: " + type);
+class ShapeFactory {
+    static Shape create(String type, double... args) {
+        // TODO: return the right Shape for the given type
+        // Supported types: "circle" (1 arg: radius), "rectangle" (2 args: w, h), "triangle" (2 args: base, height)
+        // Throw IllegalArgumentException for unknown types
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

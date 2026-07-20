@@ -33,8 +33,8 @@ public class RunnerService {
         Path workspace = null;
         try {
             workspace = workspaceManager.create(
+                    exercise.getFiles(),
                     request.getFiles(),
-                    exercise.getUsageFiles(),
                     exercise.getTestFiles());
 
             CompilationResult compilation = compilerService.compile(workspace);

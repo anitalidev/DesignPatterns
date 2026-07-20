@@ -57,9 +57,9 @@ async function loadExercise() {
   document.getElementById("exercise-title").textContent = exercise.title;
   document.getElementById("exercise-description").innerHTML = marked.parse(exercise.description);
 
-  const [[filename, code] = []] = Object.entries(exercise.files);
-  editableFilename = filename ?? "";
-  initEditor(code ?? "");
+  const firstEditable = (exercise.editableFiles ?? [])[0];
+  editableFilename = firstEditable ?? "";
+  initEditor(exercise.files[firstEditable] ?? "");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
