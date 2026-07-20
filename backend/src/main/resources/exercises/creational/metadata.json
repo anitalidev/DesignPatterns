@@ -1,0 +1,5 @@
+{
+  "id": "creational",
+  "name": "Creational",
+  "patternIds": ["factory", "singleton"]
+}

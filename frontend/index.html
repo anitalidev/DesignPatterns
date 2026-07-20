@@ -4,6 +4,64 @@
   <meta charset="UTF-8">
   <title>Design Patterns</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .category-section {
+      margin-bottom: 2rem;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .category-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .pattern-select-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .pattern-select {
+      flex: 1;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+      cursor: pointer;
+    }
+    .pattern-select:disabled {
+      color: #aaa;
+      cursor: default;
+    }
+    .btn-go {
+      padding: 0.45rem 1rem;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-go:disabled {
+      background: #aaa;
+      cursor: default;
+    }
+    .category-desc {
+      font-size: 0.88rem;
+      color: #666;
+      margin: 0.4rem 0 0.75rem;
+    }
+    .category-empty {
+      font-size: 0.88rem;
+      color: #aaa;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -48,46 +106,123 @@
     </div>
 
     <div id="tab-patterns" class="tab-panel">
-      <p style="color:#555;font-size:0.9rem;margin-bottom:1rem;">Pick a pattern, read about it, then fix the broken code.</p>
-      <ul class="category-list" id="exercise-list">
-        <li style="color:#888">Loading exercises…</li>
-      </ul>
+      <p style="color:#555;font-size:0.9rem;margin-bottom:1.5rem;">Choose a category, pick a pattern, and start practising.</p>
+      <div id="category-list">
+        <p style="color:#888">Loading…</p>
+      </div>
     </div>
   </main>
 
   <script type="module">
-    async function loadPatterns() {
-      const list = document.getElementById("exercise-list");
+    async function loadCategories() {
+      const container = document.getElementById("category-list");
       try {
-        const res = await fetch("/api/patterns");
-        if (!res.ok) throw new Error(res.statusText);
-        const patterns = await res.json();
-        list.innerHTML = patterns.map(p =>
-          `<li><a href="/pattern.html?id=${p.id}">${p.title}</a><p class="overview">${p.overview}</p></li>`
-        ).join("");
+        const [catRes, patRes] = await Promise.all([
+          fetch("/api/categories"),
+          fetch("/api/patterns"),
+        ]);
+        if (!catRes.ok) throw new Error(catRes.statusText);
+        if (!patRes.ok) throw new Error(patRes.statusText);
+
+        const categories = await catRes.json();
+        const patterns = await patRes.json();
+        const patternMap = Object.fromEntries(patterns.map(p => [p.id, p]));
+
+        container.innerHTML = "";
+
+        for (const cat of categories) {
+          const section = document.createElement("div");
+          section.className = "category-section";
+
+          const header = document.createElement("div");
+          header.className = "category-header";
+          header.innerHTML = `<h2 class="category-title">${cat.name}</h2>`;
+          section.appendChild(header);
+
+          const desc = document.createElement("p");
+          desc.className = "category-desc";
+          // Use the first non-heading line of the markdown description as a summary
+          const firstPara = cat.description
+            .split("\n")
+            .find(line => line.trim() && !line.startsWith("#"));
+          desc.textContent = firstPara ?? "";
+          section.appendChild(desc);
+
+          if (!cat.patternIds || cat.patternIds.length === 0) {
+            const empty = document.createElement("p");
+            empty.className = "category-empty";
+            empty.textContent = "No patterns yet.";
+            section.appendChild(empty);
+          } else {
+            const row = document.createElement("div");
+            row.className = "pattern-select-row";
+
+            const select = document.createElement("select");
+            select.className = "pattern-select";
+
+            const placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = "Select a pattern…";
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            select.appendChild(placeholder);
+
+            for (const pid of cat.patternIds) {
+              const p = patternMap[pid];
+              if (!p) continue;
+              const opt = document.createElement("option");
+              opt.value = pid;
+              opt.textContent = p.title;
+              select.appendChild(opt);
+            }
+
+            const goBtn = document.createElement("button");
+            goBtn.className = "btn-go";
+            goBtn.textContent = "Go";
+            goBtn.disabled = true;
+
+            select.addEventListener("change", () => {
+              goBtn.disabled = !select.value;
+            });
+            goBtn.addEventListener("click", () => {
+              if (select.value) location.href = `/pattern.html?id=${select.value}`;
+            });
+
+            row.appendChild(select);
+            row.appendChild(goBtn);
+            section.appendChild(row);
+          }
+
+          container.appendChild(section);
+        }
       } catch (err) {
-        list.innerHTML = `<li style="color:red">Failed to load patterns: ${err.message}</li>`;
+        container.innerHTML = `<p style="color:red">Failed to load categories: ${err.message}</p>`;
       }
     }
-    loadPatterns();
+
+    loadCategories();
+
+    const TAB_IDS = { about: "tab-about", patterns: "tab-patterns" };
+
+    function activateTab(hash) {
+      const key = hash.replace("#", "") || "about";
+      const tabId = TAB_IDS[key] ?? TAB_IDS.about;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+      if (btn) btn.classList.add("active");
+      document.getElementById(tabId)?.classList.add("active");
+    }
 
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        const target = btn.dataset.tab;
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(target).classList.add("active");
+        const key = Object.keys(TAB_IDS).find(k => TAB_IDS[k] === btn.dataset.tab) ?? "about";
+        location.hash = key;
       });
     });
 
-    document.querySelectorAll(".category-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const open = btn.getAttribute("aria-expanded") === "true";
-        btn.setAttribute("aria-expanded", !open);
-        btn.closest(".category").classList.toggle("open", !open);
-      });
-    });
+    window.addEventListener("hashchange", () => activateTab(location.hash));
+    activateTab(location.hash);
   </script>
 </body>
 </html>

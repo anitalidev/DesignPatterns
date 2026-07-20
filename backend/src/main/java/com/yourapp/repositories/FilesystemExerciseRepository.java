@@ -18,11 +18,18 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
 
     @Override
     public Exercise getExercise(String id) {
-        // id is e.g. "observer-1"; find it under any pattern directory
+        // id is e.g. "observer-1"; search category → pattern → exercise
         try {
             return Files.list(Paths.get(EXERCISES_ROOT))
                     .filter(Files::isDirectory)
-                    .map(pattern -> pattern.resolve(id))
+                    .flatMap(categoryDir -> {
+                        try {
+                            return Files.list(categoryDir).filter(Files::isDirectory);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Failed to list category dir: " + categoryDir, e);
+                        }
+                    })
+                    .map(patternDir -> patternDir.resolve(id))
                     .filter(Files::isDirectory)
                     .findFirst()
                     .map(this::load)
@@ -37,11 +44,18 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
         try {
             return Files.list(Paths.get(EXERCISES_ROOT))
                     .filter(Files::isDirectory)
-                    .flatMap(pattern -> {
+                    .flatMap(categoryDir -> {
                         try {
-                            return Files.list(pattern).filter(Files::isDirectory);
+                            return Files.list(categoryDir).filter(Files::isDirectory);
                         } catch (IOException e) {
-                            throw new RuntimeException("Failed to list pattern dir: " + pattern, e);
+                            throw new RuntimeException("Failed to list category dir: " + categoryDir, e);
+                        }
+                    })
+                    .flatMap(patternDir -> {
+                        try {
+                            return Files.list(patternDir).filter(Files::isDirectory);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Failed to list pattern dir: " + patternDir, e);
                         }
                     })
                     .map(this::load)

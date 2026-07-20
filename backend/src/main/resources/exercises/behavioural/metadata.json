@@ -1,0 +1,5 @@
+{
+  "id": "behavioural",
+  "name": "Behavioural",
+  "patternIds": ["observer"]
+}

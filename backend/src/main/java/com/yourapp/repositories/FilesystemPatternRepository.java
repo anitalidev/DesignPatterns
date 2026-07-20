@@ -22,20 +22,36 @@ public class FilesystemPatternRepository implements PatternRepository {
             return Files.list(Paths.get(EXERCISES_ROOT))
                     .filter(Files::isDirectory)
                     .sorted(Comparator.comparing(p -> p.getFileName().toString()))
-                    .map(this::load)
+                    .flatMap(categoryDir -> {
+                        try {
+                            return Files.list(categoryDir)
+                                    .filter(Files::isDirectory)
+                                    .filter(p -> p.resolve("metadata.json").toFile().exists())
+                                    .sorted(Comparator.comparing(p -> p.getFileName().toString()))
+                                    .map(this::load);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Failed to list patterns in " + categoryDir, e);
+                        }
+                    })
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to list patterns", e);
+            throw new RuntimeException("Failed to list categories", e);
         }
     }
 
     @Override
     public DesignPattern getPattern(String id) {
-        Path dir = Paths.get(EXERCISES_ROOT, id);
-        if (!Files.isDirectory(dir)) {
-            throw new NoSuchElementException("Pattern not found: " + id);
+        try {
+            return Files.list(Paths.get(EXERCISES_ROOT))
+                    .filter(Files::isDirectory)
+                    .map(categoryDir -> categoryDir.resolve(id))
+                    .filter(Files::isDirectory)
+                    .findFirst()
+                    .map(this::load)
+                    .orElseThrow(() -> new NoSuchElementException("Pattern not found: " + id));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to find pattern: " + id, e);
         }
-        return load(dir);
     }
 
     private DesignPattern load(Path patternDir) {
@@ -47,7 +63,6 @@ public class FilesystemPatternRepository implements PatternRepository {
 
             String description = Files.readString(patternDir.resolve("description.md"));
 
-            // Build exercises map: exercise title -> exercise id
             Map<String, String> exercises = new LinkedHashMap<>();
             JsonNode exerciseIds = meta.get("exerciseIds");
             if (exerciseIds != null && exerciseIds.isArray()) {
