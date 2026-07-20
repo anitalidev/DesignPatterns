@@ -5,25 +5,70 @@
   <title>Pattern — Design Patterns</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .exercise-tabs {
+    .file-tabs {
       display: flex;
       gap: 0;
-      border-bottom: 2px solid #ddd;
-      margin-bottom: 1.5rem;
-      justify-content: center;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 0;
       flex-wrap: wrap;
     }
-    .exercise-tab-btn {
-      padding: 0.5rem 1.25rem;
+    .file-tab-btn {
+      padding: 0.35rem 1rem;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-family: monospace;
+      color: #555;
+      margin-right: 2px;
+      border-radius: 4px 4px 0 0;
+    }
+    .file-tab-btn.active { background: #fff; color: #1a1a1a; font-weight: 600; }
+    .readonly-badge {
+      font-size: 0.7rem;
+      background: #e8e8e8;
+      color: #888;
+      border-radius: 3px;
+      padding: 1px 4px;
+      margin-left: 4px;
+      font-family: sans-serif;
+      font-weight: normal;
+      vertical-align: middle;
+    }
+    .editor-mount.hidden { display: none; }
+    .tab-btn-exercises-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .exercise-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      min-width: 220px;
+      z-index: 100;
+      overflow: hidden;
+    }
+    .exercise-dropdown.open { display: block; }
+    .exercise-dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 0.6rem 1rem;
       background: none;
       border: none;
-      cursor: pointer;
+      text-align: left;
       font-size: 0.9rem;
-      color: #555;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -2px;
+      color: #333;
+      cursor: pointer;
     }
-    .exercise-tab-btn.active { color: #1a1a1a; font-weight: 600; border-bottom-color: #1a1a1a; }
+    .exercise-dropdown-item:hover { background: #f5f5f5; }
+    .exercise-dropdown-item.active { font-weight: 600; color: #1a1a1a; }
     .exercise-panel { display: none; }
     .exercise-panel.active { display: block; }
     .loading { color: #888; font-style: italic; }
@@ -41,7 +86,10 @@
     <p id="overview"></p>
     <div class="tabs">
       <button class="tab-btn active" data-tab="tab-about">About</button>
-      <button class="tab-btn" data-tab="tab-exercises">Exercises</button>
+      <div class="tab-btn-exercises-wrap">
+        <button class="tab-btn" data-tab="tab-exercises" id="btn-exercises">Exercises ▾</button>
+        <div class="exercise-dropdown" id="exercise-dropdown"></div>
+      </div>
     </div>
   </header>
   <main>
@@ -52,7 +100,6 @@
     </div>
 
     <div id="tab-exercises" class="tab-panel">
-      <div class="exercise-tabs" id="exercise-tab-buttons"></div>
       <div id="exercise-panels"></div>
     </div>
   </main>
@@ -94,6 +141,23 @@
       ];
     }
 
+    // --- Hash helpers ---
+    function parseHash() {
+      const parts = location.hash.replace("#", "").split("/");
+      return {
+        section:    parts[0] || "about",
+        exerciseId: parts[1] || null,
+        filename:   parts[2] ? decodeURIComponent(parts[2]) : null,
+      };
+    }
+
+    function setHash(section, exerciseId = null, filename = null) {
+      let hash = section;
+      if (exerciseId) hash += "/" + exerciseId;
+      if (filename)   hash += "/" + encodeURIComponent(filename);
+      window.history.replaceState(null, "", "#" + hash);
+    }
+
     async function loadExerciseIntoPanel(exerciseId, panel) {
       if (exerciseState[exerciseId]) return; // already loaded
 
@@ -103,23 +167,94 @@
         if (!res.ok) throw new Error(res.statusText);
         const exercise = await res.json();
 
-        const firstFile = Object.values(exercise.files)[0] ?? "";
-        const starterCode = firstFile.trim();
+        // Build ordered list of files: usage (read-only) first, then editable
+        const allFiles = [
+          ...Object.entries(exercise.usageFiles ?? {}).map(([name, code]) => ({ name, code, readonly: true })),
+          ...Object.entries(exercise.files ?? {}).map(([name, code]) => ({ name, code, readonly: false })),
+        ];
 
-        const mount = panel.querySelector(".editor-mount");
-        const state = EditorState.create({ doc: starterCode, extensions: buildExtensions(false) });
-        const editorView = new EditorView({ state, parent: mount });
+        const fileTabBar = panel.querySelector(".file-tabs");
+        const editorsContainer = panel.querySelector(".editors-container");
 
-        exerciseState[exerciseId] = { editorView, starterCode };
+        let activeEditableView = null;
+        let activeEditableStarter = null;
+
+        // file name → { btn, mount }
+        const fileBtnMap = {};
+
+        function activateFile(filename) {
+          const target = fileBtnMap[filename] ?? Object.values(fileBtnMap)[0];
+          if (!target) return;
+          fileTabBar.querySelectorAll(".file-tab-btn").forEach(b => b.classList.remove("active"));
+          editorsContainer.querySelectorAll(".editor-mount").forEach(m => m.classList.add("hidden"));
+          target.btn.classList.add("active");
+          target.mount.classList.remove("hidden");
+          const resetBtn = panel.querySelector(".btn-reset");
+          if (resetBtn) resetBtn.style.display = target.readonly ? "none" : "";
+          if (!target.readonly) {
+            activeEditableView = target.view;
+            activeEditableStarter = target.starter;
+          }
+          setHash("exercises", exerciseId, target.filename);
+        }
+
+        allFiles.forEach((file, i) => {
+          const btn = document.createElement("button");
+          btn.className = "file-tab-btn" + (i === 0 ? " active" : "");
+          btn.dataset.filename = file.name;
+          if (file.readonly) {
+            btn.innerHTML = `${escHtml(file.name)} <span class="readonly-badge">read-only</span>`;
+          } else {
+            btn.textContent = file.name;
+          }
+          fileTabBar.appendChild(btn);
+
+          const mount = document.createElement("div");
+          mount.className = "editor-mount" + (i === 0 ? "" : " hidden");
+          editorsContainer.appendChild(mount);
+
+          const state = EditorState.create({ doc: file.code.trim(), extensions: buildExtensions(file.readonly) });
+          const view = new EditorView({ state, parent: mount });
+
+          if (!file.readonly && activeEditableView === null) {
+            activeEditableView = view;
+            activeEditableStarter = file.code.trim();
+          }
+
+          fileBtnMap[file.name] = { btn, mount, view, readonly: file.readonly, filename: file.name, starter: file.code.trim() };
+
+          btn.addEventListener("click", () => activateFile(file.name));
+        });
+
+        // map of filename -> { view, readonly }
+        const editableFileMap = Object.fromEntries(
+          Object.entries(fileBtnMap).filter(([, v]) => !v.readonly)
+        );
+
+        exerciseState[exerciseId] = {
+          getEditableView: () => activeEditableView,
+          getStarter: () => activeEditableStarter,
+          getEditableFiles: () => Object.fromEntries(
+            Object.entries(editableFileMap).map(([name, { view }]) => [name, view.state.doc.toString()])
+          ),
+          activateFile,
+        };
+
         if (loadingEl) loadingEl.remove();
 
-        panel.querySelector(".btn-reset").addEventListener("click", () => {
-          editorView.setState(EditorState.create({ doc: starterCode, extensions: buildExtensions(false) }));
+        // Hide reset if first file is read-only
+        const resetBtn = panel.querySelector(".btn-reset");
+        if (resetBtn && allFiles[0]?.readonly) resetBtn.style.display = "none";
+
+        panel.querySelector(".btn-reset")?.addEventListener("click", () => {
+          const view = exerciseState[exerciseId].getEditableView();
+          const starter = exerciseState[exerciseId].getStarter();
+          if (view) view.setState(EditorState.create({ doc: starter, extensions: buildExtensions(false) }));
           panel.querySelector(".test-results").innerHTML =
             '<span class="placeholder">Run tests to see results.</span>';
         });
 
-        panel.querySelector(".btn-run").addEventListener("click", () => runTests(exerciseId, panel));
+        panel.querySelector(".btn-run")?.addEventListener("click", () => runTests(exerciseId, panel));
       } catch (err) {
         if (loadingEl) loadingEl.textContent = `Failed to load exercise: ${err.message}`;
       }
@@ -131,7 +266,7 @@
       const state = exerciseState[exerciseId];
       if (!state) return;
 
-      const code = state.editorView.state.doc.toString();
+      const files = state.getEditableFiles();
       runBtn.disabled = true;
       runBtn.textContent = "Running…";
       resultsEl.innerHTML = '<span class="placeholder">Running…</span>';
@@ -140,7 +275,7 @@
         const res = await fetch("/api/run", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ exerciseId, code }),
+          body: JSON.stringify({ exerciseId, files }),
         });
         const data = await res.json();
         renderResults(data, resultsEl);
@@ -183,7 +318,8 @@
       panel.innerHTML = `
         <p class="loading">Loading exercise…</p>
         <div class="editor-wrap" style="display:none">
-          <div class="editor-mount"></div>
+          <div class="file-tabs"></div>
+          <div class="editors-container"></div>
           <div class="editor-actions">
             <button class="btn btn-primary btn-run">Run Tests</button>
             <button class="btn btn-ghost btn-reset">Reset</button>
@@ -216,52 +352,101 @@
       const tabButtons = document.getElementById("exercise-tab-buttons");
       const panels = document.getElementById("exercise-panels");
 
+      // exercise id → { panel, dropdownItem }
+      const exerciseMap = {};
+      const dropdown = document.getElementById("exercise-dropdown");
+      const btnExercises = document.getElementById("btn-exercises");
+
+      function closeDropdown() {
+        dropdown.classList.remove("open");
+      }
+
+      function toggleDropdown() {
+        dropdown.classList.toggle("open");
+      }
+
+      function activateExercise(exerciseId) {
+        const target = exerciseMap[exerciseId] ?? Object.values(exerciseMap)[0];
+        if (!target) return;
+
+        activateSection("exercises");
+
+        panels.querySelectorAll(".exercise-panel").forEach(p => p.classList.remove("active"));
+        target.panel.classList.add("active");
+
+        Object.values(exerciseMap).forEach(e => e.dropdownItem.classList.remove("active"));
+        target.dropdownItem.classList.add("active");
+
+        const editorWrap = target.panel.querySelector(".editor-wrap");
+        loadExerciseIntoPanel(exerciseId, target.panel).then(() => {
+          if (editorWrap) editorWrap.style.display = "";
+          const { filename } = parseHash();
+          if (filename) exerciseState[exerciseId]?.activateFile(filename);
+        });
+
+        setHash("exercises", exerciseId);
+        closeDropdown();
+      }
+
+      function activateSection(section) {
+        const tabId = section === "exercises" ? "tab-exercises" : "tab-about";
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        btnExercises.classList.toggle("active", section === "exercises");
+        document.querySelector('.tab-btn[data-tab="tab-about"]')
+          ?.classList.toggle("active", section === "about");
+        document.getElementById(tabId)?.classList.add("active");
+        if (section !== "exercises") setHash(section);
+      }
+
       const entries = Object.entries(pattern.exercises); // [name, id]
       entries.forEach(([exerciseName, exerciseId], i) => {
-        const btn = document.createElement("button");
-        btn.className = "exercise-tab-btn" + (i === 0 ? " active" : "");
-        btn.textContent = exerciseName;
-        btn.dataset.exerciseId = exerciseId;
-        tabButtons.appendChild(btn);
-
         const panel = makeExercisePanel(exerciseName, exerciseId);
         if (i === 0) panel.classList.add("active");
         panels.appendChild(panel);
 
-        btn.addEventListener("click", () => {
-          tabButtons.querySelectorAll(".exercise-tab-btn").forEach(b => b.classList.remove("active"));
-          panels.querySelectorAll(".exercise-panel").forEach(p => p.classList.remove("active"));
-          btn.classList.add("active");
-          panel.classList.add("active");
+        const item = document.createElement("button");
+        item.className = "exercise-dropdown-item";
+        item.textContent = exerciseName;
+        dropdown.appendChild(item);
 
-          // Lazy-load editor on first open
-          const editorWrap = panel.querySelector(".editor-wrap");
-          loadExerciseIntoPanel(exerciseId, panel).then(() => {
+        exerciseMap[exerciseId] = { panel, dropdownItem: item };
+        item.addEventListener("click", () => activateExercise(exerciseId));
+      });
+
+      // Exercises button: toggle dropdown
+      btnExercises.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+      });
+
+      document.querySelector('.tab-btn[data-tab="tab-about"]').addEventListener("click", () => {
+        closeDropdown();
+        Object.values(exerciseMap).forEach(e => e.dropdownItem.classList.remove("active"));
+        activateSection("about");
+      });
+
+      // Close dropdown on outside click
+      document.addEventListener("click", closeDropdown);
+
+      // Restore state from hash on initial load
+      const hash = parseHash();
+      if (hash.section === "exercises") {
+        activateSection("exercises");
+        const targetId = hash.exerciseId && exerciseMap[hash.exerciseId]
+          ? hash.exerciseId : entries[0]?.[1];
+        if (targetId) activateExercise(targetId);
+      } else {
+        const firstId = entries[0]?.[1];
+        if (firstId) {
+          const firstPanel = panels.querySelector(".exercise-panel");
+          loadExerciseIntoPanel(firstId, firstPanel).then(() => {
+            const editorWrap = firstPanel.querySelector(".editor-wrap");
             if (editorWrap) editorWrap.style.display = "";
           });
-        });
-      });
-
-      // Auto-load first exercise
-      if (entries.length > 0) {
-        const [, firstId] = entries[0];
-        const firstPanel = panels.querySelector(".exercise-panel");
-        loadExerciseIntoPanel(firstId, firstPanel).then(() => {
-          const editorWrap = firstPanel.querySelector(".editor-wrap");
-          if (editorWrap) editorWrap.style.display = "";
-        });
+        }
       }
     }
-
-    // Top-level page tabs (About / Exercises)
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
-      });
-    });
 
     if (patternId) loadPattern();
   </script>

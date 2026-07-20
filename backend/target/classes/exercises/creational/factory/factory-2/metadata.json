@@ -1,0 +1,8 @@
+{
+  "id": "factory-2",
+  "title": "Register creators in a factory map",
+  "difficulty": "Medium",
+  "editableFiles": [
+    "VehicleFactory.java"
+  ]
+}

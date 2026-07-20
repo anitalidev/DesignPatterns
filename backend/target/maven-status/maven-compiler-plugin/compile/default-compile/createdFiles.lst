@@ -1,4 +1,5 @@
 com/yourapp/Application.class
+com/yourapp/models/PatternCategory.class
 com/yourapp/runner/WorkspaceManager.class
 com/yourapp/controllers/ExerciseController.class
 com/yourapp/repositories/FilesystemExerciseRepository.class
@@ -7,11 +8,14 @@ com/yourapp/repositories/PatternRepository.class
 com/yourapp/models/TestResult.class
 com/yourapp/models/RunResponse.class
 com/yourapp/models/Exercise.class
+com/yourapp/repositories/CategoryRepository.class
 com/yourapp/models/DesignPattern.class
 com/yourapp/runner/TestService.class
+com/yourapp/controllers/CategoryController.class
 com/yourapp/controllers/PatternController.class
 com/yourapp/services/RunnerService.class
 com/yourapp/runner/CompilerService.class
+com/yourapp/repositories/FilesystemCategoryRepository.class
 com/yourapp/repositories/FilesystemPatternRepository.class
 com/yourapp/models/CompilationResult.class
 com/yourapp/services/ExerciseService.class

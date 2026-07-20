@@ -28,19 +28,22 @@
     <div id="tab-editor" class="tab-panel">
       <div class="editor-wrap">
         <div id="editor-mount"></div>
-        <div class="editor-actions">
-          <button class="btn btn-primary" id="btn-run">Run Tests</button>
-          <button class="btn btn-ghost" id="btn-reset">Reset</button>
-        </div>
-        <div id="test-output">
-          <div class="test-output-header">Test Results</div>
-          <div id="test-results">
-            <span class="placeholder">Run tests to see results.</span>
-          </div>
-        </div>
       </div>
     </div>
   </main>
+
+  <footer class="run-footer">
+    <div class="editor-actions">
+      <button class="btn btn-primary" id="btn-run">Run Tests</button>
+      <button class="btn btn-ghost" id="btn-reset">Reset</button>
+    </div>
+    <div id="test-output">
+      <div class="test-output-header">Test Results</div>
+      <div id="test-results">
+        <span class="placeholder">Run tests to see results.</span>
+      </div>
+    </div>
+  </footer>
 
   <script type="module" src="exercise.js"></script>
 </body>

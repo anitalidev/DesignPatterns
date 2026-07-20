@@ -16,6 +16,7 @@ if (!id) {
 
 let editorView = null;
 let starterCode = "";
+let editableFilename = "";
 
 function buildExtensions(readonly = false) {
   return [
@@ -56,8 +57,9 @@ async function loadExercise() {
   document.getElementById("exercise-title").textContent = exercise.title;
   document.getElementById("exercise-description").innerHTML = marked.parse(exercise.description);
 
-  const firstFile = Object.values(exercise.files)[0] ?? "";
-  initEditor(firstFile);
+  const [[filename, code] = []] = Object.entries(exercise.files);
+  editableFilename = filename ?? "";
+  initEditor(code ?? "");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -97,7 +99,7 @@ async function runTests() {
     const res = await fetch("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ exerciseId: id, code }),
+      body: JSON.stringify({ exerciseId: id, files: { [editableFilename]: code } }),
     });
     const data = await res.json();
     renderResults(data);

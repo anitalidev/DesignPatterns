@@ -65,7 +65,7 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
         }
     }
 
-    // variantDir is e.g. exercises/observer/observer-1
+    // variantDir is e.g. exercises/creational/factory/factory-1
     private Exercise load(Path variantDir) {
         try {
             Path patternDir = variantDir.getParent();
@@ -76,22 +76,30 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
 
             String description = Files.readString(patternDir.resolve("description.md"));
 
-            Map<String, String> files = new LinkedHashMap<>();
-            try (var entries = Files.list(variantDir.resolve("exercise"))) {
-                entries.filter(p -> p.toString().endsWith(".java"))
-                       .sorted()
-                       .forEach(p -> {
-                           try {
-                               files.put(p.getFileName().toString(), Files.readString(p));
-                           } catch (IOException e) {
-                               throw new RuntimeException("Failed to read " + p, e);
-                           }
-                       });
-            }
+            Map<String, String> files = readJavaFiles(variantDir.resolve("exercise"));
+            Map<String, String> usageFiles = readJavaFiles(variantDir.resolve("usage"));
+            Map<String, String> testFiles = readJavaFiles(variantDir.resolve("tests"));
 
-            return new Exercise(id, title, description, files);
+            return new Exercise(id, title, description, files, usageFiles, testFiles);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load exercise at " + variantDir, e);
         }
+    }
+
+    private Map<String, String> readJavaFiles(Path dir) throws IOException {
+        Map<String, String> result = new LinkedHashMap<>();
+        if (!Files.isDirectory(dir)) return result;
+        try (var entries = Files.list(dir)) {
+            entries.filter(p -> p.toString().endsWith(".java"))
+                   .sorted()
+                   .forEach(p -> {
+                       try {
+                           result.put(p.getFileName().toString(), Files.readString(p));
+                       } catch (IOException e) {
+                           throw new RuntimeException("Failed to read " + p, e);
+                       }
+                   });
+        }
+        return result;
     }
 }

@@ -1,0 +1,8 @@
+{
+  "id": "singleton-1",
+  "title": "Restrict AppConfig to a single instance",
+  "difficulty": "Easy",
+  "editableFiles": [
+    "AppConfig.java"
+  ]
+}

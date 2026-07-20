@@ -1,0 +1,8 @@
+{
+  "id": "factory-1",
+  "title": "Centralise shape creation in a factory",
+  "difficulty": "Easy",
+  "editableFiles": [
+    "ShapeFactory.java"
+  ]
+}
