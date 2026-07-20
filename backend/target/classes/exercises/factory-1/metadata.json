@@ -1,0 +1,8 @@
+{
+  "id": "factory-1",
+  "title": "Factory Method Pattern",
+  "difficulty": "Easy",
+  "editableFiles": [
+    "ShapeFactory.java"
+  ]
+}

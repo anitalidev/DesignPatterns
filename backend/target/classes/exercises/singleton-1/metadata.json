@@ -1,0 +1,8 @@
+{
+  "id": "singleton-1",
+  "title": "Singleton Pattern",
+  "difficulty": "Easy",
+  "editableFiles": [
+    "AppConfig.java"
+  ]
+}

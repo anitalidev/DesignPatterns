@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercise — Design Patterns</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="pattern-header">
+    <nav class="pattern-nav">
+      <a href="/">Home</a>
+      <span class="sep">/</span>
+      <span id="nav-title">Loading…</span>
+    </nav>
+    <h1 id="exercise-title">Loading…</h1>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tab-learn">Learn</button>
+      <button class="tab-btn" data-tab="tab-editor">Editor</button>
+    </div>
+  </header>
+  <main>
+    <div id="tab-learn" class="tab-panel active">
+      <section class="explanation" id="exercise-description">
+        <p style="color:#888">Loading exercise…</p>
+      </section>
+    </div>
+
+    <div id="tab-editor" class="tab-panel">
+      <div class="editor-wrap">
+        <div id="editor-mount"></div>
+        <div class="editor-actions">
+          <button class="btn btn-primary" id="btn-run">Run Tests</button>
+          <button class="btn btn-ghost" id="btn-reset">Reset</button>
+        </div>
+        <div id="test-output">
+          <div class="test-output-header">Test Results</div>
+          <div id="test-results">
+            <span class="placeholder">Run tests to see results.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="exercise.js"></script>
+</body>
+</html>
