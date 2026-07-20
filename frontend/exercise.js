@@ -40,6 +40,10 @@ function initEditor(code) {
   const mount = document.getElementById("editor-mount");
   const state = EditorState.create({ doc: code, extensions: buildExtensions(false) });
   editorView = new EditorView({ state, parent: mount });
+  requestAnimationFrame(() => {
+    const lineH = mount.querySelector(".cm-line")?.offsetHeight ?? 20;
+    editorView.dom.style.height = (21 * lineH + 8) + "px";
+  });
 }
 
 function renderList(listEl, items, className) {

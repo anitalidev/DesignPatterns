@@ -215,6 +215,10 @@
 
           const state = EditorState.create({ doc: file.code.trim(), extensions: buildExtensions(file.readonly) });
           const view = new EditorView({ state, parent: mount });
+          requestAnimationFrame(() => {
+            const lineH = mount.querySelector(".cm-line")?.offsetHeight ?? 20;
+            view.dom.style.height = (21 * lineH + 8) + "px";
+          });
 
           if (!file.readonly && activeEditableView === null) {
             activeEditableView = view;

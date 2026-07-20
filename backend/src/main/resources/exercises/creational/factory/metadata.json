@@ -1,6 +1,6 @@
 {
   "id": "factory",
-  "title": "Factory Method Pattern",
+  "title": "Simple Factory Pattern",
   "overview": "Centralise object creation so callers ask for a type without knowing which class gets instantiated.",
   "exerciseIds": ["factory-1", "factory-2"]
 }
