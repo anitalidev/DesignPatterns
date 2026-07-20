@@ -4,5 +4,19 @@
   "difficulty": "Easy",
   "editableFiles": [
     "Store.java"
+  ],
+  "hints": [
+    "Define an Observer interface with an update(String event, Object data) method",
+    "Add a List<Observer> field to Store and addObserver(Observer o) / removeObserver(Observer o) methods",
+    "When stock changes, call each observer's update() instead of hard-coding specific actions"
+  ],
+  "issues": [
+    "Store directly calls specific dependent objects when its state changes",
+    "Adding a new reaction to a stock change requires editing Store itself"
+  ],
+  "goals": [
+    "Store knows nothing about its dependents beyond the Observer interface",
+    "New observers can be added or removed at runtime without changing Store",
+    "All registered observers are notified whenever stock changes"
   ]
 }

@@ -4,5 +4,19 @@
   "difficulty": "Easy",
   "editableFiles": [
     "ShapeFactory.java"
+  ],
+  "hints": [
+    "Create a class called ShapeFactory with a static create(String type, double... args) method",
+    "Use a switch statement on the type string to decide which shape to instantiate",
+    "Throw an IllegalArgumentException for unknown types"
+  ],
+  "issues": [
+    "Every caller that needs a shape contains its own if/else block",
+    "Adding a new shape type means updating every call site"
+  ],
+  "goals": [
+    "Create a ShapeFactory class with a static create() method",
+    "All branching logic lives in one place",
+    "Callers no longer need to know which class to instantiate"
   ]
 }

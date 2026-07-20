@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,10 +81,22 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
             Map<String, String> usageFiles = readJavaFiles(variantDir.resolve("usage"));
             Map<String, String> testFiles = readJavaFiles(variantDir.resolve("tests"));
 
-            return new Exercise(id, title, description, files, usageFiles, testFiles);
+            List<String> hints = readStringList(meta, "hints");
+            List<String> issues = readStringList(meta, "issues");
+            List<String> goals = readStringList(meta, "goals");
+
+            return new Exercise(id, title, description, files, usageFiles, testFiles, hints, issues, goals);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load exercise at " + variantDir, e);
         }
+    }
+
+    private List<String> readStringList(JsonNode node, String field) {
+        JsonNode arr = node.get(field);
+        if (arr == null || !arr.isArray()) return List.of();
+        List<String> result = new ArrayList<>();
+        arr.forEach(el -> result.add(el.asText()));
+        return result;
     }
 
     private Map<String, String> readJavaFiles(Path dir) throws IOException {

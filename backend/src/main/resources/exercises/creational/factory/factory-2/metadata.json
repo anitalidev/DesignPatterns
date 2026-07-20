@@ -4,5 +4,19 @@
   "difficulty": "Medium",
   "editableFiles": [
     "VehicleFactory.java"
+  ],
+  "hints": [
+    "Store creators in a Map<String, Supplier<Vehicle>> and look them up by type",
+    "Add a register(String type, Supplier<Vehicle> creator) method to allow new types",
+    "Throw an IllegalArgumentException when the type is not registered"
+  ],
+  "issues": [
+    "The factory uses a growing switch statement that must be edited for every new type",
+    "Adding a vehicle type requires changing the factory itself rather than just registering one"
+  ],
+  "goals": [
+    "Replace the switch with a Map of registered creator functions",
+    "New vehicle types can be added by calling register() without touching the factory",
+    "Unknown types throw a clear exception"
   ]
 }

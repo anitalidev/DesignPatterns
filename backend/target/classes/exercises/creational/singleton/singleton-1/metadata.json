@@ -4,5 +4,19 @@
   "difficulty": "Easy",
   "editableFiles": [
     "AppConfig.java"
+  ],
+  "hints": [
+    "Add a private static field of type AppConfig to hold the single instance",
+    "Make the constructor private so callers cannot use new AppConfig()",
+    "Add a public static getInstance() method that creates the instance on first call and returns it every time"
+  ],
+  "issues": [
+    "AppConfig can be instantiated freely with new AppConfig()",
+    "Each caller gets its own separate config, so changes made in one place are invisible elsewhere"
+  ],
+  "goals": [
+    "Only one AppConfig instance can ever exist",
+    "getInstance() always returns the same object",
+    "State changes are visible to all callers that hold a reference"
   ]
 }
