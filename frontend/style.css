@@ -224,3 +224,50 @@ main { max-width: 860px; margin: 2rem auto; padding: 0 1.5rem; }
 body {
   padding-bottom: 220px;
 }
+
+/* ── issues & goals (Learn tab) ── */
+.hidden { display: none !important; }
+
+.ex-issues {
+  margin-top: 2rem;
+  padding: 1.5rem 0 0.5rem;
+  border-top: 1px solid #eee;
+}
+
+.ex-goals {
+  margin-top: 1rem;
+  padding: 1rem 0 2rem;
+  border-top: 1px solid #eee;
+}
+
+.ex-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.6rem;
+}
+
+.issue-item, .goal-item {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 0.55rem;
+  padding-left: 0.25rem;
+}
+
+.ex-issues ul { list-style: none; padding: 0; }
+.ex-goals ul  { list-style: none; padding: 0; }
+
+.issue-item::before {
+  content: "✗ ";
+  color: #cb2431;
+  font-weight: 700;
+}
+
+.goal-item::before {
+  content: "○ ";
+  color: #888;
+}
+

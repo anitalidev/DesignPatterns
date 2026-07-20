@@ -242,6 +242,20 @@
 
         if (loadingEl) loadingEl.remove();
 
+        // Issues & goals
+        if (exercise.issues?.length) {
+          const sec = panel.querySelector(".ex-issues");
+          const ul = panel.querySelector(".issues-list");
+          ul.innerHTML = exercise.issues.map(t => `<li class="issue-item">${escHtml(t)}</li>`).join("");
+          sec.classList.remove("hidden");
+        }
+        if (exercise.goals?.length) {
+          const sec = panel.querySelector(".ex-goals");
+          const ul = panel.querySelector(".goals-list");
+          ul.innerHTML = exercise.goals.map(t => `<li class="goal-item">${escHtml(t)}</li>`).join("");
+          sec.classList.remove("hidden");
+        }
+
         // Hide reset if first file is read-only
         const resetBtn = panel.querySelector(".btn-reset");
         if (resetBtn && allFiles[0]?.readonly) resetBtn.style.display = "none";
@@ -317,6 +331,14 @@
       panel.dataset.exerciseId = exerciseId;
       panel.innerHTML = `
         <p class="loading">Loading exercise…</p>
+        <section class="ex-issues hidden">
+          <h3 class="ex-section-title">What's wrong</h3>
+          <ul class="issues-list"></ul>
+        </section>
+        <section class="ex-goals hidden">
+          <h3 class="ex-section-title">Goals</h3>
+          <ul class="goals-list"></ul>
+        </section>
         <div class="editor-wrap" style="display:none">
           <div class="file-tabs"></div>
           <div class="editors-container"></div>

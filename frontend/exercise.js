@@ -42,6 +42,10 @@ function initEditor(code) {
   editorView = new EditorView({ state, parent: mount });
 }
 
+function renderList(listEl, items, className) {
+  listEl.innerHTML = items.map(t => `<li class="${className}">${escHtml(t)}</li>`).join("");
+}
+
 async function loadExercise() {
   const res = await fetch(`/api/exercises/${id}`);
   if (!res.ok) {
@@ -56,6 +60,16 @@ async function loadExercise() {
   document.getElementById("nav-title").textContent = exercise.title;
   document.getElementById("exercise-title").textContent = exercise.title;
   document.getElementById("exercise-description").innerHTML = marked.parse(exercise.description);
+
+  if (exercise.issues?.length) {
+    renderList(document.getElementById("issues-list"), exercise.issues, "issue-item");
+    document.getElementById("exercise-issues").classList.remove("hidden");
+  }
+
+  if (exercise.goals?.length) {
+    renderList(document.getElementById("goals-list"), exercise.goals, "goal-item");
+    document.getElementById("exercise-goals").classList.remove("hidden");
+  }
 
   const firstEditable = (exercise.editableFiles ?? [])[0];
   editableFilename = firstEditable ?? "";
