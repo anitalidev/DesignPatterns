@@ -1,6 +1,6 @@
 {
   "id": "observer-1",
-  "title": "Observer Pattern",
+  "title": "Decouple a tightly coupled Store",
   "difficulty": "Easy",
   "editableFiles": [
     "Store.java"

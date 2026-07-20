@@ -44,7 +44,7 @@ export default defineConfig({
   plugins: [javaRunnerPlugin()],
   server: {
     proxy: {
-      "/api/exercises": "http://localhost:8080",
+      "/api": "http://localhost:8080",
     },
   },
   build: {
@@ -52,6 +52,7 @@ export default defineConfig({
       input: {
         main:     resolve(__dirname, "index.html"),
         exercise: resolve(__dirname, "exercise.html"),
+        pattern:  resolve(__dirname, "pattern.html"),
       },
     },
   },

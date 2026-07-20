@@ -1,0 +1,6 @@
+{
+  "id": "observer",
+  "title": "Observer Pattern",
+  "overview": "Notify a list of dependents automatically when an object changes state.",
+  "exerciseIds": ["observer-1"]
+}

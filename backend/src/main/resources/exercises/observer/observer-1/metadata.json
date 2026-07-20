@@ -1,0 +1,8 @@
+{
+  "id": "observer-1",
+  "title": "Decouple a tightly coupled Store",
+  "difficulty": "Easy",
+  "editableFiles": [
+    "Store.java"
+  ]
+}

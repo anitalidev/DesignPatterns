@@ -1,6 +1,6 @@
 {
   "id": "singleton-1",
-  "title": "Singleton Pattern",
+  "title": "Restrict AppConfig to a single instance",
   "difficulty": "Easy",
   "editableFiles": [
     "AppConfig.java"

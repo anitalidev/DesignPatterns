@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pattern — Design Patterns</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .exercise-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .exercise-tab-btn {
+      padding: 0.5rem 1.25rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #555;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .exercise-tab-btn.active { color: #1a1a1a; font-weight: 600; border-bottom-color: #1a1a1a; }
+    .exercise-panel { display: none; }
+    .exercise-panel.active { display: block; }
+    .loading { color: #888; font-style: italic; }
+    #overview { color: #555; font-size: 0.95rem; margin-bottom: 1rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <header class="pattern-header">
+    <nav class="pattern-nav">
+      <a href="/">Home</a>
+      <span class="sep">/</span>
+      <span id="nav-title">Loading…</span>
+    </nav>
+    <h1 id="pattern-title">Loading…</h1>
+    <p id="overview"></p>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tab-about">About</button>
+      <button class="tab-btn" data-tab="tab-exercises">Exercises</button>
+    </div>
+  </header>
+  <main>
+    <div id="tab-about" class="tab-panel active">
+      <section class="explanation" id="pattern-description">
+        <p class="loading">Loading…</p>
+      </section>
+    </div>
+
+    <div id="tab-exercises" class="tab-panel">
+      <div class="exercise-tabs" id="exercise-tab-buttons"></div>
+      <div id="exercise-panels"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { marked } from "marked";
+    import { EditorState } from "@codemirror/state";
+    import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
+    import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirror/commands";
+    import { java } from "@codemirror/lang-java";
+    import { oneDark } from "@codemirror/theme-one-dark";
+    import { indentOnInput, bracketMatching, foldGutter } from "@codemirror/language";
+
+    const params = new URLSearchParams(location.search);
+    const patternId = params.get("id");
+
+    if (!patternId) {
+      document.getElementById("pattern-description").innerHTML =
+        '<p style="color:red">No pattern id in URL. Try <code>?id=factory</code></p>';
+    }
+
+    // exercise state: exerciseId -> { editorView, starterCode }
+    const exerciseState = {};
+
+    function buildExtensions(readonly = false) {
+      return [
+        lineNumbers(),
+        highlightActiveLine(),
+        highlightActiveLineGutter(),
+        history(),
+        foldGutter(),
+        indentOnInput(),
+        bracketMatching(),
+        java(),
+        oneDark,
+        keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
+        EditorView.lineWrapping,
+        EditorState.readOnly.of(readonly),
+      ];
+    }
+
+    async function loadExerciseIntoPanel(exerciseId, panel) {
+      if (exerciseState[exerciseId]) return; // already loaded
+
+      const loadingEl = panel.querySelector(".loading");
+      try {
+        const res = await fetch(`/api/exercises/${exerciseId}`);
+        if (!res.ok) throw new Error(res.statusText);
+        const exercise = await res.json();
+
+        const firstFile = Object.values(exercise.files)[0] ?? "";
+        const starterCode = firstFile.trim();
+
+        const mount = panel.querySelector(".editor-mount");
+        const state = EditorState.create({ doc: starterCode, extensions: buildExtensions(false) });
+        const editorView = new EditorView({ state, parent: mount });
+
+        exerciseState[exerciseId] = { editorView, starterCode };
+        if (loadingEl) loadingEl.remove();
+
+        panel.querySelector(".btn-reset").addEventListener("click", () => {
+          editorView.setState(EditorState.create({ doc: starterCode, extensions: buildExtensions(false) }));
+          panel.querySelector(".test-results").innerHTML =
+            '<span class="placeholder">Run tests to see results.</span>';
+        });
+
+        panel.querySelector(".btn-run").addEventListener("click", () => runTests(exerciseId, panel));
+      } catch (err) {
+        if (loadingEl) loadingEl.textContent = `Failed to load exercise: ${err.message}`;
+      }
+    }
+
+    async function runTests(exerciseId, panel) {
+      const resultsEl = panel.querySelector(".test-results");
+      const runBtn = panel.querySelector(".btn-run");
+      const state = exerciseState[exerciseId];
+      if (!state) return;
+
+      const code = state.editorView.state.doc.toString();
+      runBtn.disabled = true;
+      runBtn.textContent = "Running…";
+      resultsEl.innerHTML = '<span class="placeholder">Running…</span>';
+
+      try {
+        const res = await fetch("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ exerciseId, code }),
+        });
+        const data = await res.json();
+        renderResults(data, resultsEl);
+      } catch (err) {
+        resultsEl.innerHTML = `<div class="test-err">Network error: ${escHtml(String(err))}</div>`;
+      } finally {
+        runBtn.disabled = false;
+        runBtn.textContent = "Run Tests";
+      }
+    }
+
+    function renderResults(data, resultsEl) {
+      if (!data.compiled) {
+        resultsEl.innerHTML =
+          `<div class="test-row fail"><span class="test-icon"></span><span class="test-name">Compile error</span></div>` +
+          `<div class="test-err">${escHtml(data.compilerOutput)}</div>`;
+        return;
+      }
+      const rows = data.tests.map(t =>
+        `<div class="test-row ${t.passed ? "pass" : "fail"}">
+          <span class="test-icon"></span>
+          <span class="test-name">${escHtml(t.name)}</span>
+        </div>${t.message ? `<div class="test-err">${escHtml(t.message)}</div>` : ""}`
+      ).join("");
+      const passed = data.tests.filter(t => t.passed).length;
+      const total = data.tests.length;
+      const allPass = passed === total;
+      resultsEl.innerHTML = rows +
+        `<div class="summary ${allPass ? "all-pass" : "has-fail"}">${passed}/${total} passed</div>`;
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function makeExercisePanel(exerciseName, exerciseId) {
+      const panel = document.createElement("div");
+      panel.className = "exercise-panel";
+      panel.dataset.exerciseId = exerciseId;
+      panel.innerHTML = `
+        <p class="loading">Loading exercise…</p>
+        <div class="editor-wrap" style="display:none">
+          <div class="editor-mount"></div>
+          <div class="editor-actions">
+            <button class="btn btn-primary btn-run">Run Tests</button>
+            <button class="btn btn-ghost btn-reset">Reset</button>
+          </div>
+          <div id="test-output-${exerciseId}">
+            <div class="test-output-header">Test Results</div>
+            <div class="test-results">
+              <span class="placeholder">Run tests to see results.</span>
+            </div>
+          </div>
+        </div>`;
+      return panel;
+    }
+
+    async function loadPattern() {
+      const res = await fetch(`/api/patterns/${patternId}`);
+      if (!res.ok) {
+        document.getElementById("pattern-description").innerHTML =
+          `<p style="color:red">Pattern "${patternId}" not found.</p>`;
+        return;
+      }
+
+      const pattern = await res.json();
+      document.title = `${pattern.title} — Design Patterns`;
+      document.getElementById("nav-title").textContent = pattern.title;
+      document.getElementById("pattern-title").textContent = pattern.title;
+      document.getElementById("overview").textContent = pattern.overview;
+      document.getElementById("pattern-description").innerHTML = marked.parse(pattern.description);
+
+      const tabButtons = document.getElementById("exercise-tab-buttons");
+      const panels = document.getElementById("exercise-panels");
+
+      const entries = Object.entries(pattern.exercises); // [name, id]
+      entries.forEach(([exerciseName, exerciseId], i) => {
+        const btn = document.createElement("button");
+        btn.className = "exercise-tab-btn" + (i === 0 ? " active" : "");
+        btn.textContent = exerciseName;
+        btn.dataset.exerciseId = exerciseId;
+        tabButtons.appendChild(btn);
+
+        const panel = makeExercisePanel(exerciseName, exerciseId);
+        if (i === 0) panel.classList.add("active");
+        panels.appendChild(panel);
+
+        btn.addEventListener("click", () => {
+          tabButtons.querySelectorAll(".exercise-tab-btn").forEach(b => b.classList.remove("active"));
+          panels.querySelectorAll(".exercise-panel").forEach(p => p.classList.remove("active"));
+          btn.classList.add("active");
+          panel.classList.add("active");
+
+          // Lazy-load editor on first open
+          const editorWrap = panel.querySelector(".editor-wrap");
+          loadExerciseIntoPanel(exerciseId, panel).then(() => {
+            if (editorWrap) editorWrap.style.display = "";
+          });
+        });
+      });
+
+      // Auto-load first exercise
+      if (entries.length > 0) {
+        const [, firstId] = entries[0];
+        const firstPanel = panels.querySelector(".exercise-panel");
+        loadExerciseIntoPanel(firstId, firstPanel).then(() => {
+          const editorWrap = firstPanel.querySelector(".editor-wrap");
+          if (editorWrap) editorWrap.style.display = "";
+        });
+      }
+    }
+
+    // Top-level page tabs (About / Exercises)
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    if (patternId) loadPattern();
+  </script>
+</body>
+</html>

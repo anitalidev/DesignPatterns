@@ -18,11 +18,18 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
 
     @Override
     public Exercise getExercise(String id) {
-        Path root = Paths.get(EXERCISES_ROOT, id);
-        if (!Files.isDirectory(root)) {
-            throw new NoSuchElementException("Exercise not found: " + id);
+        // id is e.g. "observer-1"; find it under any pattern directory
+        try {
+            return Files.list(Paths.get(EXERCISES_ROOT))
+                    .filter(Files::isDirectory)
+                    .map(pattern -> pattern.resolve(id))
+                    .filter(Files::isDirectory)
+                    .findFirst()
+                    .map(this::load)
+                    .orElseThrow(() -> new NoSuchElementException("Exercise not found: " + id));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to find exercise: " + id, e);
         }
-        return load(root);
     }
 
     @Override
@@ -30,6 +37,13 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
         try {
             return Files.list(Paths.get(EXERCISES_ROOT))
                     .filter(Files::isDirectory)
+                    .flatMap(pattern -> {
+                        try {
+                            return Files.list(pattern).filter(Files::isDirectory);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Failed to list pattern dir: " + pattern, e);
+                        }
+                    })
                     .map(this::load)
                     .collect(Collectors.toList());
         } catch (IOException e) {
@@ -37,16 +51,19 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
         }
     }
 
-    private Exercise load(Path root) {
+    // variantDir is e.g. exercises/observer/observer-1
+    private Exercise load(Path variantDir) {
         try {
-            JsonNode meta = JSON.readTree(root.resolve("metadata.json").toFile());
+            Path patternDir = variantDir.getParent();
+
+            JsonNode meta = JSON.readTree(variantDir.resolve("metadata.json").toFile());
             String id = meta.get("id").asText();
             String title = meta.get("title").asText();
 
-            String description = Files.readString(root.resolve("description.md"));
+            String description = Files.readString(patternDir.resolve("description.md"));
 
             Map<String, String> files = new LinkedHashMap<>();
-            try (var entries = Files.list(root.resolve("exercise"))) {
+            try (var entries = Files.list(variantDir.resolve("exercise"))) {
                 entries.filter(p -> p.toString().endsWith(".java"))
                        .sorted()
                        .forEach(p -> {
@@ -60,7 +77,7 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
 
             return new Exercise(id, title, description, files);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load exercise at " + root, e);
+            throw new RuntimeException("Failed to load exercise at " + variantDir, e);
         }
     }
 }

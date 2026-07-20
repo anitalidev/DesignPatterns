@@ -56,20 +56,20 @@
   </main>
 
   <script type="module">
-    async function loadExercises() {
+    async function loadPatterns() {
       const list = document.getElementById("exercise-list");
       try {
-        const res = await fetch("/api/exercises");
+        const res = await fetch("/api/patterns");
         if (!res.ok) throw new Error(res.statusText);
-        const exercises = await res.json();
-        list.innerHTML = exercises.map(e =>
-          `<li><a href="/exercise.html?id=${e.id}">${e.title}</a></li>`
+        const patterns = await res.json();
+        list.innerHTML = patterns.map(p =>
+          `<li><a href="/pattern.html?id=${p.id}">${p.title}</a><p class="overview">${p.overview}</p></li>`
         ).join("");
       } catch (err) {
-        list.innerHTML = `<li style="color:red">Failed to load exercises: ${err.message}</li>`;
+        list.innerHTML = `<li style="color:red">Failed to load patterns: ${err.message}</li>`;
       }
     }
-    loadExercises();
+    loadPatterns();
 
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
