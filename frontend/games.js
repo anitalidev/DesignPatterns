@@ -335,6 +335,7 @@ export function initGames(patterns, categories) {
             <span class="name-em-cat-label">${esc(cat.name)}</span>
             <span class="name-em-timer${timeLeft <= 15 ? " urgent" : ""}">${timeLeft}s</span>
             <span class="name-em-score">${found.size} / ${targets.length}</span>
+            ${!done ? `<button class="btn btn-ghost name-em-stop">Cancel</button>` : ""}
           </div>
           <input class="name-em-input" type="text" placeholder="Type a pattern name and press Enter…"
             autocomplete="off" ${done ? "disabled" : ""}>
@@ -370,6 +371,10 @@ export function initGames(patterns, categories) {
             setTimeout(() => input.classList.remove("shake"), 400);
           });
         }
+        root.querySelector(".name-em-stop")?.addEventListener("click", () => {
+          clearInterval(interval);
+          gameNameEm(root);
+        });
         root.querySelector("#btn-change-cat")?.addEventListener("click", () => {
           clearInterval(interval);
           gameNameEm(root);
