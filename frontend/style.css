@@ -166,9 +166,10 @@ main { max-width: 860px; margin: 2rem auto; padding: 0 1.5rem; }
   font-weight: 500;
 }
 .btn-primary { background: #1a1a1a; color: #fff; }
-.btn-primary:hover { background: #333; }
+.btn-primary:hover:not(:disabled) { background: #333; }
 .btn-ghost { background: #eee; color: #333; }
-.btn-ghost:hover { background: #ddd; }
+.btn-ghost:hover:not(:disabled) { background: #ddd; }
+.btn:disabled { opacity: 0.4; cursor: default; }
 
 /* ── test output ── */
 #test-output {
@@ -321,6 +322,7 @@ body {
 .game-card-title { font-weight: 700; font-size: 1rem; color: #1a1a1a; }
 .game-card-desc  { font-size: 0.82rem; color: #666; line-height: 1.4; }
 
+.game-arena { margin-top: -1rem; }
 .game-arena-header {
   display: flex;
   align-items: center;
@@ -367,12 +369,15 @@ body {
   border: 1px solid #ccc;
   border-radius: 20px;
   font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.1s, border-color 0.1s;
+  cursor: grab;
+  user-select: none;
+  transition: background 0.1s, border-color 0.1s, opacity 0.1s;
 }
 .sort-card:hover { background: #f0f0f0; }
-.sort-card.selected { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-.sort-card.placed { background: #eef; border-color: #aac; }
+.sort-card.placed { background: #f0f0ff; border-color: #aac; }
+.sort-card.dragging { opacity: 0.4; cursor: grabbing; }
+.sort-pool.drag-over { background: #e8f0ff; border: 2px dashed #4477cc; }
+.sort-column.drag-over { border-color: #555; background: #f0f0f0; }
 .sort-card.result-correct { background: #d4edda; border-color: #28a745; color: #155724; }
 .sort-card.result-wrong   { background: #f8d7da; border-color: #dc3545; color: #721c24; }
 .sort-columns {
@@ -398,9 +403,20 @@ body {
   padding: 0.5rem 0.75rem 0.25rem;
 }
 .sort-col-body { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.25rem 0.6rem 0.6rem; }
-.sort-result-row { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
-.sort-result-score { font-weight: 700; font-size: 1rem; }
-.sort-check-btn { margin-top: 0.75rem; }
+.sort-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  background: #f8f8f8;
+  padding: 0.75rem 0;
+  border-top: 1px solid #e8e8e8;
+  margin-top: 0.75rem;
+}
+.sort-score-display { margin-top: 0.5rem; }
+.sort-result-score { font-weight: 700; font-size: 0.95rem; }
 
 /* Match It */
 .match-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem; }

@@ -77,6 +77,7 @@ export function initGames(patterns, categories) {
   // ── Lobby ──────────────────────────────────────────────────────────────────
 
   function renderLobby() {
+    sessionStorage.removeItem("currentGame");
     el.innerHTML = `
       <div class="game-lobby">
         <p class="game-lobby-intro">Test your knowledge of design patterns with these mini-games.</p>
@@ -96,6 +97,7 @@ export function initGames(patterns, categories) {
   // ── Shell ──────────────────────────────────────────────────────────────────
 
   function startGame(gameId) {
+    sessionStorage.setItem("currentGame", gameId);
     const game = GAMES.find(g => g.id === gameId);
     el.innerHTML = `
       <div class="game-arena">
@@ -114,79 +116,135 @@ export function initGames(patterns, categories) {
 
   function gameSortIt(root) {
     const order = shuffle(all);
-    const placed = {};   // patternId → categoryId
-    let selected = null;
+    const placed = {};  // patternId → categoryId
+    let draggingId = null;
+    let highlighted = false;
+
+    function makeDraggable(el, pid) {
+      el.draggable = true;
+      el.addEventListener("dragstart", e => {
+        draggingId = pid;
+        e.dataTransfer.effectAllowed = "move";
+        el.classList.add("dragging");
+      });
+      el.addEventListener("dragend", () => {
+        draggingId = null;
+        el.classList.remove("dragging");
+        root.querySelectorAll(".sort-column").forEach(c => c.classList.remove("drag-over"));
+      });
+    }
+
+    function makeDropZone(col, cid) {
+      col.addEventListener("dragover", e => {
+        if (!draggingId) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        root.querySelectorAll(".sort-column").forEach(c => c.classList.remove("drag-over"));
+        col.classList.add("drag-over");
+      });
+      col.addEventListener("dragleave", e => {
+        if (!col.contains(e.relatedTarget)) col.classList.remove("drag-over");
+      });
+      col.addEventListener("drop", e => {
+        e.preventDefault();
+        col.classList.remove("drag-over");
+        if (!draggingId) return;
+        placed[draggingId] = cid;
+        draggingId = null;
+        highlighted = false;
+        render();
+      });
+    }
+
+    // The pool is also a drop zone (to unplace a card)
+    function makePoolDropZone(pool) {
+      pool.addEventListener("dragover", e => {
+        if (!draggingId) return;
+        e.preventDefault();
+        pool.classList.add("drag-over");
+      });
+      pool.addEventListener("dragleave", e => {
+        if (!pool.contains(e.relatedTarget)) pool.classList.remove("drag-over");
+      });
+      pool.addEventListener("drop", e => {
+        e.preventDefault();
+        pool.classList.remove("drag-over");
+        if (!draggingId) return;
+        delete placed[draggingId];
+        draggingId = null;
+        highlighted = false;
+        render();
+      });
+    }
 
     function render() {
       const unplaced = order.filter(p => !placed[p.id]);
-      const allPlaced = Object.keys(placed).length === all.length;
+      const placedCount = Object.keys(placed).length;
+      const correctCount = all.filter(p => placed[p.id] === p.category.id).length;
 
       root.innerHTML = `
-        <p class="game-instructions">Click a pattern to select it, then click a category column to place it there.
-          Click a placed card to return it to the pool.</p>
+        <p class="game-instructions">Drag each pattern into its category. Drag back to the pool to undo.</p>
         <div class="sort-pool" id="sort-pool">
           ${unplaced.map(p =>
-            `<button class="sort-card${selected === p.id ? " selected" : ""}" data-pid="${p.id}">${esc(p.title)}</button>`
-          ).join("") || `<span class="sort-pool-empty">All placed — now check your answers!</span>`}
+            `<div class="sort-card" data-pid="${p.id}">${esc(p.title)}</div>`
+          ).join("") || `<span class="sort-pool-empty">All placed!</span>`}
         </div>
         <div class="sort-columns">
           ${categories.map(cat => `
             <div class="sort-column" data-cid="${cat.id}">
               <div class="sort-col-header">${esc(cat.name)}</div>
               <div class="sort-col-body">
-                ${all.filter(p => placed[p.id] === cat.id).map(p =>
-                  `<button class="sort-card placed" data-pid="${p.id}">${esc(p.title)}</button>`
+                ${order.filter(p => placed[p.id] === cat.id).map(p =>
+                  `<div class="sort-card placed${highlighted ? (p.category.id === cat.id ? " result-correct" : " result-wrong") : ""}" data-pid="${p.id}">${esc(p.title)}</div>`
                 ).join("")}
               </div>
             </div>`).join("")}
         </div>
-        ${allPlaced ? `<button class="btn btn-primary sort-check-btn">Check answers</button>` : ""}`;
+        <div class="sort-actions">
+          <button class="btn btn-ghost sort-score-btn"${placedCount === 0 ? " disabled" : ""}>Check Score</button>
+          <button class="btn btn-primary sort-highlight-btn"${placedCount === 0 ? " disabled" : ""}>${highlighted ? "Hide Highlights" : "Check Answers with Highlight"}</button>
+          <button class="btn btn-ghost sort-again-btn"${placedCount === 0 ? " disabled" : ""}>Reset</button>
+        </div>
+        <div class="sort-score-display" id="sort-score-display" style="display:none">
+          <span class="sort-result-score"></span>
+        </div>`;
 
-      root.querySelectorAll(".sort-card:not(.placed)").forEach(btn => {
-        btn.addEventListener("click", e => {
-          e.stopPropagation();
-          selected = selected === btn.dataset.pid ? null : btn.dataset.pid;
-          render();
-        });
+      root.querySelectorAll(".sort-card").forEach(card => {
+        makeDraggable(card, card.dataset.pid);
       });
-
-      root.querySelectorAll(".sort-card.placed").forEach(btn => {
-        btn.addEventListener("click", e => {
-          e.stopPropagation();
-          delete placed[btn.dataset.pid];
-          if (selected === btn.dataset.pid) selected = null;
-          render();
-        });
-      });
-
       root.querySelectorAll(".sort-column").forEach(col => {
-        col.addEventListener("click", () => {
-          if (!selected) return;
-          placed[selected] = col.dataset.cid;
-          selected = null;
-          render();
-        });
+        makeDropZone(col, col.dataset.cid);
+      });
+      makePoolDropZone(root.querySelector("#sort-pool"));
+
+      root.querySelector(".sort-score-btn")?.addEventListener("click", () => {
+        const display = root.querySelector("#sort-score-display");
+        if (display.style.display === "none") {
+          display.querySelector(".sort-result-score").textContent =
+            `${correctCount} / ${placedCount} placed correctly`;
+          display.style.display = "";
+        } else {
+          display.style.display = "none";
+        }
       });
 
-      root.querySelector(".sort-check-btn")?.addEventListener("click", () => {
-        const correct = all.filter(p => placed[p.id] === p.category.id).length;
-        // colour cards
-        root.querySelectorAll(".sort-card.placed").forEach(btn => {
-          const p = all.find(x => x.id === btn.dataset.pid);
-          btn.classList.add(placed[p.id] === p.category.id ? "result-correct" : "result-wrong");
-        });
-        root.querySelector(".sort-check-btn").replaceWith((() => {
-          const div = document.createElement("div");
-          div.className = "sort-result-row";
-          div.innerHTML = `<span class="sort-result-score">${correct} / ${all.length} correct</span>
-            <button class="btn btn-ghost">Play again</button>`;
-          div.querySelector("button").addEventListener("click", () => {
-            Object.keys(placed).forEach(k => delete placed[k]);
-            selected = null;
-            render();
-          });
-          return div;
-        })());
+      root.querySelector(".sort-highlight-btn")?.addEventListener("click", () => {
+        highlighted = !highlighted;
+        render();
+        if (highlighted) {
+          const display = root.querySelector("#sort-score-display");
+          if (display) {
+            display.querySelector(".sort-result-score").textContent =
+              `${correctCount} / ${placedCount} placed correctly`;
+            display.style.display = "";
+          }
+        }
+      });
+
+      root.querySelector(".sort-again-btn")?.addEventListener("click", () => {
+        Object.keys(placed).forEach(k => delete placed[k]);
+        highlighted = false;
+        render();
       });
     }
     render();
@@ -463,5 +521,9 @@ export function initGames(patterns, categories) {
     restart();
   }
 
-  renderLobby();
+  const saved = sessionStorage.getItem("currentGame");
+  if (saved && GAMES.find(g => g.id === saved)) {
+    startGame(saved);
+    document.querySelector('.tab-btn[data-tab="tab-games"]')?.click();
+  } else renderLobby();
 }
