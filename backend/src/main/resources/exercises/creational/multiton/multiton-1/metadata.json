@@ -1,0 +1,24 @@
+{
+  "id": "multiton-1",
+  "title": "One logger instance per module",
+  "difficulty": "Easy",
+  "description": "Logger follows the Multiton pattern — one instance per named module, shared across all callers that use the same name. getInstance(name) must return the same Logger every time it is called with the same name, but a different Logger for a different name. Each logger keeps its own message list. Fill in getInstance() and log().",
+  "editableFiles": [
+    "Logger.java"
+  ],
+  "hints": [
+    "Store instances in a static Map keyed by module name",
+    "In getInstance(), create a new Logger only if the key is not already in the map",
+    "log() should append the message to this logger's own list"
+  ],
+  "issues": [
+    "Creating a new Logger object on every call means each caller gets a separate message history",
+    "There is no way to share a single logger across multiple parts of the same module"
+  ],
+  "overallGoal": "Use the Multiton pattern so that each module name maps to exactly one Logger instance, shared by all callers that request that name.",
+  "goals": [
+    "getInstance() with the same name always returns the identical Logger object",
+    "getInstance() with different names returns different Logger objects",
+    "Each Logger maintains its own independent message history"
+  ]
+}

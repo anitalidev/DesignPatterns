@@ -1,0 +1,24 @@
+{
+  "id": "fluent-builder-1",
+  "title": "Compose an email with a fluent builder",
+  "difficulty": "Easy",
+  "description": "EmailBuilder constructs an Email via a fluent chain. Each method returns the builder so calls can be chained. to() is the only required field — build() throws if it is missing. cc() and attach() can be called multiple times and accumulate into lists. Fill in the empty method bodies.",
+  "editableFiles": [
+    "EmailBuilder.java"
+  ],
+  "hints": [
+    "Every setter should return 'this'",
+    "cc() and attach() should add to a list, not replace the previous value",
+    "build() should throw IllegalStateException when 'to' is null or blank"
+  ],
+  "issues": [
+    "Building an email with optional cc recipients and attachments leads to many constructor overloads",
+    "Nothing enforces that a recipient is always provided before the email is sent"
+  ],
+  "overallGoal": "Use the Fluent Builder pattern to compose an Email incrementally through a readable method chain, accumulating repeated fields and validating only what is truly required.",
+  "goals": [
+    "All methods return 'this' to enable chaining",
+    "cc() and attach() accumulate values into lists across multiple calls",
+    "build() throws IllegalStateException when 'to' is not set"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "marker-interface-1",
+  "title": "Tag domain objects as auditable",
+  "difficulty": "Easy",
+  "description": "Auditable is an empty marker interface. AuditLogger.log() records an entry only for objects that implement Auditable — all others are silently ignored. Mark Order and Payment as auditable, leave Product unmarked, then complete AuditLogger.log() to check the marker at runtime.",
+  "editableFiles": [
+    "AuditLogger.java"
+  ],
+  "hints": [
+    "Auditable has no methods — implementing it is purely a tag",
+    "Use 'instanceof Auditable' inside log() to decide whether to record the entry",
+    "Order and Payment should implement Auditable; Product should not"
+  ],
+  "issues": [
+    "Without a marker, AuditLogger must maintain a hard-coded list of which classes to log",
+    "Adding a new auditable type requires changing AuditLogger instead of just the new class"
+  ],
+  "overallGoal": "Use the Marker Interface pattern so any class can opt in to audit logging simply by implementing Auditable, with no changes to AuditLogger.",
+  "goals": [
+    "AuditLogger.log() records entries for objects that implement Auditable",
+    "AuditLogger.log() ignores objects that do not implement Auditable",
+    "Order and Payment are auditable; Product is not"
+  ]
+}

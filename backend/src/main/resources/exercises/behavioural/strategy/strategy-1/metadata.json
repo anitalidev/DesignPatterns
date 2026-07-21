@@ -1,0 +1,24 @@
+{
+  "id": "strategy-1",
+  "title": "Swap payment strategies at runtime",
+  "difficulty": "Easy",
+  "description": "PaymentProcessor accepts a PaymentStrategy and delegates to it when pay() is called. Implement CreditCardStrategy, PayPalStrategy, and CryptoStrategy, each printing a distinct confirmation. The processor should be able to swap strategies at runtime without any changes to itself.",
+  "editableFiles": [
+    "PaymentStrategy.java"
+  ],
+  "hints": [
+    "PaymentStrategy is an interface with a single pay(double amount) method returning a String",
+    "Each concrete strategy returns a message that identifies itself and includes the amount",
+    "PaymentProcessor.setStrategy() replaces the current strategy"
+  ],
+  "issues": [
+    "Without the Strategy pattern, adding a new payment method requires modifying PaymentProcessor with more if/else branches",
+    "Payment logic is scattered inside the processor instead of encapsulated in interchangeable classes"
+  ],
+  "overallGoal": "Use the Strategy pattern so PaymentProcessor delegates payment behaviour to whichever strategy it holds, and new payment methods can be added without touching the processor.",
+  "goals": [
+    "Each strategy returns a confirmation message containing the amount",
+    "PaymentProcessor delegates to its current strategy",
+    "Swapping strategy at runtime changes the payment behaviour immediately"
+  ]
+}

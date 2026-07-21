@@ -1,0 +1,24 @@
+{
+  "id": "iterator-1",
+  "title": "Iterate over a bookshelf",
+  "difficulty": "Easy",
+  "description": "BookShelf holds a fixed-size array of Books. Implement a BookIterator that traverses the shelf in order via hasNext() and next(). BookShelf.iterator() returns a fresh BookIterator. Callers should be able to iterate without knowing anything about the internal array.",
+  "editableFiles": [
+    "BookShelf.java"
+  ],
+  "hints": [
+    "BookIterator tracks the current index and compares it to the number of books",
+    "hasNext() returns true while the index is less than the book count",
+    "next() returns the book at the current index and advances the index"
+  ],
+  "issues": [
+    "Exposing the internal array forces callers to know how the shelf is stored",
+    "Changing the internal storage structure would break every caller"
+  ],
+  "overallGoal": "Use the Iterator pattern to provide sequential access to books without exposing the underlying array.",
+  "goals": [
+    "hasNext() returns true while books remain",
+    "next() returns each book in order and advances the cursor",
+    "A fresh iterator() call starts from the beginning"
+  ]
+}

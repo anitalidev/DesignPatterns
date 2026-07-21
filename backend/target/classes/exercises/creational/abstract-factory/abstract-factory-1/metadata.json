@@ -1,0 +1,24 @@
+{
+  "id": "abstract-factory-1",
+  "title": "Build a cross-platform UI factory",
+  "difficulty": "Medium",
+  "description": "A UI toolkit needs to create buttons and checkboxes that look native on each platform. The Mac and Windows component classes already exist. Wire up a UIFactory interface and two concrete factories — MacUIFactory and WindowsUIFactory — then complete the Application class that uses whichever factory it receives.",
+  "editableFiles": [
+    "UIFactory.java"
+  ],
+  "hints": [
+    "UIFactory is an interface with createButton() and createCheckbox() methods",
+    "MacUIFactory returns MacButton and MacCheckbox; WindowsUIFactory returns their Windows counterparts",
+    "Application stores the factory and calls it — it never mentions a concrete platform class"
+  ],
+  "issues": [
+    "Application directly instantiates platform-specific components, making it impossible to swap platforms without editing its code",
+    "Adding a new platform requires touching every place that creates components"
+  ],
+  "overallGoal": "Use the Abstract Factory pattern so Application can build a complete UI family without knowing which platform it is running on.",
+  "goals": [
+    "Define a UIFactory interface with createButton() and createCheckbox()",
+    "Implement MacUIFactory and WindowsUIFactory as concrete factories",
+    "Application only depends on UIFactory — never on Mac or Windows classes directly"
+  ]
+}

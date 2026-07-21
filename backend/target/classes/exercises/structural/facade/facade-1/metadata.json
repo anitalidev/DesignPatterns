@@ -1,0 +1,24 @@
+{
+  "id": "facade-1",
+  "title": "Hide computer startup complexity behind a facade",
+  "difficulty": "Easy",
+  "description": "Booting a computer requires sequencing three subsystems in order: CPU.initialize(), Memory.load(), then HardDrive.spin(). ComputerFacade should expose a single pressStart() method that performs all three steps in the correct order. Callers should never need to touch the subsystems directly.",
+  "editableFiles": [
+    "ComputerFacade.java"
+  ],
+  "hints": [
+    "ComputerFacade holds references to CPU, Memory, and HardDrive",
+    "pressStart() calls each subsystem in the correct order: CPU first, then Memory, then HardDrive",
+    "The subsystem classes are provided — only ComputerFacade needs implementing"
+  ],
+  "issues": [
+    "Callers must know about three separate subsystems and the exact order to initialise them",
+    "Any change to the boot sequence requires updating every call site"
+  ],
+  "overallGoal": "Use the Facade pattern to give callers a single pressStart() entry point that encapsulates the full boot sequence, hiding all subsystem details.",
+  "goals": [
+    "pressStart() calls CPU.initialize(), Memory.load(), and HardDrive.spin() in that order",
+    "Callers interact only with ComputerFacade, never with the subsystems directly",
+    "Each subsystem step is invoked exactly once per pressStart() call"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "bridge-1",
+  "title": "Bridge a remote control to interchangeable devices",
+  "difficulty": "Medium",
+  "description": "A RemoteControl abstraction provides togglePower() and setVolume(int) to the user. It holds a reference to a Device implementation (TV or Radio) and delegates all state changes to it. An AdvancedRemote extends RemoteControl with a mute() shortcut. Wire up the bridge so remotes and devices can be combined freely without subclassing every combination.",
+  "editableFiles": [
+    "RemoteControl.java"
+  ],
+  "hints": [
+    "Device is an interface — TV and Radio are provided for you",
+    "RemoteControl stores a Device and delegates togglePower() and setVolume() to it",
+    "AdvancedRemote extends RemoteControl and adds mute() by calling setVolume(0)"
+  ],
+  "issues": [
+    "Without a bridge, every remote-device combination needs its own subclass (TVRemote, RadioRemote, AdvancedTVRemote, …)",
+    "Adding a new device type forces changes to the remote hierarchy and vice versa"
+  ],
+  "overallGoal": "Use the Bridge pattern to let RemoteControl and Device vary independently, so any remote can control any device with no extra subclasses.",
+  "goals": [
+    "RemoteControl delegates power and volume to its Device",
+    "AdvancedRemote.mute() sets volume to 0 via the existing setVolume() method",
+    "The same remote class works correctly with both TV and Radio"
+  ]
+}

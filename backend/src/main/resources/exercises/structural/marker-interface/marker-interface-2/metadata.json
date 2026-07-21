@@ -1,0 +1,24 @@
+{
+  "id": "marker-interface-2",
+  "title": "Combine Auditable and Cacheable markers",
+  "difficulty": "Medium",
+  "description": "Two marker interfaces — Auditable and Cacheable — independently tag classes for different behaviours. AuditLogger logs only Auditable objects. ResponseCache stores and retrieves only Cacheable objects, returning null for unmarked ones. Some classes implement both, some one, some neither. Wire up the markers on the provided domain classes and complete both services.",
+  "editableFiles": [
+    "Markers.java"
+  ],
+  "hints": [
+    "A class can implement multiple marker interfaces at once",
+    "AuditLogger checks 'instanceof Auditable'; ResponseCache checks 'instanceof Cacheable'",
+    "The two markers are completely independent — implementing one does not affect the other"
+  ],
+  "issues": [
+    "Without markers, each service needs its own hard-coded allowlist of supported types",
+    "Classes that need both behaviours would have to be registered in two separate places"
+  ],
+  "overallGoal": "Use two independent marker interfaces so classes can opt in to auditing, caching, both, or neither — and each service responds only to its own marker.",
+  "goals": [
+    "AuditLogger.log() records only Auditable objects",
+    "ResponseCache stores and retrieves only Cacheable objects, returning null otherwise",
+    "A class implementing both markers is handled correctly by both services independently"
+  ]
+}

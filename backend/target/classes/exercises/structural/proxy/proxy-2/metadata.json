@@ -1,0 +1,24 @@
+{
+  "id": "proxy-2",
+  "title": "Screen visitors through a receptionist proxy",
+  "difficulty": "Medium",
+  "description": "Executive is busy and only meets visitors with an appointment. ReceptionistProxy sits in front of Executive and checks a visitor's name against an appointment list before allowing the meeting. Visitors without an appointment are turned away with a polite refusal. Implement ReceptionistProxy to enforce this without changing Executive.",
+  "editableFiles": [
+    "ReceptionistProxy.java"
+  ],
+  "hints": [
+    "ReceptionistProxy implements the same Person interface as Executive",
+    "Keep a Set of approved visitor names; addAppointment() adds to it",
+    "meet() checks the visitor name — delegate to executive only if they have an appointment"
+  ],
+  "issues": [
+    "Without a proxy, Executive must manage its own appointment book inside meet(), mixing business logic with scheduling",
+    "Adding a waiting-room or screening step later requires modifying Executive directly"
+  ],
+  "overallGoal": "Use the Proxy pattern to let ReceptionistProxy control access to Executive, so Executive only ever sees pre-approved visitors.",
+  "goals": [
+    "Visitors with an appointment are passed through to Executive.meet()",
+    "Visitors without an appointment are refused before reaching Executive",
+    "ReceptionistProxy implements the same interface as Executive"
+  ]
+}

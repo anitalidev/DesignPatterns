@@ -1,0 +1,24 @@
+{
+  "id": "object-pool-1",
+  "title": "Pool a fixed set of database connections",
+  "difficulty": "Medium",
+  "description": "ConnectionPool manages a fixed number of reusable Connection objects. acquire() hands out an available connection, or throws if none are free. release() returns a connection to the pool. The pool is pre-filled at construction — connections are never created on demand. Fill in acquire() and release().",
+  "editableFiles": [
+    "ConnectionPool.java"
+  ],
+  "hints": [
+    "Use a Queue or List to track available connections",
+    "acquire() should remove and return one connection from the available set",
+    "release() should add the connection back — but only if it belongs to this pool"
+  ],
+  "issues": [
+    "Creating a new database connection for every request is expensive and slow",
+    "Without a pool there is no upper bound on concurrent connections"
+  ],
+  "overallGoal": "Use the Object Pool pattern to maintain a fixed set of Connection objects that are borrowed and returned rather than created and destroyed.",
+  "goals": [
+    "acquire() returns a connection from the pool and removes it from the available set",
+    "release() returns a connection to the available set",
+    "acquire() throws IllegalStateException when no connections are free"
+  ]
+}

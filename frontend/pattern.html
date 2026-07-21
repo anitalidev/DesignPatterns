@@ -72,6 +72,7 @@
     .exercise-panel { display: none; }
     .exercise-panel.active { display: block; }
     .loading { color: #888; font-style: italic; }
+    .ex-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 1rem; padding-top: 0; }
     #overview { color: #555; font-size: 0.95rem; margin-bottom: 1rem; text-align: center; }
   </style>
 </head>
@@ -213,12 +214,11 @@
           mount.className = "editor-mount" + (i === 0 ? "" : " hidden");
           editorsContainer.appendChild(mount);
 
-          const state = EditorState.create({ doc: file.code.trim(), extensions: buildExtensions(file.readonly) });
+          const trimmed = file.code.trim();
+          const state = EditorState.create({ doc: trimmed, extensions: buildExtensions(file.readonly) });
           const view = new EditorView({ state, parent: mount });
-          requestAnimationFrame(() => {
-            const lineH = mount.querySelector(".cm-line")?.offsetHeight ?? 20;
-            view.dom.style.height = (21 * lineH + 8) + "px";
-          });
+          const lineCount = trimmed.split("\n").length;
+          view.dom.style.height = (Math.min(lineCount, 21) * 20 + 8) + "px";
 
           if (!file.readonly && activeEditableView === null) {
             activeEditableView = view;
@@ -235,6 +235,8 @@
           Object.entries(fileBtnMap).filter(([, v]) => !v.readonly)
         );
 
+        const allViews = Object.values(fileBtnMap).map(f => f.view);
+
         exerciseState[exerciseId] = {
           getEditableView: () => activeEditableView,
           getStarter: () => activeEditableStarter,
@@ -242,6 +244,7 @@
             Object.entries(editableFileMap).map(([name, { view }]) => [name, view.state.doc.toString()])
           ),
           activateFile,
+          remeasureAll: () => allViews.forEach(v => v.requestMeasure()),
         };
 
         if (loadingEl) loadingEl.remove();
@@ -348,6 +351,7 @@
       panel.className = "exercise-panel";
       panel.dataset.exerciseId = exerciseId;
       panel.innerHTML = `
+        <h2 class="ex-title">${escHtml(exerciseName)}</h2>
         <p class="loading">Loading exercise…</p>
         <p class="ex-description hidden"></p>
         <section class="ex-issues hidden">
@@ -425,6 +429,7 @@
         const editorWrap = target.panel.querySelector(".editor-wrap");
         loadExerciseIntoPanel(exerciseId, target.panel).then(() => {
           if (editorWrap) editorWrap.style.display = "";
+          exerciseState[exerciseId]?.remeasureAll();
           const { filename } = parseHash();
           if (filename) exerciseState[exerciseId]?.activateFile(filename);
         });
@@ -488,6 +493,7 @@
           loadExerciseIntoPanel(firstId, firstPanel).then(() => {
             const editorWrap = firstPanel.querySelector(".editor-wrap");
             if (editorWrap) editorWrap.style.display = "";
+            exerciseState[firstId]?.remeasureAll();
           });
         }
       }

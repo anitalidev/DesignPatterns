@@ -1,0 +1,24 @@
+{
+  "id": "proxy-1",
+  "title": "Guard a service with an access control proxy",
+  "difficulty": "Medium",
+  "description": "AdminService exposes sensitive operations. SecureServiceProxy wraps it and checks the caller's role before delegating. ADMIN callers get full access; any other role receives an UnauthorizedException. Implement SecureServiceProxy so it enforces this rule without modifying AdminService.",
+  "editableFiles": [
+    "SecureServiceProxy.java"
+  ],
+  "hints": [
+    "SecureServiceProxy implements the same Service interface as AdminService",
+    "Store the caller's role in the proxy and check it before each call",
+    "Throw UnauthorizedException (provided) when the role is not ADMIN"
+  ],
+  "issues": [
+    "Without a proxy, access control must be duplicated inside every service method or at every call site",
+    "AdminService itself cannot change its public interface to add security without breaking callers"
+  ],
+  "overallGoal": "Use the Protection Proxy pattern to enforce role-based access control transparently, keeping AdminService itself free of security logic.",
+  "goals": [
+    "ADMIN callers can invoke all service methods successfully",
+    "Non-ADMIN callers receive UnauthorizedException without the real service being called",
+    "SecureServiceProxy implements the same interface as AdminService"
+  ]
+}

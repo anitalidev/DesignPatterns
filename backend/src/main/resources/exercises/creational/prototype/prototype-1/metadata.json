@@ -1,0 +1,24 @@
+{
+  "id": "prototype-1",
+  "title": "Spawn enemies by cloning a prototype",
+  "difficulty": "Easy",
+  "description": "Enemy has a clone() method that should return a deep copy. An EnemySpawner holds a prototype Enemy and calls clone() each time it spawns a new one. Implement clone() on Enemy so that mutations to a spawned copy never affect the prototype or any other copy.",
+  "editableFiles": [
+    "Enemy.java"
+  ],
+  "hints": [
+    "clone() should return a new Enemy with the same field values",
+    "The weapons list must be copied — sharing the same list reference means mutations leak between copies",
+    "EnemySpawner is provided; you only need to implement Enemy.clone()"
+  ],
+  "issues": [
+    "Constructing each enemy from scratch requires repeating all configuration at every spawn site",
+    "Sharing mutable state between enemies causes unintended side effects when one is modified"
+  ],
+  "overallGoal": "Use the Prototype pattern so EnemySpawner can produce independent Enemy copies from a single configured prototype, with no shared mutable state between them.",
+  "goals": [
+    "clone() returns a new Enemy instance with identical field values",
+    "Modifying a clone's weapons list does not affect the prototype",
+    "Each spawned enemy is an independent object"
+  ]
+}

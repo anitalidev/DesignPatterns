@@ -1,0 +1,24 @@
+{
+  "id": "chain-of-responsibility-2",
+  "title": "Escalate support tickets through tiers",
+  "difficulty": "Medium",
+  "description": "Support tickets have a severity level (1 = basic, 2 = technical, 3 = critical). L1Support handles severity 1, L2Support handles severity 2, L3Support handles severity 3. Each handler resolves tickets it can handle and escalates the rest. Implement the three handlers so they form a chain.",
+  "editableFiles": [
+    "SupportHandler.java"
+  ],
+  "hints": [
+    "SupportHandler is an abstract class — concrete handlers implement handle(Ticket)",
+    "Each handler checks the ticket's severity against what it can handle",
+    "If the severity is too high and there is no next handler, throw an IllegalStateException"
+  ],
+  "issues": [
+    "Without a chain, a dispatcher must know every tier's capabilities and update whenever tiers change",
+    "Tickets that span multiple tiers require complex routing logic in a single place"
+  ],
+  "overallGoal": "Use the Chain of Responsibility pattern so each support tier only knows what it can handle and who to escalate to, keeping routing logic out of a central dispatcher.",
+  "goals": [
+    "L1Support resolves severity-1 tickets",
+    "L2Support resolves severity-2 tickets",
+    "L3Support resolves severity-3 tickets; severity beyond any handler throws"
+  ]
+}

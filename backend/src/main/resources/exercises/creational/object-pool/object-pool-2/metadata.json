@@ -1,0 +1,24 @@
+{
+  "id": "object-pool-2",
+  "title": "Reuse bullet objects in a game",
+  "difficulty": "Medium",
+  "description": "BulletPool keeps a fixed set of Bullet objects. fire() acquires a bullet from the pool, marks it active, and returns it. When the bullet hits or expires, recycle() resets it and returns it to the pool. If no bullets are free, fire() returns null (the shot is skipped). Fill in fire() and recycle().",
+  "editableFiles": [
+    "BulletPool.java"
+  ],
+  "hints": [
+    "Keep two collections: one for available bullets, one for active bullets",
+    "fire() moves a bullet from available to active and sets its active flag",
+    "recycle() resets the bullet and moves it back to available"
+  ],
+  "issues": [
+    "Allocating a new Bullet object on every shot causes frequent garbage collection spikes",
+    "Without a cap on active bullets, the game has no way to limit simultaneous projectiles"
+  ],
+  "overallGoal": "Use the Object Pool pattern to reuse a fixed set of Bullet objects across many shots, avoiding repeated allocation and enabling a hard cap on simultaneous projectiles.",
+  "goals": [
+    "fire() returns an active Bullet from the pool, or null when the pool is exhausted",
+    "recycle() resets the bullet and makes it available for the next fire() call",
+    "The total number of Bullet objects never exceeds the pool size"
+  ]
+}

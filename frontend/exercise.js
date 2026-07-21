@@ -100,6 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
       btn.classList.add("active");
       document.getElementById(btn.dataset.tab).classList.add("active");
+      if (btn.dataset.tab === "tab-editor" && editorView) {
+        requestAnimationFrame(() => {
+          const mount = document.getElementById("editor-mount");
+          const lineH = mount.querySelector(".cm-line")?.offsetHeight ?? 20;
+          editorView.dom.style.height = (21 * lineH + 8) + "px";
+          editorView.requestMeasure();
+        });
+      }
     });
   });
 

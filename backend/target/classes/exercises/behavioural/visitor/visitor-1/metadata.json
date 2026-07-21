@@ -1,0 +1,24 @@
+{
+  "id": "visitor-1",
+  "title": "Visit shapes to calculate area and perimeter",
+  "difficulty": "Medium",
+  "description": "Circle and Rectangle implement Shape, which has an accept(ShapeVisitor) method. ShapeVisitor has visitCircle() and visitRectangle() methods. AreaVisitor and PerimeterVisitor each implement ShapeVisitor and compute their respective values. Implement both visitors and the accept() methods on each shape.",
+  "editableFiles": [
+    "ShapeVisitor.java"
+  ],
+  "hints": [
+    "accept() calls the matching visit method on the visitor: circle.accept(v) calls v.visitCircle(this)",
+    "AreaVisitor: circle = π*r², rectangle = w*h",
+    "PerimeterVisitor: circle = 2*π*r, rectangle = 2*(w+h)"
+  ],
+  "issues": [
+    "Without the Visitor pattern, adding a new operation (e.g. perimeter) requires modifying every shape class",
+    "Operations that span multiple shape types are scattered rather than grouped by concern"
+  ],
+  "overallGoal": "Use the Visitor pattern to add area and perimeter calculations to shapes without modifying the shape classes.",
+  "goals": [
+    "accept() dispatches to the correct visit method on the visitor",
+    "AreaVisitor computes the correct area for circles and rectangles",
+    "PerimeterVisitor computes the correct perimeter for circles and rectangles"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "chain-of-responsibility-1",
+  "title": "Route expense approvals up a management chain",
+  "difficulty": "Medium",
+  "description": "Expenses are approved by the first handler in the chain whose limit covers the amount: Manager (up to $500), Director (up to $5000), CEO (any amount). Each handler holds a reference to the next handler and passes the request on if it cannot approve it. Implement the three handlers so they can be chained together.",
+  "editableFiles": [
+    "ExpenseHandler.java"
+  ],
+  "hints": [
+    "ExpenseHandler is an abstract class with a setNext() method and an approve() method to implement",
+    "Each concrete handler compares the expense amount to its limit and either approves or calls next.approve()",
+    "If there is no next handler and the amount exceeds all limits, throw an IllegalStateException"
+  ],
+  "issues": [
+    "Without a chain, a single approval method needs a long if/else tree that must be updated whenever limits change",
+    "Adding a new approval tier means modifying the central dispatcher rather than just inserting a new handler"
+  ],
+  "overallGoal": "Use the Chain of Responsibility pattern so each handler only knows its own limit and its successor, and approval requests flow automatically to the right level.",
+  "goals": [
+    "Manager approves expenses up to $500",
+    "Director approves expenses from $501 to $5000",
+    "CEO approves anything above $5000; an unhandled request throws"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "flyweight-1",
+  "title": "Share tree type data across a forest",
+  "difficulty": "Medium",
+  "description": "A forest can contain thousands of trees. Each tree has a unique position (x, y) but shares species, color, and texture with all trees of the same type. TreeType is the flyweight holding shared data. TreeFactory ensures only one TreeType exists per species. Tree holds a position and a reference to a shared TreeType. Implement TreeFactory so it reuses existing TreeType instances.",
+  "editableFiles": [
+    "TreeFactory.java"
+  ],
+  "hints": [
+    "TreeFactory keeps a map from species name to TreeType",
+    "getTreeType() returns the existing instance if one exists for that species, otherwise creates and stores a new one",
+    "Tree and TreeType are provided — only TreeFactory needs implementing"
+  ],
+  "issues": [
+    "Without sharing, every tree in the forest stores its own copy of species, color, and texture, wasting memory",
+    "10 000 oak trees would create 10 000 identical TreeType objects"
+  ],
+  "overallGoal": "Use the Flyweight pattern so all trees of the same species share a single TreeType instance, regardless of how many trees are planted.",
+  "goals": [
+    "getTreeType() returns the same TreeType instance for the same species",
+    "getTreeType() creates a new TreeType only when the species has not been seen before",
+    "The number of TreeType objects never exceeds the number of distinct species"
+  ]
+}

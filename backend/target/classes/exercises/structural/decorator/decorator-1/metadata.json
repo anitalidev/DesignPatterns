@@ -1,0 +1,24 @@
+{
+  "id": "decorator-1",
+  "title": "Stack text formatting decorators",
+  "difficulty": "Medium",
+  "description": "Text is an interface with a single render() method. PlainText is the base implementation. BoldDecorator, ItalicDecorator, and UpperCaseDecorator each wrap any Text and transform its output. Implement the three decorators so they can be stacked in any order.",
+  "editableFiles": [
+    "TextDecorators.java"
+  ],
+  "hints": [
+    "Each decorator stores a reference to the inner Text and calls its render() first",
+    "BoldDecorator wraps the result in ** ... **, ItalicDecorator in _ ... _",
+    "UpperCaseDecorator calls toUpperCase() on the inner render() result"
+  ],
+  "issues": [
+    "Adding formatting combinations through subclassing causes a class explosion (BoldItalic, BoldUpperCase, BoldItalicUpperCase, …)",
+    "Formatting cannot be added or removed at runtime with inheritance"
+  ],
+  "overallGoal": "Use the Decorator pattern to compose text formatting dynamically, so any combination of bold, italic, and uppercase can be achieved by stacking decorators without extra subclasses.",
+  "goals": [
+    "Each decorator delegates to its inner Text and transforms the result",
+    "Decorators can be stacked in any order and each layer applies correctly",
+    "PlainText is unaffected when used without any decorators"
+  ]
+}

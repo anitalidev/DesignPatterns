@@ -1,0 +1,24 @@
+{
+  "id": "composite-1",
+  "title": "Model a file system with files and folders",
+  "difficulty": "Medium",
+  "description": "File and Folder both implement FileSystemItem. File is a leaf — it has a fixed size. Folder is a composite — it holds child FileSystemItems and its getSize() is the sum of all children's sizes, recursively. Implement File and Folder so that a tree of any depth can be traversed uniformly through the FileSystemItem interface.",
+  "editableFiles": [
+    "FileSystemItem.java"
+  ],
+  "hints": [
+    "FileSystemItem declares getName() and getSize()",
+    "File stores a name and a size and returns them directly",
+    "Folder stores a list of children; getSize() sums each child's getSize() recursively"
+  ],
+  "issues": [
+    "Without a common interface, callers must distinguish between files and folders at every level",
+    "Computing a folder's total size requires type-checking and special-casing rather than simple recursion"
+  ],
+  "overallGoal": "Use the Composite pattern so that files and folders are treated identically through FileSystemItem, enabling recursive size calculation over a tree of arbitrary depth.",
+  "goals": [
+    "File.getSize() returns its own fixed size",
+    "Folder.getSize() returns the total size of all descendants recursively",
+    "Both File and Folder are usable wherever a FileSystemItem is expected"
+  ]
+}
