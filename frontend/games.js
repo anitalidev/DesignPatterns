@@ -51,14 +51,21 @@ export function initGames(patterns, categories) {
       <line x1="12" y1="23" x2="26" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       <line x1="12" y1="27" x2="21" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
     </svg>`,
+    connections: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3"  y="3"  width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="21" y="3"  width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="3"  y="21" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="21" y="21" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+    </svg>`,
   };
 
   const GAMES = [
-    { id: "sort",       title: "Sort It",       desc: "Place every pattern into its correct category." },
-    { id: "match",      title: "Match It",      desc: "Connect each pattern name to its one-sentence description." },
-    { id: "name-em",    title: "Name Them All", desc: "Pick a category and name every pattern before time runs out." },
-    { id: "quiz",       title: "Quiz",          desc: "Read the description — pick the right pattern from four choices." },
-    { id: "flashcards", title: "Flashcards",    desc: "Flip through cards: name on one side, description on the other." },
+    { id: "sort",        title: "Sort It",       desc: "Place every pattern into its correct category." },
+    { id: "match",       title: "Match It",      desc: "Connect each pattern name to its one-sentence description." },
+    { id: "name-em",     title: "Name Them All", desc: "Pick a category and name every pattern before time runs out." },
+    { id: "quiz",        title: "Quiz",          desc: "Read the description — pick the right pattern from four choices." },
+    { id: "flashcards",  title: "Flashcards",    desc: "Flip through cards: name on one side, description on the other." },
+    { id: "connections", title: "Connections",   desc: "Find four groups of three use cases that belong to the same design pattern." },
   ];
 
   function esc(s) {
@@ -109,7 +116,7 @@ export function initGames(patterns, categories) {
       </div>`;
     el.querySelector(".btn-back-lobby").addEventListener("click", renderLobby);
     const content = el.querySelector("#game-content");
-    ({ sort: gameSortIt, match: gameMatchIt, "name-em": gameNameEm, quiz: gameQuiz, flashcards: gameFlashcards })[gameId](content);
+    ({ sort: gameSortIt, match: gameMatchIt, "name-em": gameNameEm, quiz: gameQuiz, flashcards: gameFlashcards, connections: gameConnections })[gameId](content);
   }
 
   // ── GAME 1: Sort It ────────────────────────────────────────────────────────
@@ -601,6 +608,135 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
     }
 
     restart();
+  }
+
+  // ── GAME 6: Connections ────────────────────────────────────────────────────
+
+  function gameConnections(root) {
+    const eligible = all.filter(p => p.useCases && p.useCases.length >= 3);
+    if (eligible.length < 4) {
+      root.innerHTML = `<p>Not enough patterns with use cases to play.</p>`;
+      return;
+    }
+
+    function newRound() {
+      const chosen = pick(eligible, 4);
+      const groups = chosen.map(p => ({
+        patternId: p.id,
+        title: p.title,
+        useCases: shuffle(p.useCases).slice(0, 3),
+      }));
+      const tiles = shuffle(
+        groups.flatMap(g => g.useCases.map(uc => ({ uc, patternId: g.patternId })))
+      );
+      let selected = [];
+      let solved   = [];
+      let mistakes = 0;
+
+      function showToast(msg) {
+        const existing = root.querySelector(".conn-toast");
+        if (existing) existing.remove();
+        const t = document.createElement("div");
+        t.className = "conn-toast";
+        t.textContent = msg;
+        root.appendChild(t);
+        requestAnimationFrame(() => t.classList.add("conn-toast-show"));
+        setTimeout(() => { t.classList.remove("conn-toast-show"); setTimeout(() => t.remove(), 300); }, 1800);
+      }
+
+      function render() {
+        const remaining = tiles.filter(t => !solved.includes(t.patternId));
+        root.innerHTML = `
+          <p class="game-instructions">Find four groups of three — each group's use cases belong to the same design pattern.</p>
+          <div class="conn-solved">
+            ${groups.filter(g => solved.includes(g.patternId)).map(g => {
+              const colorIdx = groups.indexOf(g);
+              return `<div class="conn-group-revealed conn-color-${colorIdx}">
+                <strong>${esc(g.title)}</strong>
+                <ul>${g.useCases.map(uc => `<li>${esc(uc)}</li>`).join("")}</ul>
+              </div>`;
+            }).join("")}
+          </div>
+          <div class="conn-grid">
+            ${remaining.map((t, i) => {
+              const colorIdx = groups.findIndex(g => g.patternId === t.patternId);
+              const isSelected = selected.includes(i);
+              return `<button class="conn-tile${isSelected ? " conn-selected" : ""} conn-hint-${colorIdx}" data-idx="${i}">
+                ${esc(t.uc)}
+              </button>`;
+            }).join("")}
+          </div>
+          <div class="conn-footer">
+            <span class="conn-mistakes">${"●".repeat(mistakes)}${"○".repeat(Math.max(0, 4 - mistakes))}</span>
+            <button class="btn btn-ghost conn-deselect"${selected.length === 0 ? " disabled" : ""}>Deselect all</button>
+            <button class="btn btn-primary conn-submit"${selected.length !== 3 ? " disabled" : ""}>Submit</button>
+          </div>`;
+
+        root.querySelectorAll(".conn-tile").forEach(btn => {
+          const idx = +btn.dataset.idx;
+          btn.addEventListener("click", () => {
+            if (selected.includes(idx)) {
+              selected = selected.filter(i => i !== idx);
+            } else if (selected.length < 3) {
+              selected.push(idx);
+            }
+            render();
+          });
+        });
+
+        root.querySelector(".conn-deselect")?.addEventListener("click", () => { selected = []; render(); });
+
+        root.querySelector(".conn-submit")?.addEventListener("click", () => {
+          if (selected.length !== 3) return;
+          const remaining = tiles.filter(t => !solved.includes(t.patternId));
+          const selectedTiles = selected.map(i => remaining[i]);
+          const pid = selectedTiles[0].patternId;
+          if (selectedTiles.every(t => t.patternId === pid)) {
+            solved.push(pid);
+            selected = [];
+            if (solved.length === 4) { renderEnd(true); } else { render(); }
+          } else {
+            mistakes++;
+            // Figure out which patterns are in the wrong mix to give a hint
+            const pids = [...new Set(selectedTiles.map(t => t.patternId))];
+            const names = pids.map(id => groups.find(g => g.patternId === id)?.title).filter(Boolean);
+            showToast(pids.length > 1
+              ? `Not quite — those belong to ${names.join(" and ")}`
+              : "Almost! That's only one pattern but not the right three.");
+            root.querySelectorAll(".conn-tile.conn-selected").forEach(btn => {
+              btn.classList.add("conn-shake");
+              setTimeout(() => btn.classList.remove("conn-shake"), 500);
+            });
+            setTimeout(() => {
+              selected = [];
+              if (mistakes >= 4) { renderEnd(false); } else { render(); }
+            }, 600);
+          }
+        });
+      }
+
+      function renderEnd(won) {
+        root.innerHTML = `
+          ${won
+            ? `<p class="conn-result-msg">Solved with ${mistakes} mistake${mistakes !== 1 ? "s" : ""}!</p>`
+            : `<p class="conn-result-msg conn-result-fail">Too many mistakes — here are the answers:</p>`}
+          <div class="conn-solved">
+            ${groups.map((g, i) => `
+              <div class="conn-group-revealed conn-color-${i}">
+                <strong>${esc(g.title)}</strong>
+                <ul>${g.useCases.map(uc => `<li>${esc(uc)}</li>`).join("")}</ul>
+              </div>`).join("")}
+          </div>
+          <div style="text-align:center;margin-top:1.25rem">
+            <button class="btn btn-primary conn-again">Play again</button>
+          </div>`;
+        root.querySelector(".conn-again").addEventListener("click", newRound);
+      }
+
+      render();
+    }
+
+    newRound();
   }
 
   const saved = sessionStorage.getItem("currentGame");
