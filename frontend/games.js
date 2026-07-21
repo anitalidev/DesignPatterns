@@ -258,54 +258,131 @@ export function initGames(patterns, categories) {
     function newRound() {
       const sample = pick(all, 6);
       const overviews = shuffle(sample.map(p => ({ id: p.id, text: p.overview })));
-      const matched = new Set();
-      let selectedId = null;
-      let wrongPair = null;
-      let wrongTimeout = null;
+      const conns = {};   // patternId → overviewId
+      let checked = false;
+      let drawing = null; // { pid, cx, cy } — in-progress line
 
-      function render() {
+      function getWrap() { return root.querySelector(".match-grid-wrap"); }
+      function getSvg()  { return root.querySelector("#match-svg"); }
+
+      function edgeOf(el, side) {
+        const w = getWrap().getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        return {
+          x: (side === "right" ? r.right : r.left) - w.left,
+          y: r.top + r.height / 2 - w.top,
+        };
+      }
+
+      function redrawSvg(curX, curY) {
+        const s = getSvg();
+        if (!s) return;
+        const lines = [];
+
+        // Permanent connection lines
+        for (const [pid, ovId] of Object.entries(conns)) {
+          const nameEl = root.querySelector(`.match-name[data-id="${pid}"]`);
+          const ovEl   = root.querySelector(`.match-ov[data-id="${ovId}"]`);
+          if (!nameEl || !ovEl) continue;
+          const start = edgeOf(nameEl, "right");
+          const end   = edgeOf(ovEl, "left");
+          const color = !checked ? "#999" : pid === ovId ? "#28a745" : "#dc3545";
+          const width = checked ? 3 : 2.5;
+          lines.push(`<line x1="${start.x}" y1="${start.y}" x2="${end.x}" y2="${end.y}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`);
+        }
+
+        // In-progress dashed line
+        if (drawing && curX !== undefined) {
+          lines.push(`<line x1="${drawing.cx}" y1="${drawing.cy}" x2="${curX}" y2="${curY}" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 3"/>`);
+        }
+
+        s.innerHTML = lines.join("");
+      }
+
+      function renderCards() {
+        const reverseConns = Object.fromEntries(Object.entries(conns).map(([k,v]) => [v, k]));
+        const connCount = Object.keys(conns).length;
+
         root.innerHTML = `
-          <p class="game-instructions">Click a name, then click its matching description. Matched: ${totalMatched}</p>
-          <div class="match-grid">
-            <div class="match-col">
-              ${sample.map(p => `
-                <button class="match-name ${matched.has(p.id) ? "matched" : ""} ${selectedId === p.id ? "selected" : ""} ${wrongPair === p.id + ":name" ? "wrong" : ""}"
-                  data-id="${p.id}">${esc(p.title)}</button>`).join("")}
-            </div>
-            <div class="match-col">
-              ${overviews.map(o => `
-                <button class="match-ov ${matched.has(o.id) ? "matched" : ""} ${wrongPair === o.id + ":ov" ? "wrong" : ""}"
-                  data-id="${o.id}">${esc(o.text)}</button>`).join("")}
+          <p class="game-instructions">Draw a line from each name to its description.</p>
+          <div class="match-grid-wrap">
+            <svg class="match-svg" id="match-svg"></svg>
+            <div class="match-grid">
+              <div class="match-col" id="match-names">
+                ${sample.map(p => {
+                  const cls = ["match-name"];
+                  if (conns[p.id]) cls.push("connected");
+                  if (checked) cls.push(conns[p.id] === p.id ? "correct" : "wrong");
+                  return `<div class="${cls.join(" ")}" data-id="${p.id}">${esc(p.title)}</div>`;
+                }).join("")}
+              </div>
+              <div class="match-col" id="match-ovs">
+                ${overviews.map(o => {
+                  const cls = ["match-ov"];
+                  if (reverseConns[o.id]) cls.push("connected");
+                  if (checked && reverseConns[o.id]) cls.push(reverseConns[o.id] === o.id ? "correct" : "wrong");
+                  return `<div class="${cls.join(" ")}" data-id="${o.id}">${esc(o.text)}</div>`;
+                }).join("")}
+              </div>
             </div>
           </div>
-          ${matched.size === sample.length
-            ? `<div class="match-round-done"><span>Round complete!</span><button class="btn btn-primary" id="btn-next-round">Next round →</button></div>`
-            : ""}`;
+          <div class="match-actions">
+            <button class="btn btn-primary" id="btn-check-conns"${connCount === 0 ? " disabled" : ""}>Check Connections</button>
+${checked ? `<button class="btn btn-ghost" id="btn-next-round">Next round →</button>` : ""}
+          </div>`;
 
-        root.querySelectorAll(".match-name:not(.matched)").forEach(btn => {
-          btn.addEventListener("click", () => { selectedId = btn.dataset.id; render(); });
-        });
-        root.querySelectorAll(".match-ov:not(.matched)").forEach(btn => {
-          btn.addEventListener("click", () => {
-            if (!selectedId) return;
-            clearTimeout(wrongTimeout);
-            if (selectedId === btn.dataset.id) {
-              matched.add(selectedId);
-              totalMatched++;
-              selectedId = null;
-              wrongPair = null;
-            } else {
-              wrongPair = selectedId + ":name";
-              const prevSel = selectedId;
-              selectedId = null;
-              wrongTimeout = setTimeout(() => { wrongPair = null; render(); }, 700);
+        redrawSvg();
+
+        root.querySelectorAll(".match-name").forEach(nameEl => {
+          nameEl.addEventListener("mousedown", e => {
+            e.preventDefault();
+            const start = edgeOf(nameEl, "right");
+            drawing = { pid: nameEl.dataset.id, cx: start.x, cy: start.y };
+            nameEl.classList.add("active");
+
+            function onMove(e) {
+              const w = getWrap().getBoundingClientRect();
+              const cx = e.clientX - w.left;
+              const cy = e.clientY - w.top;
+              root.querySelectorAll(".match-ov").forEach(o => o.classList.remove("drag-over"));
+              document.elementFromPoint(e.clientX, e.clientY)?.closest(".match-ov")?.classList.add("drag-over");
+              redrawSvg(cx, cy);
             }
-            render();
+
+            function onUp(e) {
+              document.removeEventListener("mousemove", onMove);
+              document.removeEventListener("mouseup", onUp);
+              nameEl.classList.remove("active");
+              root.querySelectorAll(".match-ov").forEach(o => o.classList.remove("drag-over"));
+
+              const target = document.elementFromPoint(e.clientX, e.clientY)?.closest(".match-ov");
+              if (target && drawing) {
+                const pid = drawing.pid;
+                const ovId = target.dataset.id;
+                // Remove any existing reverse connection to this overview
+                for (const [k, v] of Object.entries(conns)) {
+                  if (v === ovId) delete conns[k];
+                }
+                conns[pid] = ovId;
+                checked = false;
+              }
+              drawing = null;
+              renderCards();
+            }
+
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onUp);
           });
         });
-        root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
+
+        root.querySelector("#btn-check-conns")?.addEventListener("click", () => {
+          checked = true;
+          renderCards();
+        });
+root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
       }
-      render();
+
+      renderCards();
     }
     newRound();
   }
