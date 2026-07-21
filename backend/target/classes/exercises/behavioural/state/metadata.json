@@ -6,6 +6,13 @@
     "state-1"
   ],
   "useCases": [
-    "An object's behaviour varies based on its current state, and you want to eliminate large conditional statements and make state transitions easier to manage"
+    "An object's behaviour varies based on its current state, and you want to eliminate large conditional statements and make state transitions easier to manage",
+    "You want each state's logic to live in its own class rather than scattered across if/switch blocks",
+    "Modelling workflows or lifecycles where an entity moves through well-defined states (e.g. order: pending → paid → shipped → delivered)"
+  ],
+  "exampleUses": [
+    "A vending machine that behaves differently (accept coins, dispense item, return change) depending on whether it is idle, has credit, or is dispensing",
+    "A TCP connection object whose open(), close(), and acknowledge() methods behave differently based on the current connection state (Established, Listen, Closed)",
+    "A document editor where the toolbar responds differently to clicks depending on whether the document is in view, edit, or review mode"
   ]
 }

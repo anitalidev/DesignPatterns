@@ -7,5 +7,10 @@
     "When you want to maintain a single instance of a class per ID/Key",
     "Named instances that must each be unique and globally accessible",
     "Managing a fixed set of resources identified by a key (e.g. one database connection per database name)"
+  ],
+  "exampleUses": [
+    "Per-tenant configuration objects in a multi-tenant application, where each tenant gets exactly one config instance",
+    "Locale-specific resource bundles where one bundle per language code is loaded and cached globally",
+    "Game character archetypes where each character class (Warrior, Mage, Rogue) has one shared stats template"
   ]
 }

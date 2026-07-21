@@ -10,5 +10,10 @@
     "You need to queue, schedule, or log operations",
     "You want to support undo/redo by storing executed commands",
     "You have many actions (menu items, toolbar buttons, keyboard shortcuts) that should all trigger work in a uniform way"
+  ],
+  "exampleUses": [
+    "A macro recorder that captures a sequence of user actions and replays them later as a saved command list",
+    "A job scheduler that serialises tasks to a queue and lets workers execute them in order or in parallel",
+    "A smart home app where voice commands, app buttons, and physical switches all create the same Command objects sent to devices"
   ]
 }

@@ -5,6 +5,12 @@
   "exerciseIds": ["builder-1"],
   "useCases": [
     "Building an object is done in steps",
-    "Constructor is becoming unwieldy (too many parameters, variants, or tasks)"
+    "Constructor is becoming unwieldy (too many parameters, variants, or tasks)",
+    "The same construction process should be able to produce different representations of the object"
+  ],
+  "exampleUses": [
+    "Constructing an HTTP request with optional headers, query parameters, body, and auth settings",
+    "Assembling a meal order (burger, sides, drink, extras) where each component is optional and chosen independently",
+    "Building a complex SQL query programmatically where clauses like WHERE, JOIN, and ORDER BY are added conditionally"
   ]
 }

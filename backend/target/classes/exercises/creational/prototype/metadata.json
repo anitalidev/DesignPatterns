@@ -7,5 +7,10 @@
     "Object construction is expensive",
     "Objects to be created are similar to an existing instance",
     "Many expensive parts can be shared between copies"
+  ],
+  "exampleUses": [
+    "Duplicating a fully configured document template (with styles, headers, footers) to start a new document",
+    "Cloning game entities (enemies, projectiles) at runtime instead of re-reading their config from disk each time",
+    "Copying a complex UI component tree so the user can edit a draft without affecting the original"
   ]
 }

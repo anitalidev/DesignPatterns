@@ -7,5 +7,10 @@
     "Two dimensions of a class hierarchy should vary independently",
     "You want to avoid a combinatorial explosion of subclasses",
     "You want to separate abstraction (e.g. Shape) from implementation (e.g. Colour)"
+  ],
+  "exampleUses": [
+    "A notification system where message types (Alert, Report) are separated from delivery channels (Email, SMS, Push) so each combination works without a dedicated subclass",
+    "A drawing tool that separates shape types (Circle, Rectangle) from rendering backends (SVG, Canvas, PDF) to support any combination",
+    "A remote control abstraction that works with any device (TV, DVD, Radio) independently of the control's button layout"
   ]
 }

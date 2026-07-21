@@ -7,5 +7,10 @@
     "Multiple objects could handle a request, but you don't know which one should",
     "You want to avoid large if/switch statements",
     "You want to add, remove, or reorder handlers without changing the sender"
+  ],
+  "exampleUses": [
+    "A web server middleware pipeline where authentication, rate limiting, and logging each process the request in turn before it reaches the route handler",
+    "An expense approval workflow where a request is escalated from team lead → manager → director until someone with sufficient authority approves it",
+    "A technical support ticket system that tries level-1 support, then level-2, then engineering, stopping as soon as one tier resolves the issue"
   ]
 }

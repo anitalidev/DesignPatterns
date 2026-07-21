@@ -9,5 +9,10 @@
     "You need undo/redo functionality",
     "You want to save snapshots/checkpoints of an object's state",
     "You need to restore an object to an earlier state without exposing or modifying its internal fields directly"
+  ],
+  "exampleUses": [
+    "A version control system that stores a snapshot of the working tree at each commit so the user can check out any earlier revision",
+    "A game that saves a checkpoint before a boss fight so the player can retry from that point without starting over",
+    "A form wizard that saves the user's answers at each step so they can navigate back and change earlier responses without losing later ones"
   ]
 }

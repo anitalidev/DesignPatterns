@@ -619,15 +619,23 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
       return;
     }
 
+    function buildTileLabel(text, kind) {
+      const prefix = kind === "example"
+        ? `<strong>Example Use:</strong> `
+        : `<strong>Use Case:</strong> `;
+      return prefix + esc(text);
+    }
+
     function newRound() {
       const chosen = pick(eligible, 4);
-      const groups = chosen.map(p => ({
-        patternId: p.id,
-        title: p.title,
-        useCases: shuffle(p.useCases).slice(0, 3),
-      }));
+      const groups = chosen.map(p => {
+        const ucEntries  = shuffle(p.useCases   || []).map(t => ({ text: t, kind: "usecase" }));
+        const euEntries  = shuffle(p.exampleUses || []).map(t => ({ text: t, kind: "example" }));
+        const combined   = shuffle([...ucEntries, ...euEntries]).slice(0, 3);
+        return { patternId: p.id, title: p.title, entries: combined };
+      });
       const tiles = shuffle(
-        groups.flatMap(g => g.useCases.map(uc => ({ uc, patternId: g.patternId })))
+        groups.flatMap(g => g.entries.map(e => ({ ...e, patternId: g.patternId })))
       );
       let selected = [];
       let solved   = [];
@@ -653,7 +661,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
               const colorIdx = groups.indexOf(g);
               return `<div class="conn-group-revealed conn-color-${colorIdx}">
                 <strong>${esc(g.title)}</strong>
-                <ul>${g.useCases.map(uc => `<li>${esc(uc)}</li>`).join("")}</ul>
+                <ul>${g.entries.map(e => `<li>${buildTileLabel(e.text, e.kind)}</li>`).join("")}</ul>
               </div>`;
             }).join("")}
           </div>
@@ -662,7 +670,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
               const colorIdx = groups.findIndex(g => g.patternId === t.patternId);
               const isSelected = selected.includes(i);
               return `<button class="conn-tile${isSelected ? " conn-selected" : ""} conn-hint-${colorIdx}" data-idx="${i}">
-                ${esc(t.uc)}
+                ${buildTileLabel(t.text, t.kind)}
               </button>`;
             }).join("")}
           </div>
@@ -724,7 +732,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
             ${groups.map((g, i) => `
               <div class="conn-group-revealed conn-color-${i}">
                 <strong>${esc(g.title)}</strong>
-                <ul>${g.useCases.map(uc => `<li>${esc(uc)}</li>`).join("")}</ul>
+                <ul>${g.entries.map(e => `<li>${buildTileLabel(e.text, e.kind)}</li>`).join("")}</ul>
               </div>`).join("")}
           </div>
           <div style="text-align:center;margin-top:1.25rem">

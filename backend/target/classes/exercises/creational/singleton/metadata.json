@@ -5,6 +5,12 @@
   "exerciseIds": ["singleton-1"],
   "useCases": [
     "When you want to maintain a single instance of a class globally",
-    "Useful when a single shared resource (config, logger, connection) must be accessed throughout the application"
+    "Useful when a single shared resource (config, logger, connection) must be accessed throughout the application",
+    "When you need to coordinate actions across the system from a single point (e.g. a thread pool or cache)"
+  ],
+  "exampleUses": [
+    "A print spooler that must coordinate all print jobs from a single queue to avoid conflicting output",
+    "An application-wide event bus where all components publish and subscribe through one central dispatcher",
+    "A device driver for hardware that must not be initialised more than once (e.g. a GPU context or serial port)"
   ]
 }

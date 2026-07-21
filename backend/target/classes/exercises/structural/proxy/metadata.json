@@ -5,6 +5,12 @@
   "exerciseIds": ["proxy-1", "proxy-2"],
   "useCases": [
     "You want to control or manage access to an object",
-    "The wrapped class cannot or should not be changed"
+    "The wrapped class cannot or should not be changed",
+    "Adding cross-cutting concerns like lazy loading, access control, logging, or caching around an existing object"
+  ],
+  "exampleUses": [
+    "A virtual proxy that loads a large image from disk only when it is actually drawn on screen",
+    "A protection proxy that checks the caller's role before allowing access to a sensitive financial service",
+    "A caching proxy that stores results of expensive API calls and returns cached responses for repeated requests"
   ]
 }

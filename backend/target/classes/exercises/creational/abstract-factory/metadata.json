@@ -5,6 +5,12 @@
   "exerciseIds": ["abstract-factory-1"],
   "useCases": [
     "Creating a family of related objects designed to work together",
-    "When you want to switch between entire families of objects (e.g. Windows vs Mac UI) without changing client code"
+    "When you want to switch between entire families of objects (e.g. Windows vs Mac UI) without changing client code",
+    "When the system must be independent of how its products are created, composed, or represented"
+  ],
+  "exampleUses": [
+    "A game engine that swaps between a DirectX rendering family and an OpenGL rendering family without touching game logic",
+    "A cloud deployment tool that creates provider-specific resources (AWS vs Azure) through a common factory interface",
+    "A testing framework that switches between a real database factory and an in-memory database factory for unit tests"
   ]
 }

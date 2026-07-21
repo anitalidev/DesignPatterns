@@ -7,5 +7,10 @@
     "Expensive parts of a class may never actually be used",
     "You want to improve startup time by deferring heavy work until it is first needed",
     "Creating all possible instances upfront would waste memory or I/O (e.g. loading config files, database connections)"
+  ],
+  "exampleUses": [
+    "A spell-checker that only loads its dictionary into memory when the user first invokes spell-check",
+    "A report module that connects to an analytics database only when a report is actually requested",
+    "An image editor that decodes high-resolution thumbnails only when the user scrolls to that part of the gallery"
   ]
 }

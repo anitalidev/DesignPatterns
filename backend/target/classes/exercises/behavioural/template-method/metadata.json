@@ -9,5 +9,10 @@
     "Multiple classes follow the same overall process, but some steps differ",
     "You want to reuse the common algorithm while allowing customization",
     "You want to ensure the order of steps cannot be changed regardless of the class involved"
+  ],
+  "exampleUses": [
+    "A data importer base class that handles opening the file, iterating rows, and closing — subclasses only implement how to parse a single row",
+    "A game framework where the main loop (initialise → update → render → cleanup) is fixed but each game overrides the update and render steps",
+    "A beverage preparation class whose make() method (boil water → brew → pour → add condiments) is fixed, while brew() and addCondiments() differ per drink"
   ]
 }

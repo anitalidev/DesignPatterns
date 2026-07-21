@@ -9,5 +9,10 @@
     "You want to traverse a collection without exposing its internal representation",
     "You want different ways to traverse the same collection (forward, reverse, filtered, etc.)",
     "You want all collections to provide a consistent way to iterate"
+  ],
+  "exampleUses": [
+    "A social media feed iterator that abstracts away pagination and API calls, letting the caller loop over posts with a simple hasNext()/next() loop",
+    "A tree iterator that exposes a depth-first or breadth-first traversal without the caller needing to manage a stack or queue",
+    "A lazy file-line iterator that reads lines from a large log file one at a time without loading the whole file into memory"
   ]
 }

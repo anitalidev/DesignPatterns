@@ -7,5 +7,10 @@
     "You want to hide the complexity of multiple classes behind a single entry point",
     "You want a simple, unified interface to a complex subsystem",
     "You want to reduce coupling between client code and a complex set of classes"
+  ],
+  "exampleUses": [
+    "A HomeAutomation facade with a leaveHome() method that internally turns off lights, locks doors, and sets the alarm",
+    "An OrderService facade that coordinates inventory reservation, payment processing, and shipping dispatch behind a single placeOrder() call",
+    "A compiler facade with a compile(sourceFile) method that hides the lexer, parser, semantic analyser, and code generator from the caller"
   ]
 }

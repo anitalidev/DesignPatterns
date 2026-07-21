@@ -7,5 +7,10 @@
     "You want to add additional functionality to a class without changing it",
     "The class cannot or should not be modified",
     "You need to combine multiple behaviours independently at runtime (e.g. logging + caching + auth on a service)"
+  ],
+  "exampleUses": [
+    "Wrapping an InputStream with BufferedInputStream, then GZIPInputStream to layer buffering and compression",
+    "Adding toll and express-lane surcharges on top of a base taxi fare without subclassing the Taxi class",
+    "Layering middleware on an HTTP handler — rate limiting, authentication, and request logging each as separate decorators"
   ]
 }

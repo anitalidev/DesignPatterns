@@ -5,6 +5,12 @@
   "exerciseIds": ["marker-interface-1", "marker-interface-2"],
   "useCases": [
     "You want to mark classes as having a capability without requiring them to implement methods",
-    "Classes can be grouped into categories checked at runtime via instanceof"
+    "Classes can be grouped into categories checked at runtime via instanceof",
+    "You want to apply cross-cutting behaviour (e.g. serialisation, cloning) to specific classes without polluting their API"
+  ],
+  "exampleUses": [
+    "Java's Serializable interface tags classes as safe to serialise without adding any serialisation methods to them",
+    "Marking certain domain events as AuditableEvent so an audit framework can intercept and log them automatically",
+    "Tagging entity classes as Cacheable so an ORM layer knows which ones are safe to store in a second-level cache"
   ]
 }

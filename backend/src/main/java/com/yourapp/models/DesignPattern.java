@@ -9,15 +9,17 @@ public class DesignPattern {
     private final String overview;
     private final String description;
     private final List<String> useCases;
+    private final List<String> exampleUses;
     // key: exercise title, value: exercise id
     private final Map<String, String> exercises;
 
-    public DesignPattern(String id, String title, String overview, String description, List<String> useCases, Map<String, String> exercises) {
+    public DesignPattern(String id, String title, String overview, String description, List<String> useCases, List<String> exampleUses, Map<String, String> exercises) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.description = description;
         this.useCases = useCases;
+        this.exampleUses = exampleUses;
         this.exercises = exercises;
     }
 
@@ -26,5 +28,6 @@ public class DesignPattern {
     public String getOverview() { return overview; }
     public String getDescription() { return description; }
     public List<String> getUseCases() { return useCases; }
+    public List<String> getExampleUses() { return exampleUses; }
     public Map<String, String> getExercises() { return exercises; }
 }

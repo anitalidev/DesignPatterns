@@ -7,5 +7,10 @@
     "Object construction is expensive",
     "Object destruction is expensive",
     "Objects can be frequently reused rather than recreated"
+  ],
+  "exampleUses": [
+    "A database connection pool that reuses open connections instead of opening a new one per query",
+    "A thread pool in a web server that assigns idle threads to incoming requests rather than spawning new ones",
+    "A particle system in a game that recycles inactive particle objects instead of allocating new ones each frame"
   ]
 }

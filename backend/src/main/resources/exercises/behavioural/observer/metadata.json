@@ -7,5 +7,10 @@
     "Multiple objects need to react automatically to changes in another object",
     "You want event-driven behaviour where the event producer is decoupled from consumers",
     "The set of listeners may change dynamically at runtime"
+  ],
+  "exampleUses": [
+    "A spreadsheet where changing one cell automatically recalculates all dependent cells and refreshes the chart",
+    "A social media feed where followers receive a notification whenever someone they follow posts new content",
+    "A CI/CD pipeline where committing code triggers multiple independent jobs (build, test, lint) simultaneously"
   ]
 }

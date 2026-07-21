@@ -5,6 +5,12 @@
   "exerciseIds": ["composite-1"],
   "useCases": [
     "You want to treat individual objects and groups of objects uniformly via a shared interface",
-    "Clients should work with single items and collections interchangeably"
+    "Clients should work with single items and collections interchangeably",
+    "Representing tree-like structures such as file systems, UI component hierarchies, or organisational charts"
+  ],
+  "exampleUses": [
+    "A menu system where both individual menu items and submenus implement a render() method so the UI draws them the same way",
+    "An expression evaluator where literals and compound expressions (add, multiply) all implement evaluate(), enabling recursive calculation",
+    "A build system where individual tasks and task groups both implement execute(), so the runner doesn't distinguish between them"
   ]
 }

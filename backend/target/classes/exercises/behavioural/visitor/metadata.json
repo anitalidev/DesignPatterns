@@ -9,5 +9,10 @@
     "You have a fixed set of object types, but you frequently add new operations on them",
     "You want to avoid modifying the object classes every time you add a new operation",
     "You need different behaviours (e.g. printing, exporting, validation) over the same object structure"
+  ],
+  "exampleUses": [
+    "An AST (abstract syntax tree) where a TypeCheckVisitor, a CodeGenVisitor, and a PrettyPrintVisitor all walk the same nodes without changing the node classes",
+    "A shopping cart where a TaxVisitor and a ShippingCostVisitor calculate charges for each item type without those types knowing about taxes or shipping",
+    "A document object model where an ExportToHTMLVisitor and a WordCountVisitor traverse headings, paragraphs, and images without modifying those classes"
   ]
 }

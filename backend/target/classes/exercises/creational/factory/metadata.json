@@ -7,5 +7,10 @@
     "When the concrete class to create depends on values known only at runtime",
     "Multiple places in the codebase implement similar type-to-class mappings",
     "To centralise object creation logic and decouple callers from concrete types"
+  ],
+  "exampleUses": [
+    "A payment gateway that creates the correct payment processor (Stripe, PayPal, Bank Transfer) based on a method string",
+    "A report generator that instantiates the right formatter (PDF, CSV, HTML) from a user-selected output type",
+    "A notification service that returns the right sender (Email, SMS, Push) based on user preferences"
   ]
 }

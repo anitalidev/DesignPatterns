@@ -7,5 +7,10 @@
     "You have a class A that wants to use class B but B's interface is incompatible with what A expects",
     "B cannot or should not be changed",
     "Integrating a third-party library or legacy code into a system that expects a different interface"
+  ],
+  "exampleUses": [
+    "Wrapping an old XML-based reporting library behind a JSON interface that the rest of the application uses",
+    "Bridging a payment provider's SDK to a common PaymentGateway interface shared across multiple providers",
+    "Adapting a legacy authentication service to implement a modern OAuth-style interface without rewriting it"
   ]
 }

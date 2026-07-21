@@ -5,6 +5,12 @@
   "exerciseIds": ["fluent-builder-1"],
   "useCases": [
     "Same as Builder but where method chaining improves readability",
-    "When build steps can be expressed as a readable chain of calls"
+    "When build steps can be expressed as a readable chain of calls",
+    "When optional parameters are common and you want to avoid telescoping constructors"
+  ],
+  "exampleUses": [
+    "Configuring an email message: new EmailBuilder().to(\"a@b.com\").subject(\"Hello\").body(\"...\").send()",
+    "Setting up test fixtures with many optional fields where only a few change per test case",
+    "Constructing API client configuration where each option (timeout, retries, base URL) is set independently"
   ]
 }

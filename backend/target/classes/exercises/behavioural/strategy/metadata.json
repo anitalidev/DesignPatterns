@@ -9,5 +9,10 @@
     "You have multiple ways to perform the same task and want to switch behaviours at runtime",
     "You want to avoid large if/switch statements choosing between implementations",
     "You want to add new algorithms without modifying existing code (Open/Closed Principle)"
+  ],
+  "exampleUses": [
+    "A navigation app that switches between fastest route, shortest route, and avoid-tolls strategies based on user preference",
+    "An e-commerce checkout that applies different discount strategies (percentage, flat rate, buy-one-get-one) without branching in the order logic",
+    "A compression tool that lets the user choose between ZIP, GZIP, or BZIP2 algorithms at runtime without changing the tool's core logic"
   ]
 }

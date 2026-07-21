@@ -7,5 +7,10 @@
     "Many similar objects share large amounts of identical data",
     "You want to reduce memory usage by storing shared (intrinsic) state only once",
     "You want to separate shared (intrinsic) state from unique (extrinsic) state"
+  ],
+  "exampleUses": [
+    "A text editor that stores one Character object per glyph (font, size, style) shared across all occurrences instead of one per character in the document",
+    "A forest renderer in a game where thousands of trees share one mesh and texture object, differing only in position and scale",
+    "An icon library in a GUI toolkit where one Image object per icon type is shared by every button or menu item that displays it"
   ]
 }
