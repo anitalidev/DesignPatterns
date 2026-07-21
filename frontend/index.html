@@ -69,6 +69,7 @@
     <div class="tabs">
       <button class="tab-btn active" data-tab="tab-about">About</button>
       <button class="tab-btn" data-tab="tab-patterns">Patterns</button>
+      <button class="tab-btn" data-tab="tab-games">Games</button>
     </div>
   </header>
   <main>
@@ -111,9 +112,15 @@
         <p style="color:#888">Loading…</p>
       </div>
     </div>
+
+    <div id="tab-games" class="tab-panel">
+      <p style="color:#888;font-size:0.9rem">Loading…</p>
+    </div>
   </main>
 
   <script type="module">
+    import { initGames } from "./games.js";
+
     async function loadCategories() {
       const container = document.getElementById("category-list");
       try {
@@ -126,6 +133,7 @@
 
         const categories = await catRes.json();
         const patterns = await patRes.json();
+        initGames(patterns, categories);
         const patternMap = Object.fromEntries(patterns.map(p => [p.id, p]));
 
         container.innerHTML = "";
@@ -202,7 +210,7 @@
 
     loadCategories();
 
-    const TAB_IDS = { about: "tab-about", patterns: "tab-patterns" };
+    const TAB_IDS = { about: "tab-about", patterns: "tab-patterns", games: "tab-games" };
 
     function activateTab(hash) {
       const key = hash.replace("#", "") || "about";
