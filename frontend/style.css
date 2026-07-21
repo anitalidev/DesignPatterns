@@ -600,6 +600,11 @@ body {
 
 
 /* ── Connections ── */
+.conn-game-wrap {
+  width: min(980px, calc(100vw - 3rem));
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
 .conn-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

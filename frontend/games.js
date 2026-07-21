@@ -400,26 +400,33 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
     root.innerHTML = `
       <p class="game-instructions">Choose a category, then name every pattern in it before time runs out.</p>
       <div class="name-em-picker">
+        <button class="btn btn-ghost name-em-cat" data-cid="__all__">All</button>
         ${categories.map(cat => `<button class="btn btn-ghost name-em-cat" data-cid="${cat.id}">${esc(cat.name)}</button>`).join("")}
       </div>`;
     root.querySelectorAll(".name-em-cat").forEach(btn =>
       btn.addEventListener("click", () => startRound(btn.dataset.cid)));
 
     function startRound(catId) {
-      const cat = categories.find(c => c.id === catId);
-      const targets = all.filter(p => p.category.id === catId);
+      const cat = catId === "__all__" ? { name: "All" } : categories.find(c => c.id === catId);
+      const targets = catId === "__all__" ? all.slice() : all.filter(p => p.category.id === catId);
       const found = new Set();
-      let timeLeft = 90;
+      let elapsed = 0;
       let done = false;
       let interval = null;
+
+      function fmtTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+      }
 
       function render() {
         root.innerHTML = `
           <div class="name-em-header">
-            <span class="name-em-cat-label">${esc(cat.name)}</span>
-            <span class="name-em-timer${timeLeft <= 15 ? " urgent" : ""}">${timeLeft}s</span>
-            <span class="name-em-score">${found.size} / ${targets.length}</span>
             ${!done ? `<button class="btn btn-ghost name-em-stop">Cancel</button>` : ""}
+            <span class="name-em-cat-label">${esc(cat.name)}</span>
+            <span class="name-em-timer">${fmtTime(elapsed)}</span>
+            <span class="name-em-score">${found.size} / ${targets.length}</span>
           </div>
           <input class="name-em-input" type="text" placeholder="Type a pattern name and press Enter…"
             autocomplete="off" ${done ? "disabled" : ""}>
@@ -430,7 +437,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
               </div>`).join("")}
           </div>
           ${done ? `<div class="name-em-done">
-            <span>${found.size === targets.length ? "You got them all!" : `${found.size} / ${targets.length}`}</span>
+            <span>${found.size === targets.length ? `You got them all in ${fmtTime(elapsed)}!` : `${found.size} / ${targets.length}`}</span>
             <button class="btn btn-ghost" id="btn-change-cat">Change category</button>
             <button class="btn btn-primary" id="btn-retry-cat">Try again</button>
           </div>` : ""}`;
@@ -443,7 +450,9 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
             const val = input.value.trim().toLowerCase();
             input.value = "";
             for (const p of targets) {
-              if (!found.has(p.id) && p.title.toLowerCase() === val) {
+              const titleLower = p.title.toLowerCase();
+              const titleShort = titleLower.endsWith(" pattern") ? titleLower.slice(0, -8).trimEnd() : titleLower;
+              if (!found.has(p.id) && (titleLower === val || titleShort === val)) {
                 found.add(p.id);
                 if (found.size === targets.length) endGame();
                 else render();
@@ -476,10 +485,9 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
       }
 
       interval = setInterval(() => {
-        timeLeft--;
+        elapsed++;
         const t = root.querySelector(".name-em-timer");
-        if (t) { t.textContent = `${timeLeft}s`; if (timeLeft <= 15) t.classList.add("urgent"); }
-        if (timeLeft <= 0) endGame();
+        if (t) t.textContent = fmtTime(elapsed);
       }, 1000);
 
       render();
@@ -649,12 +657,13 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
         t.textContent = msg;
         root.appendChild(t);
         requestAnimationFrame(() => t.classList.add("conn-toast-show"));
-        setTimeout(() => { t.classList.remove("conn-toast-show"); setTimeout(() => t.remove(), 300); }, 1800);
+        setTimeout(() => { t.classList.remove("conn-toast-show"); setTimeout(() => t.remove(), 300); }, 900);
       }
 
       function render() {
         const remaining = tiles.filter(t => !solved.includes(t.patternId));
         root.innerHTML = `
+          <div class="conn-game-wrap">
           <p class="game-instructions">Find four groups of three — each group's use cases belong to the same design pattern.</p>
           <div class="conn-solved">
             ${groups.filter(g => solved.includes(g.patternId)).map(g => {
@@ -675,9 +684,10 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
             }).join("")}
           </div>
           <div class="conn-footer">
-            <span class="conn-mistakes">${"●".repeat(mistakes)}${"○".repeat(Math.max(0, 4 - mistakes))}</span>
+            <span class="conn-mistakes">${"○".repeat(mistakes)}${"●".repeat(Math.max(0, 4 - mistakes))}</span>
             <button class="btn btn-ghost conn-deselect"${selected.length === 0 ? " disabled" : ""}>Deselect all</button>
             <button class="btn btn-primary conn-submit"${selected.length !== 3 ? " disabled" : ""}>Submit</button>
+          </div>
           </div>`;
 
         root.querySelectorAll(".conn-tile").forEach(btn => {
@@ -708,9 +718,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
             // Figure out which patterns are in the wrong mix to give a hint
             const pids = [...new Set(selectedTiles.map(t => t.patternId))];
             const names = pids.map(id => groups.find(g => g.patternId === id)?.title).filter(Boolean);
-            showToast(pids.length > 1
-              ? `Not quite — those belong to ${names.join(" and ")}`
-              : "Almost! That's only one pattern but not the right three.");
+            showToast("Not quite — try again!");
             root.querySelectorAll(".conn-tile.conn-selected").forEach(btn => {
               btn.classList.add("conn-shake");
               setTimeout(() => btn.classList.remove("conn-shake"), 500);
@@ -725,6 +733,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
 
       function renderEnd(won) {
         root.innerHTML = `
+          <div class="conn-game-wrap">
           ${won
             ? `<p class="conn-result-msg">Solved with ${mistakes} mistake${mistakes !== 1 ? "s" : ""}!</p>`
             : `<p class="conn-result-msg conn-result-fail">Too many mistakes — here are the answers:</p>`}
@@ -737,6 +746,7 @@ root.querySelector("#btn-next-round")?.addEventListener("click", newRound);
           </div>
           <div style="text-align:center;margin-top:1.25rem">
             <button class="btn btn-primary conn-again">Play again</button>
+          </div>
           </div>`;
         root.querySelector(".conn-again").addEventListener("click", newRound);
       }

@@ -5,7 +5,7 @@
   "exerciseIds": ["proxy-1", "proxy-2"],
   "useCases": [
     "You want to control or manage access to an object",
-    "The wrapped class cannot or should not be changed",
+    "The class you want to add behaviour around cannot or should not be changed",
     "Adding cross-cutting concerns like lazy loading, access control, logging, or caching around an existing object"
   ],
   "exampleUses": [
