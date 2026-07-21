@@ -4,5 +4,10 @@
   "overview": "Define an object that encapsulates how a set of objects interact, reducing direct dependencies between them.",
   "exerciseIds": [
     "mediator-1"
+  ],
+  "useCases": [
+    "Many objects communicate with each other, creating complex dependencies",
+    "You want to reduce coupling between objects",
+    "You want to keep coordination logic in one place instead of spreading it across many classes"
   ]
 }

@@ -4,5 +4,10 @@
   "overview": "Define a family of algorithms, encapsulate each one, and make them interchangeable at runtime.",
   "exerciseIds": [
     "strategy-1"
+  ],
+  "useCases": [
+    "You have multiple ways to perform the same task and want to switch behaviours at runtime",
+    "You want to avoid large if/switch statements choosing between implementations",
+    "You want to add new algorithms without modifying existing code (Open/Closed Principle)"
   ]
 }

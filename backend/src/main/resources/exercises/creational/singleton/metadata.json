@@ -2,5 +2,10 @@
   "id": "singleton",
   "title": "Singleton Pattern",
   "overview": "Ensure a class has only one instance and provide a global point of access to it.",
-  "exerciseIds": ["singleton-1"]
+  "exerciseIds": ["singleton-1"],
+  "useCases": [
+    "When you want to maintain a single instance of a class globally",
+    "Useful when a single shared resource (config, logger, connection) must be accessed throughout the application",
+    "When you need to coordinate actions across the system from a single point (e.g. a thread pool or cache)"
+  ]
 }

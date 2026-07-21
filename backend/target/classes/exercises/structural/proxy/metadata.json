@@ -2,5 +2,9 @@
   "id": "proxy",
   "title": "Proxy Pattern",
   "overview": "Provide a surrogate or placeholder for another object to control access to it.",
-  "exerciseIds": ["proxy-1", "proxy-2"]
+  "exerciseIds": ["proxy-1", "proxy-2"],
+  "useCases": [
+    "You want to control or manage access to an object",
+    "The wrapped class cannot or should not be changed"
+  ]
 }

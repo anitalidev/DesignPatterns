@@ -2,5 +2,10 @@
   "id": "bridge",
   "title": "Bridge Pattern",
   "overview": "Decouple an abstraction from its implementation so the two can vary independently.",
-  "exerciseIds": ["bridge-1"]
+  "exerciseIds": ["bridge-1"],
+  "useCases": [
+    "Two dimensions of a class hierarchy should vary independently",
+    "You want to avoid a combinatorial explosion of subclasses",
+    "You want to separate abstraction (e.g. Shape) from implementation (e.g. Colour)"
+  ]
 }

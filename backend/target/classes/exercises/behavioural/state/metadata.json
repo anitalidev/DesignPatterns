@@ -4,5 +4,8 @@
   "overview": "Allow an object to alter its behaviour when its internal state changes, appearing to change its class.",
   "exerciseIds": [
     "state-1"
+  ],
+  "useCases": [
+    "An object's behaviour varies based on its current state, and you want to eliminate large conditional statements and make state transitions easier to manage"
   ]
 }

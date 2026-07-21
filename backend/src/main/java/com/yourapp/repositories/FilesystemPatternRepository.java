@@ -63,6 +63,14 @@ public class FilesystemPatternRepository implements PatternRepository {
 
             String description = Files.readString(patternDir.resolve("description.md"));
 
+            List<String> useCases = new ArrayList<>();
+            JsonNode useCasesNode = meta.get("useCases");
+            if (useCasesNode != null && useCasesNode.isArray()) {
+                for (JsonNode uc : useCasesNode) {
+                    useCases.add(uc.asText());
+                }
+            }
+
             Map<String, String> exercises = new LinkedHashMap<>();
             JsonNode exerciseIds = meta.get("exerciseIds");
             if (exerciseIds != null && exerciseIds.isArray()) {
@@ -77,7 +85,7 @@ public class FilesystemPatternRepository implements PatternRepository {
                 }
             }
 
-            return new DesignPattern(id, title, overview, description, exercises);
+            return new DesignPattern(id, title, overview, description, useCases, exercises);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load pattern at " + patternDir, e);
         }

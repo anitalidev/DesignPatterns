@@ -2,5 +2,10 @@
   "id": "chain-of-responsibility",
   "title": "Chain of Responsibility Pattern",
   "overview": "Pass a request along a chain of handlers, each deciding whether to handle it or pass it on.",
-  "exerciseIds": ["chain-of-responsibility-1", "chain-of-responsibility-2"]
+  "exerciseIds": ["chain-of-responsibility-1", "chain-of-responsibility-2"],
+  "useCases": [
+    "Multiple objects could handle a request, but you don't know which one should",
+    "You want to avoid large if/switch statements",
+    "You want to add, remove, or reorder handlers without changing the sender"
+  ]
 }

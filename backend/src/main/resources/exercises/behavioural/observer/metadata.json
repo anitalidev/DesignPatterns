@@ -2,5 +2,10 @@
   "id": "observer",
   "title": "Observer Pattern",
   "overview": "Notify a list of dependents automatically when an object changes state.",
-  "exerciseIds": ["observer-1"]
+  "exerciseIds": ["observer-1"],
+  "useCases": [
+    "Multiple objects need to react automatically to changes in another object",
+    "You want event-driven behaviour where the event producer is decoupled from consumers",
+    "The set of listeners may change dynamically at runtime"
+  ]
 }

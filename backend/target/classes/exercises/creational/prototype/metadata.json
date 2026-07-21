@@ -2,5 +2,10 @@
   "id": "prototype",
   "title": "Prototype Pattern",
   "overview": "Create new objects by copying an existing object, avoiding the cost of creating from scratch.",
-  "exerciseIds": ["prototype-1"]
+  "exerciseIds": ["prototype-1"],
+  "useCases": [
+    "Object construction is expensive",
+    "Objects to be created are similar to an existing instance",
+    "Many expensive parts can be shared between copies"
+  ]
 }

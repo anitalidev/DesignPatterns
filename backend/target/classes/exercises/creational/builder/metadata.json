@@ -2,5 +2,9 @@
   "id": "builder",
   "title": "Builder Pattern",
   "overview": "Separate the construction of a complex object from its representation so the same process can create different representations.",
-  "exerciseIds": ["builder-1"]
+  "exerciseIds": ["builder-1"],
+  "useCases": [
+    "Building an object is done in steps",
+    "Constructor is becoming unwieldy (too many parameters, variants, or tasks)"
+  ]
 }

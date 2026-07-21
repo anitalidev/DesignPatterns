@@ -4,5 +4,11 @@
   "overview": "Encapsulate a request as an object, allowing parameterisation, queuing, logging, and undoable operations.",
   "exerciseIds": [
     "command-1"
+  ],
+  "useCases": [
+    "You want to decouple the object requesting an action from the object performing it",
+    "You need to queue, schedule, or log operations",
+    "You want to support undo/redo by storing executed commands",
+    "You have many actions (menu items, toolbar buttons, keyboard shortcuts) that should all trigger work in a uniform way"
   ]
 }

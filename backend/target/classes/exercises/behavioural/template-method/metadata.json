@@ -4,5 +4,10 @@
   "overview": "Define the skeleton of an algorithm in a base class, deferring some steps to subclasses.",
   "exerciseIds": [
     "template-method-1"
+  ],
+  "useCases": [
+    "Multiple classes follow the same overall process, but some steps differ",
+    "You want to reuse the common algorithm while allowing customization",
+    "You want to ensure the order of steps cannot be changed regardless of the class involved"
   ]
 }

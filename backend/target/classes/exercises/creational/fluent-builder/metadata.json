@@ -2,5 +2,9 @@
   "id": "fluent-builder",
   "title": "Fluent Builder Pattern",
   "overview": "A Builder variant where each setter returns the builder itself, enabling method chaining for readable object construction.",
-  "exerciseIds": ["fluent-builder-1"]
+  "exerciseIds": ["fluent-builder-1"],
+  "useCases": [
+    "Same as Builder but where method chaining improves readability",
+    "When build steps can be expressed as a readable chain of calls"
+  ]
 }

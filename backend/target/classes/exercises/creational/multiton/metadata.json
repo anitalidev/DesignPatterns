@@ -2,5 +2,9 @@
   "id": "multiton",
   "title": "Multiton Pattern",
   "overview": "Extend Singleton to allow a controlled number of named instances, each identified by a key.",
-  "exerciseIds": ["multiton-1"]
+  "exerciseIds": ["multiton-1"],
+  "useCases": [
+    "When you want to maintain a single instance of a class per ID/Key",
+    "Named instances that must each be unique and globally accessible"
+  ]
 }

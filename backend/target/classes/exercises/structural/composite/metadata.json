@@ -2,5 +2,9 @@
   "id": "composite",
   "title": "Composite Pattern",
   "overview": "Compose objects into tree structures to represent part-whole hierarchies, letting clients treat individual objects and compositions uniformly.",
-  "exerciseIds": ["composite-1"]
+  "exerciseIds": ["composite-1"],
+  "useCases": [
+    "You want to treat individual objects and groups of objects uniformly via a shared interface",
+    "Clients should work with single items and collections interchangeably"
+  ]
 }

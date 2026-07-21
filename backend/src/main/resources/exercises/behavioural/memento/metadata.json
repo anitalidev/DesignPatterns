@@ -4,5 +4,10 @@
   "overview": "Capture and restore an object's internal state without violating encapsulation.",
   "exerciseIds": [
     "memento-1"
+  ],
+  "useCases": [
+    "You need undo/redo functionality",
+    "You want to save snapshots/checkpoints of an object's state",
+    "You need to restore an object to an earlier state without exposing or modifying its internal fields directly"
   ]
 }

@@ -2,5 +2,10 @@
   "id": "lazy-initialization",
   "title": "Lazy Initialization Pattern",
   "overview": "Defer the creation of an object until it is first needed, saving resources when the object may never be used.",
-  "exerciseIds": ["lazy-initialization-1"]
+  "exerciseIds": ["lazy-initialization-1"],
+  "useCases": [
+    "Expensive parts of a class may never actually be used",
+    "You want to improve startup time by deferring heavy work until it is first needed",
+    "Creating all possible instances upfront would waste memory or I/O (e.g. loading config files, database connections)"
+  ]
 }

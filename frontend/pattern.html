@@ -98,6 +98,7 @@
       <section class="explanation" id="pattern-description">
         <p class="loading">Loading…</p>
       </section>
+      <section class="use-cases" id="pattern-use-cases" style="display:none"></section>
     </div>
 
     <div id="tab-exercises" class="tab-panel">
@@ -397,6 +398,15 @@
       document.getElementById("pattern-title").textContent = pattern.title;
       document.getElementById("overview").textContent = pattern.overview;
       document.getElementById("pattern-description").innerHTML = marked.parse(pattern.description);
+
+      const useCasesEl = document.getElementById("pattern-use-cases");
+      if (pattern.useCases && pattern.useCases.length > 0) {
+        useCasesEl.innerHTML =
+          `<h3>Useful When…</h3><ul>${pattern.useCases.map(uc => `<li>${escHtml(uc)}</li>`).join("")}</ul>`;
+        useCasesEl.style.display = "";
+      } else {
+        useCasesEl.style.display = "none";
+      }
 
       const tabButtons = document.getElementById("exercise-tab-buttons");
       const panels = document.getElementById("exercise-panels");

@@ -4,5 +4,10 @@
   "overview": "Provide a way to sequentially access elements of a collection without exposing its underlying representation.",
   "exerciseIds": [
     "iterator-1"
+  ],
+  "useCases": [
+    "You want to traverse a collection without exposing its internal representation",
+    "You want different ways to traverse the same collection (forward, reverse, filtered, etc.)",
+    "You want all collections to provide a consistent way to iterate"
   ]
 }

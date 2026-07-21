@@ -2,5 +2,9 @@
   "id": "abstract-factory",
   "title": "Abstract Factory Pattern",
   "overview": "Provide an interface for creating families of related objects without specifying their concrete classes.",
-  "exerciseIds": ["abstract-factory-1"]
+  "exerciseIds": ["abstract-factory-1"],
+  "useCases": [
+    "Creating a family of related objects designed to work together",
+    "When you want to switch between entire families of objects (e.g. Windows vs Mac UI) without changing client code"
+  ]
 }
