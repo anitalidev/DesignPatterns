@@ -103,6 +103,32 @@
       cursor: pointer;
       max-width: 240px;
     }
+    /* inline run bar below editor */
+    .ex-run-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .ex-test-output {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: monospace;
+      font-size: 0.82rem;
+      margin-top: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .ex-test-output-header {
+      padding: 0.4rem 0.75rem;
+      background: #eee;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #555;
+    }
+    .ex-test-results { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.3rem; min-height: 4rem; }
   </style>
 </head>
 <body>
@@ -146,8 +172,43 @@
     import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
     import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirror/commands";
     import { java } from "@codemirror/lang-java";
-    import { oneDark } from "@codemirror/theme-one-dark";
-    import { indentOnInput, bracketMatching, foldGutter } from "@codemirror/language";
+    import { HighlightStyle, indentOnInput, bracketMatching, foldGutter, syntaxHighlighting } from "@codemirror/language";
+    import { tags as t } from "@lezer/highlight";
+
+    const leetcodeTheme = EditorView.theme({
+      "&": { background: "#1e1e1e", color: "#d4d4d4" },
+      ".cm-content": { caretColor: "#aeafad" },
+      ".cm-cursor": { borderLeftColor: "#aeafad" },
+      ".cm-selectionBackground, ::selection": { background: "#264f78 !important" },
+      ".cm-gutters": { background: "#1e1e1e", color: "#858585", border: "none" },
+      ".cm-activeLineGutter": { background: "#2a2a2a" },
+      ".cm-activeLine": { background: "#2a2a2a" },
+      ".cm-lineNumbers .cm-gutterElement": { paddingRight: "1rem" },
+      ".cm-foldPlaceholder": { background: "#3a3a3a", color: "#858585", border: "none" },
+      ".cm-tooltip": { background: "#252526", border: "1px solid #3a3a3a" },
+      ".cm-matchingBracket": { background: "#3a3a3a", outline: "1px solid #888" },
+    }, { dark: true });
+
+    const leetcodeHighlight = HighlightStyle.define([
+      { tag: t.keyword,                        color: "#569cd6" },
+      { tag: t.controlKeyword,                 color: "#c586c0" },
+      { tag: t.operator,                       color: "#d4d4d4" },
+      { tag: [t.string, t.special(t.string)],  color: "#ce9178" },
+      { tag: t.number,                         color: "#b5cea8" },
+      { tag: t.bool,                           color: "#569cd6" },
+      { tag: t.null,                           color: "#569cd6" },
+      { tag: [t.comment, t.lineComment, t.blockComment], color: "#6a9955", fontStyle: "italic" },
+      { tag: t.className,                      color: "#4ec9b0" },
+      { tag: t.typeName,                       color: "#4ec9b0" },
+      { tag: t.definition(t.variableName),     color: "#9cdcfe" },
+      { tag: t.variableName,                   color: "#9cdcfe" },
+      { tag: t.propertyName,                   color: "#9cdcfe" },
+      { tag: t.function(t.variableName),       color: "#dcdcaa" },
+      { tag: t.function(t.propertyName),       color: "#dcdcaa" },
+      { tag: t.definition(t.function(t.variableName)), color: "#dcdcaa" },
+      { tag: t.punctuation,                    color: "#d4d4d4" },
+      { tag: t.annotation,                     color: "#dcdcaa" },
+    ]);
 
     const params = new URLSearchParams(location.search);
     const patternId = params.get("id");
@@ -157,59 +218,41 @@
         '<p style="color:red">No pattern id in URL. Try <code>?id=factory</code></p>';
     }
 
-    // Pattern navigation
     (async () => {
       const res = await fetch("/api/patterns");
       if (!res.ok) return;
       const all = await res.json();
       const idx = all.findIndex(p => p.id === patternId);
-
       const sel = document.getElementById("pattern-select");
       const btnPrev = document.getElementById("btn-prev");
       const btnNext = document.getElementById("btn-next");
-
       sel.innerHTML = all.map(p =>
         `<option value="${p.id}"${p.id === patternId ? " selected" : ""}>${p.title}</option>`
       ).join("");
-
       btnPrev.disabled = idx <= 0;
       btnNext.disabled = idx >= all.length - 1;
-
       function goTo(id) { location.href = `/pattern.html?id=${id}`; }
-
       sel.addEventListener("change", () => goTo(sel.value));
       btnPrev.addEventListener("click", () => { if (idx > 0) goTo(all[idx - 1].id); });
       btnNext.addEventListener("click", () => { if (idx < all.length - 1) goTo(all[idx + 1].id); });
     })();
 
-    // exercise state: exerciseId -> { editorView, starterCode }
     const exerciseState = {};
 
     function buildExtensions(readonly = false) {
       return [
-        lineNumbers(),
-        highlightActiveLine(),
-        highlightActiveLineGutter(),
-        history(),
-        foldGutter(),
-        indentOnInput(),
-        bracketMatching(),
-        java(),
-        oneDark,
+        lineNumbers(), highlightActiveLine(), highlightActiveLineGutter(),
+        history(), foldGutter(), indentOnInput(), bracketMatching(),
+        java(), leetcodeTheme, syntaxHighlighting(leetcodeHighlight),
         keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
         EditorView.lineWrapping,
         EditorState.readOnly.of(readonly),
       ];
     }
 
-    // --- Hash helpers ---
     function parseHash() {
       const parts = location.hash.replace("#", "").split("/");
-      return {
-        section:    parts[0] || "about",
-        exerciseId: parts[1] || null,
-        filename:   parts[2] ? decodeURIComponent(parts[2]) : null,
-      };
+      return { section: parts[0] || "about", exerciseId: parts[1] || null, filename: parts[2] ? decodeURIComponent(parts[2]) : null };
     }
 
     function setHash(section, exerciseId = null, filename = null) {
@@ -219,8 +262,12 @@
       window.history.replaceState(null, "", "#" + hash);
     }
 
+    function escHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
     async function loadExerciseIntoPanel(exerciseId, panel) {
-      if (exerciseState[exerciseId]) return; // already loaded
+      if (exerciseState[exerciseId]) return;
 
       const loadingEl = panel.querySelector(".loading");
       try {
@@ -228,7 +275,6 @@
         if (!res.ok) throw new Error(res.statusText);
         const exercise = await res.json();
 
-        // Build ordered list: read-only files first, then editable
         const editableSet = new Set(exercise.editableFiles ?? []);
         const allFiles = Object.entries(exercise.files ?? {})
           .map(([name, code]) => ({ name, code, readonly: !editableSet.has(name) }))
@@ -236,11 +282,10 @@
 
         const fileTabBar = panel.querySelector(".file-tabs");
         const editorsContainer = panel.querySelector(".editors-container");
+        const resetBtn = panel.querySelector(".btn-reset");
 
         let activeEditableView = null;
         let activeEditableStarter = null;
-
-        // file name → { btn, mount }
         const fileBtnMap = {};
 
         function activateFile(filename) {
@@ -250,7 +295,6 @@
           editorsContainer.querySelectorAll(".editor-mount").forEach(m => m.classList.add("hidden"));
           target.btn.classList.add("active");
           target.mount.classList.remove("hidden");
-          const resetBtn = panel.querySelector(".btn-reset");
           if (resetBtn) resetBtn.style.display = target.readonly ? "none" : "";
           if (!target.readonly) {
             activeEditableView = target.view;
@@ -262,12 +306,9 @@
         allFiles.forEach((file, i) => {
           const btn = document.createElement("button");
           btn.className = "file-tab-btn" + (i === 0 ? " active" : "");
-          btn.dataset.filename = file.name;
-          if (file.readonly) {
-            btn.innerHTML = `${escHtml(file.name)} <span class="readonly-badge">read-only</span>`;
-          } else {
-            btn.textContent = file.name;
-          }
+          btn.innerHTML = file.readonly
+            ? `${escHtml(file.name)} <span class="readonly-badge">read-only</span>`
+            : escHtml(file.name);
           fileTabBar.appendChild(btn);
 
           const mount = document.createElement("div");
@@ -275,31 +316,27 @@
           editorsContainer.appendChild(mount);
 
           const trimmed = file.code.trim();
-          const state = EditorState.create({ doc: trimmed, extensions: buildExtensions(file.readonly) });
-          const view = new EditorView({ state, parent: mount });
-          const lineCount = trimmed.split("\n").length;
-          view.dom.style.height = (Math.min(lineCount, 21) * 20 + 8) + "px";
+          const view = new EditorView({
+            state: EditorState.create({ doc: trimmed, extensions: buildExtensions(file.readonly) }),
+            parent: mount,
+          });
+          view.dom.style.height = (Math.min(trimmed.split("\n").length, 21) * 20 + 8) + "px";
 
           if (!file.readonly && activeEditableView === null) {
             activeEditableView = view;
-            activeEditableStarter = file.code.trim();
+            activeEditableStarter = trimmed;
           }
 
-          fileBtnMap[file.name] = { btn, mount, view, readonly: file.readonly, filename: file.name, starter: file.code.trim() };
-
+          fileBtnMap[file.name] = { btn, mount, view, readonly: file.readonly, filename: file.name, starter: trimmed };
           btn.addEventListener("click", () => activateFile(file.name));
         });
 
-        // map of filename -> { view, readonly }
-        const editableFileMap = Object.fromEntries(
-          Object.entries(fileBtnMap).filter(([, v]) => !v.readonly)
-        );
-
+        const editableFileMap = Object.fromEntries(Object.entries(fileBtnMap).filter(([, v]) => !v.readonly));
         const allViews = Object.values(fileBtnMap).map(f => f.view);
 
         exerciseState[exerciseId] = {
-          getEditableView: () => activeEditableView,
-          getStarter: () => activeEditableStarter,
+          getEditableView:  () => activeEditableView,
+          getStarter:       () => activeEditableStarter,
           getEditableFiles: () => Object.fromEntries(
             Object.entries(editableFileMap).map(([name, { view }]) => [name, view.state.doc.toString()])
           ),
@@ -309,71 +346,62 @@
 
         if (loadingEl) loadingEl.remove();
 
-        // Exercise description
         if (exercise.exerciseDescription) {
           const el = panel.querySelector(".ex-description");
           el.textContent = exercise.exerciseDescription;
           el.classList.remove("hidden");
         }
-
-        // Overall goal
         if (exercise.overallGoal) {
           const sec = panel.querySelector(".ex-overall-goal");
           sec.querySelector(".overall-goal-text").textContent = exercise.overallGoal;
           sec.classList.remove("hidden");
         }
-
-        // Issues & goals
         if (exercise.issues?.length) {
           const sec = panel.querySelector(".ex-issues");
-          const ul = panel.querySelector(".issues-list");
-          ul.innerHTML = exercise.issues.map(t => `<li class="issue-item">${escHtml(t)}</li>`).join("");
+          sec.querySelector(".issues-list").innerHTML =
+            exercise.issues.map(i => `<li class="issue-item">${escHtml(i)}</li>`).join("");
           sec.classList.remove("hidden");
         }
         if (exercise.goals?.length) {
           const sec = panel.querySelector(".ex-goals");
-          const ul = panel.querySelector(".goals-list");
-          ul.innerHTML = exercise.goals.map(t => `<li class="goal-item">${escHtml(t)}</li>`).join("");
+          sec.querySelector(".goals-list").innerHTML =
+            exercise.goals.map(g => `<li class="goal-item">${escHtml(g)}</li>`).join("");
           sec.classList.remove("hidden");
         }
 
-        // Hide reset if first file is read-only
-        const resetBtn = panel.querySelector(".btn-reset");
-        if (resetBtn && allFiles[0]?.readonly) resetBtn.style.display = "none";
+        if (allFiles[0]?.readonly && resetBtn) resetBtn.style.display = "none";
 
-        panel.querySelector(".btn-reset")?.addEventListener("click", () => {
+        // Wire run/reset buttons
+        resetBtn?.addEventListener("click", () => {
           const view = exerciseState[exerciseId].getEditableView();
           const starter = exerciseState[exerciseId].getStarter();
           if (view) view.setState(EditorState.create({ doc: starter, extensions: buildExtensions(false) }));
-          panel.querySelector(".test-results").innerHTML =
+          panel.querySelector(".ex-test-results").innerHTML =
             '<span class="placeholder">Run tests to see results.</span>';
         });
 
         panel.querySelector(".btn-run")?.addEventListener("click", () => runTests(exerciseId, panel));
+
       } catch (err) {
-        if (loadingEl) loadingEl.textContent = `Failed to load exercise: ${err.message}`;
+        if (loadingEl) loadingEl.textContent = `Failed to load: ${err.message}`;
       }
     }
 
     async function runTests(exerciseId, panel) {
-      const resultsEl = panel.querySelector(".test-results");
-      const runBtn = panel.querySelector(".btn-run");
       const state = exerciseState[exerciseId];
       if (!state) return;
-
-      const files = state.getEditableFiles();
+      const resultsEl = panel.querySelector(".ex-test-results");
+      const runBtn = panel.querySelector(".btn-run");
       runBtn.disabled = true;
       runBtn.textContent = "Running…";
       resultsEl.innerHTML = '<span class="placeholder">Running…</span>';
-
       try {
         const res = await fetch("/api/run", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ exerciseId, files }),
+          body: JSON.stringify({ exerciseId, files: state.getEditableFiles() }),
         });
-        const data = await res.json();
-        renderResults(data, resultsEl);
+        renderResults(await res.json(), resultsEl);
       } catch (err) {
         resultsEl.innerHTML = `<div class="test-err">Network error: ${escHtml(String(err))}</div>`;
       } finally {
@@ -391,19 +419,13 @@
       }
       const rows = data.tests.map(t =>
         `<div class="test-row ${t.passed ? "pass" : "fail"}">
-          <span class="test-icon"></span>
-          <span class="test-name">${escHtml(t.name)}</span>
+          <span class="test-icon"></span><span class="test-name">${escHtml(t.name)}</span>
         </div>${t.message ? `<div class="test-err">${escHtml(t.message)}</div>` : ""}`
       ).join("");
       const passed = data.tests.filter(t => t.passed).length;
-      const total = data.tests.length;
-      const allPass = passed === total;
+      const total  = data.tests.length;
       resultsEl.innerHTML = rows +
-        `<div class="summary ${allPass ? "all-pass" : "has-fail"}">${passed}/${total} passed</div>`;
-    }
-
-    function escHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        `<div class="summary ${passed === total ? "all-pass" : "has-fail"}">${passed}/${total} passed</div>`;
     }
 
     function makeExercisePanel(exerciseName, exerciseId) {
@@ -426,20 +448,21 @@
           <h3 class="ex-section-title">Sub-goals</h3>
           <ul class="goals-list"></ul>
         </section>
-        <div class="editor-wrap" style="display:none">
+        <div class="editor-wrap">
           <div class="file-tabs"></div>
           <div class="editors-container"></div>
-          <div class="editor-actions">
-            <button class="btn btn-primary btn-run">Run Tests</button>
-            <button class="btn btn-ghost btn-reset">Reset</button>
-          </div>
-          <div id="test-output-${exerciseId}">
-            <div class="test-output-header">Test Results</div>
-            <div class="test-results">
-              <span class="placeholder">Run tests to see results.</span>
-            </div>
+        </div>
+        <div class="ex-run-bar">
+          <button class="btn btn-primary btn-run">Run Tests</button>
+          <button class="btn btn-ghost btn-reset">Reset</button>
+        </div>
+        <div class="ex-test-output">
+          <div class="ex-test-output-header">Test Results</div>
+          <div class="ex-test-results">
+            <span class="placeholder">Run tests to see results.</span>
           </div>
         </div>`;
+
       return panel;
     }
 
@@ -459,7 +482,7 @@
       document.getElementById("pattern-description").innerHTML = marked.parse(pattern.description);
 
       const useCasesEl = document.getElementById("pattern-use-cases");
-      if (pattern.useCases && pattern.useCases.length > 0) {
+      if (pattern.useCases?.length) {
         useCasesEl.innerHTML =
           `<h3>Useful When…</h3><ul>${pattern.useCases.map(uc => `<li>${escHtml(uc)}</li>`).join("")}</ul>`;
         useCasesEl.style.display = "";
@@ -467,42 +490,27 @@
         useCasesEl.style.display = "none";
       }
 
-      const tabButtons = document.getElementById("exercise-tab-buttons");
       const panels = document.getElementById("exercise-panels");
-
-      // exercise id → { panel, dropdownItem }
       const exerciseMap = {};
-      const dropdown = document.getElementById("exercise-dropdown");
+      const dropdown    = document.getElementById("exercise-dropdown");
       const btnExercises = document.getElementById("btn-exercises");
 
-      function closeDropdown() {
-        dropdown.classList.remove("open");
-      }
-
-      function toggleDropdown() {
-        dropdown.classList.toggle("open");
-      }
+      function closeDropdown() { dropdown.classList.remove("open"); }
+      function toggleDropdown() { dropdown.classList.toggle("open"); }
 
       function activateExercise(exerciseId) {
         const target = exerciseMap[exerciseId] ?? Object.values(exerciseMap)[0];
         if (!target) return;
-
         activateSection("exercises");
-
         panels.querySelectorAll(".exercise-panel").forEach(p => p.classList.remove("active"));
         target.panel.classList.add("active");
-
         Object.values(exerciseMap).forEach(e => e.dropdownItem.classList.remove("active"));
         target.dropdownItem.classList.add("active");
-
-        const editorWrap = target.panel.querySelector(".editor-wrap");
         loadExerciseIntoPanel(exerciseId, target.panel).then(() => {
-          if (editorWrap) editorWrap.style.display = "";
           exerciseState[exerciseId]?.remeasureAll();
           const { filename } = parseHash();
           if (filename) exerciseState[exerciseId]?.activateFile(filename);
         });
-
         setHash("exercises", exerciseId);
         closeDropdown();
       }
@@ -518,7 +526,7 @@
         if (section !== "exercises") setHash(section);
       }
 
-      const entries = Object.entries(pattern.exercises); // [name, id]
+      const entries = Object.entries(pattern.exercises);
       entries.forEach(([exerciseName, exerciseId], i) => {
         const panel = makeExercisePanel(exerciseName, exerciseId);
         if (i === 0) panel.classList.add("active");
@@ -533,22 +541,14 @@
         item.addEventListener("click", () => activateExercise(exerciseId));
       });
 
-      // Exercises button: toggle dropdown
-      btnExercises.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleDropdown();
-      });
-
+      btnExercises.addEventListener("click", (e) => { e.stopPropagation(); toggleDropdown(); });
       document.querySelector('.tab-btn[data-tab="tab-about"]').addEventListener("click", () => {
         closeDropdown();
         Object.values(exerciseMap).forEach(e => e.dropdownItem.classList.remove("active"));
         activateSection("about");
       });
-
-      // Close dropdown on outside click
       document.addEventListener("click", closeDropdown);
 
-      // Restore state from hash on initial load
       const hash = parseHash();
       if (hash.section === "exercises") {
         activateSection("exercises");
@@ -557,14 +557,7 @@
         if (targetId) activateExercise(targetId);
       } else {
         const firstId = entries[0]?.[1];
-        if (firstId) {
-          const firstPanel = panels.querySelector(".exercise-panel");
-          loadExerciseIntoPanel(firstId, firstPanel).then(() => {
-            const editorWrap = firstPanel.querySelector(".editor-wrap");
-            if (editorWrap) editorWrap.style.display = "";
-            exerciseState[firstId]?.remeasureAll();
-          });
-        }
+        if (firstId) loadExerciseIntoPanel(firstId, panels.querySelector(".exercise-panel"));
       }
     }
 
