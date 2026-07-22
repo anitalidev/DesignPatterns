@@ -1,11 +1,14 @@
 {
   "id": "adaptor",
+  "order": 10,
   "title": "Adaptor Pattern",
   "overview": "Convert the interface of a class into another interface clients expect, letting incompatible classes work together.",
-  "exerciseIds": ["adaptor-1"],
+  "exerciseIds": [
+    "adaptor-1"
+  ],
   "useCases": [
-    "You have a class A that wants to use class B but B's interface is incompatible with what A expects",
-    "B cannot or should not be changed",
+    "You have a class that wants to use another class but its interface is incompatible with what you expect",
+    "The class with the incompatible interface cannot or should not be changed",
     "Integrating a third-party library or legacy code into a system that expects a different interface"
   ],
   "exampleUses": [

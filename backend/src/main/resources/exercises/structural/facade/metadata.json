@@ -1,8 +1,11 @@
 {
   "id": "facade",
+  "order": 16,
   "title": "Facade Pattern",
   "overview": "Provide a simplified interface to a complex subsystem, reducing the number of dependencies clients need.",
-  "exerciseIds": ["facade-1"],
+  "exerciseIds": [
+    "facade-1"
+  ],
   "useCases": [
     "You want to hide the complexity of multiple classes behind a single entry point",
     "You want a simple, unified interface to a complex subsystem",

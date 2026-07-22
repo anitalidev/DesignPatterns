@@ -1,5 +1,6 @@
 {
   "id": "visitor",
+  "order": 24,
   "title": "Visitor Pattern",
   "overview": "Separate an algorithm from the object structure it operates on, letting new operations be added without modifying the classes.",
   "exerciseIds": [

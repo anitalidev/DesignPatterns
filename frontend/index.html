@@ -107,7 +107,9 @@
     </div>
 
     <div id="tab-patterns" class="tab-panel">
-      <p style="color:#555;font-size:0.9rem;margin-bottom:1.5rem;">Choose a category, pick a pattern, and start practising.</p>
+      <p style="color:#555;font-size:0.95rem;margin-bottom:0.75rem;">Start learning about design patterns from the beginning</p>
+      <a id="btn-start-beginning" href="#" class="btn btn-primary" style="display:inline-block;margin-bottom:1.5rem;text-decoration:none">Start from the beginning</a>
+      <p style="color:#555;font-size:0.95rem;margin-bottom:1.5rem;">Or navigate to a specific pattern you want to look at:</p>
       <div id="category-list">
         <p style="color:#888">Loading…</p>
       </div>
@@ -135,6 +137,9 @@
         const patterns = await patRes.json();
         initGames(patterns, categories);
         const patternMap = Object.fromEntries(patterns.map(p => [p.id, p]));
+
+        const first = patterns.reduce((a, b) => (a.order ?? 0) <= (b.order ?? 0) ? a : b, patterns[0]);
+        if (first) document.getElementById("btn-start-beginning").href = `/pattern.html?id=${first.id}`;
 
         container.innerHTML = "";
 

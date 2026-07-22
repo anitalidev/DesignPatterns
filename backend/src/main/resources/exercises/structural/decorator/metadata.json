@@ -1,8 +1,11 @@
 {
   "id": "decorator",
+  "order": 11,
   "title": "Decorator Pattern",
   "overview": "Attach additional responsibilities to an object dynamically by wrapping it in decorator objects.",
-  "exerciseIds": ["decorator-1"],
+  "exerciseIds": [
+    "decorator-1"
+  ],
   "useCases": [
     "You want to add additional functionality to a class without changing it",
     "The class you want to extend cannot or should not be modified",
@@ -11,6 +14,6 @@
   "exampleUses": [
     "Wrapping an InputStream with BufferedInputStream, then GZIPInputStream to layer buffering and compression",
     "Adding toll and express-lane surcharges on top of a base taxi fare without subclassing the Taxi class",
-    "Layering middleware on an HTTP handler — rate limiting, authentication, and request logging each as separate decorators"
+    "Layering middleware on an HTTP handler \u2014 rate limiting, authentication, and request logging each as separate decorators"
   ]
 }

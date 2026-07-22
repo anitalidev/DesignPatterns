@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class FilesystemPatternRepository implements PatternRepository {
 
     private static final String EXERCISES_ROOT = "src/main/resources/exercises";
+    private static final List<String> CATEGORY_ORDER = List.of("creational", "structural", "behavioural");
     private static final ObjectMapper JSON = new ObjectMapper();
 
     @Override
@@ -21,14 +22,17 @@ public class FilesystemPatternRepository implements PatternRepository {
         try {
             return Files.list(Paths.get(EXERCISES_ROOT))
                     .filter(Files::isDirectory)
-                    .sorted(Comparator.comparing(p -> p.getFileName().toString()))
+                    .sorted(Comparator.comparingInt(p -> {
+                        int i = CATEGORY_ORDER.indexOf(p.getFileName().toString());
+                        return i < 0 ? Integer.MAX_VALUE : i;
+                    }))
                     .flatMap(categoryDir -> {
                         try {
                             return Files.list(categoryDir)
                                     .filter(Files::isDirectory)
                                     .filter(p -> p.resolve("metadata.json").toFile().exists())
-                                    .sorted(Comparator.comparing(p -> p.getFileName().toString()))
-                                    .map(this::load);
+                                    .map(this::load)
+                                    .sorted(Comparator.comparingInt(DesignPattern::getOrder));
                         } catch (IOException e) {
                             throw new RuntimeException("Failed to list patterns in " + categoryDir, e);
                         }
@@ -58,6 +62,7 @@ public class FilesystemPatternRepository implements PatternRepository {
         try {
             JsonNode meta = JSON.readTree(patternDir.resolve("metadata.json").toFile());
             String id = meta.get("id").asText();
+            int order = meta.has("order") ? meta.get("order").asInt() : 0;
             String title = meta.get("title").asText();
             String overview = meta.get("overview").asText();
 
@@ -93,7 +98,7 @@ public class FilesystemPatternRepository implements PatternRepository {
                 }
             }
 
-            return new DesignPattern(id, title, overview, description, useCases, exampleUses, exercises);
+            return new DesignPattern(id, order, title, overview, description, useCases, exampleUses, exercises);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load pattern at " + patternDir, e);
         }

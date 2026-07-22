@@ -1,5 +1,6 @@
 {
   "id": "iterator",
+  "order": 23,
   "title": "Iterator Pattern",
   "overview": "Provide a way to sequentially access elements of a collection without exposing its underlying representation.",
   "exerciseIds": [

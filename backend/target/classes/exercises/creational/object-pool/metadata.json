@@ -1,8 +1,12 @@
 {
   "id": "object-pool",
+  "order": 8,
   "title": "Object Pool Pattern",
   "overview": "Reuse a fixed set of initialised objects rather than creating and destroying them on demand.",
-  "exerciseIds": ["object-pool-1", "object-pool-2"],
+  "exerciseIds": [
+    "object-pool-1",
+    "object-pool-2"
+  ],
   "useCases": [
     "Object construction is expensive",
     "Object destruction is expensive",

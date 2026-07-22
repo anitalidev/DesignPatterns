@@ -1,5 +1,6 @@
 {
   "id": "state",
+  "order": 21,
   "title": "State Pattern",
   "overview": "Allow an object to alter its behaviour when its internal state changes, appearing to change its class.",
   "exerciseIds": [
@@ -8,7 +9,7 @@
   "useCases": [
     "An object's behaviour varies based on its current state, and you want to eliminate large conditional statements and make state transitions easier to manage",
     "You want each state's logic to live in its own class rather than scattered across if/switch blocks",
-    "Modelling workflows or lifecycles where an entity moves through well-defined states (e.g. order: pending → paid → shipped → delivered)"
+    "Modelling workflows or lifecycles where an entity moves through well-defined states (e.g. order: pending \u2192 paid \u2192 shipped \u2192 delivered)"
   ],
   "exampleUses": [
     "A vending machine that behaves differently (accept coins, dispense item, return change) depending on whether it is idle, has credit, or is dispensing",

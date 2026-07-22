@@ -74,6 +74,35 @@
     .loading { color: #888; font-style: italic; }
     .ex-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 1rem; padding-top: 0; }
     #overview { color: #555; font-size: 0.95rem; margin-bottom: 1rem; text-align: center; }
+    .pattern-nav-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+    .pattern-nav-row button {
+      background: none;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: #444;
+      line-height: 1;
+    }
+    .pattern-nav-row button:hover:not(:disabled) { background: #f0f0f0; }
+    .pattern-nav-row button:disabled { opacity: 0.35; cursor: default; }
+    .pattern-nav-row select {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.85rem;
+      color: #222;
+      background: #fff;
+      cursor: pointer;
+      max-width: 240px;
+    }
   </style>
 </head>
 <body>
@@ -83,6 +112,11 @@
       <span class="sep">/</span>
       <span id="nav-title">Loading…</span>
     </nav>
+    <div class="pattern-nav-row">
+      <button id="btn-prev">&#8592;</button>
+      <select id="pattern-select"><option>Loading…</option></select>
+      <button id="btn-next">&#8594;</button>
+    </div>
     <h1 id="pattern-title">Loading…</h1>
     <p id="overview"></p>
     <div class="tabs">
@@ -122,6 +156,31 @@
       document.getElementById("pattern-description").innerHTML =
         '<p style="color:red">No pattern id in URL. Try <code>?id=factory</code></p>';
     }
+
+    // Pattern navigation
+    (async () => {
+      const res = await fetch("/api/patterns");
+      if (!res.ok) return;
+      const all = await res.json();
+      const idx = all.findIndex(p => p.id === patternId);
+
+      const sel = document.getElementById("pattern-select");
+      const btnPrev = document.getElementById("btn-prev");
+      const btnNext = document.getElementById("btn-next");
+
+      sel.innerHTML = all.map(p =>
+        `<option value="${p.id}"${p.id === patternId ? " selected" : ""}>${p.title}</option>`
+      ).join("");
+
+      btnPrev.disabled = idx <= 0;
+      btnNext.disabled = idx >= all.length - 1;
+
+      function goTo(id) { location.href = `/pattern.html?id=${id}`; }
+
+      sel.addEventListener("change", () => goTo(sel.value));
+      btnPrev.addEventListener("click", () => { if (idx > 0) goTo(all[idx - 1].id); });
+      btnNext.addEventListener("click", () => { if (idx < all.length - 1) goTo(all[idx + 1].id); });
+    })();
 
     // exercise state: exerciseId -> { editorView, starterCode }
     const exerciseState = {};

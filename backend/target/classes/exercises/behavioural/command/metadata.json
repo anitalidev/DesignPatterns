@@ -1,5 +1,6 @@
 {
   "id": "command",
+  "order": 20,
   "title": "Command Pattern",
   "overview": "Encapsulate a request as an object, allowing parameterisation, queuing, logging, and undoable operations.",
   "exerciseIds": [

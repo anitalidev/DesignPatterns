@@ -1,8 +1,12 @@
 {
   "id": "factory",
+  "order": 3,
   "title": "Simple Factory Pattern",
   "overview": "Centralise object creation so callers ask for a type without knowing which class gets instantiated.",
-  "exerciseIds": ["factory-1", "factory-2"],
+  "exerciseIds": [
+    "factory-1",
+    "factory-2"
+  ],
   "useCases": [
     "When the concrete class to create depends on values known only at runtime",
     "Multiple places in the codebase implement similar type-to-class mappings",

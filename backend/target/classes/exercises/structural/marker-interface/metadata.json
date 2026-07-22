@@ -1,8 +1,12 @@
 {
   "id": "marker-interface",
+  "order": 13,
   "title": "Marker Interface Pattern",
   "overview": "Use an empty interface to tag classes and allow runtime type checking without adding methods.",
-  "exerciseIds": ["marker-interface-1", "marker-interface-2"],
+  "exerciseIds": [
+    "marker-interface-1",
+    "marker-interface-2"
+  ],
   "useCases": [
     "You want to mark classes as having a capability without requiring them to implement methods",
     "Classes can be grouped into categories checked at runtime via instanceof",

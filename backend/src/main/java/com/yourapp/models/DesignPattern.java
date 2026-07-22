@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class DesignPattern {
     private final String id;
+    private final int order;
     private final String title;
     private final String overview;
     private final String description;
@@ -13,8 +14,9 @@ public class DesignPattern {
     // key: exercise title, value: exercise id
     private final Map<String, String> exercises;
 
-    public DesignPattern(String id, String title, String overview, String description, List<String> useCases, List<String> exampleUses, Map<String, String> exercises) {
+    public DesignPattern(String id, int order, String title, String overview, String description, List<String> useCases, List<String> exampleUses, Map<String, String> exercises) {
         this.id = id;
+        this.order = order;
         this.title = title;
         this.overview = overview;
         this.description = description;
@@ -24,6 +26,7 @@ public class DesignPattern {
     }
 
     public String getId() { return id; }
+    public int getOrder() { return order; }
     public String getTitle() { return title; }
     public String getOverview() { return overview; }
     public String getDescription() { return description; }

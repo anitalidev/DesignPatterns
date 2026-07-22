@@ -1,8 +1,11 @@
 {
   "id": "flyweight",
+  "order": 17,
   "title": "Flyweight Pattern",
   "overview": "Share common state among many fine-grained objects to reduce memory usage.",
-  "exerciseIds": ["flyweight-1"],
+  "exerciseIds": [
+    "flyweight-1"
+  ],
   "useCases": [
     "Many similar objects share large amounts of identical data",
     "You want to reduce memory usage by storing shared (intrinsic) state only once",

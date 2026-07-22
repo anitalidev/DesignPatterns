@@ -1,5 +1,6 @@
 {
   "id": "mediator",
+  "order": 25,
   "title": "Mediator Pattern",
   "overview": "Define an object that encapsulates how a set of objects interact, reducing direct dependencies between them.",
   "exerciseIds": [
@@ -13,6 +14,6 @@
   "exampleUses": [
     "An air traffic control tower that coordinates all aircraft landings and take-offs so planes never communicate directly with each other",
     "A chat room server that relays messages between users so no user holds references to any other user directly",
-    "A GUI dialog where enabling a checkbox should enable a text field and disable a button — a mediator owns this logic instead of the widgets knowing about each other"
+    "A GUI dialog where enabling a checkbox should enable a text field and disable a button \u2014 a mediator owns this logic instead of the widgets knowing about each other"
   ]
 }
