@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Command pattern so RemoteControl works with any command through the Command interface, and undo is automatic via the history stack.",
   "goals": [
-    "execute() and undo() on each command correctly toggle the light's state",
-    "pressUndo() reverses the last executed command",
-    "pressUndo() on an empty history does nothing"
+    "Define a Command interface with execute() and undo() methods",
+    "Implement TurnOnCommand and TurnOffCommand, each toggling the Light's state and reversing it on undo",
+    "In pressUndo(), pop the last command from the history stack and call undo() on it"
   ]
 }

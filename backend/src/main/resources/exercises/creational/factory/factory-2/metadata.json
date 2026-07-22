@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Factory Method pattern with a registry map so new vehicle types can be added without ever modifying VehicleFactory itself.",
   "goals": [
-    "Replace the switch with a Map of registered creator functions",
-    "New vehicle types can be added by calling register() without touching the factory",
-    "Unknown types throw a clear exception"
+    "Replace the switch statement with a Map<String, Supplier<Vehicle>>",
+    "Add a register(String type, Supplier<Vehicle>) method so new types can be added without touching the factory",
+    "In create(), look up the type in the map and throw a clear exception for unknown types"
   ]
 }

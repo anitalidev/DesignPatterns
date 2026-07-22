@@ -2,12 +2,12 @@
   "id": "template-method-1",
   "title": "Export data in CSV or JSON format",
   "difficulty": "Medium",
-  "description": "DataExporter defines the export() template method which calls formatHeader(), formatRow(), and formatFooter() in order. CSVExporter and JSONExporter each override the three hook methods to produce their format. The template method is final — only the hooks change between subclasses.",
+  "description": "DataExporter defines the export() template method which calls formatHeader(), formatRow(), and formatFooter() in order. CSVExporter and JSONExporter each override the three hook methods to produce their format. The template method is final \u2014 only the hooks change between subclasses.",
   "editableFiles": [
     "DataExporter.java"
   ],
   "hints": [
-    "export() calls formatHeader(), then formatRow() for each row, then formatFooter() — you don't change this",
+    "export() calls formatHeader(), then formatRow() for each row, then formatFooter() \u2014 you don't change this",
     "CSVExporter produces comma-separated rows; JSONExporter wraps everything in [ ] with {} per row",
     "Collect the output in a StringBuilder inside export() and return it as a String"
   ],
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Template Method pattern so the export algorithm lives once in the base class and only the formatting details vary between CSV and JSON.",
   "goals": [
-    "export() calls the hooks in the correct order for every row",
-    "CSVExporter and JSONExporter produce structurally correct output in their respective formats",
-    "The algorithm in export() is shared and not duplicated"
+    "Create an abstract DataExporter base class with a final export() method that defines the algorithm",
+    "Declare abstract hook methods (e.g. getHeader(), formatRow(), getFooter()) for subclasses to fill in",
+    "Implement CSVExporter and JSONExporter by overriding only the hook methods"
   ]
 }

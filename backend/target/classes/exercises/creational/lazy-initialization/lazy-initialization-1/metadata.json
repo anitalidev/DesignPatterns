@@ -2,14 +2,14 @@
   "id": "lazy-initialization-1",
   "title": "Generate a report only when first requested",
   "difficulty": "Easy",
-  "description": "ReportGenerator wraps a costly computation (tracked via a call counter). getReport() should compute the report on the first call and cache the result — subsequent calls must return the same object without recomputing. The skeleton is in place; fill in the lazy init logic.",
+  "description": "ReportGenerator wraps a costly computation (tracked via a call counter). getReport() should compute the report on the first call and cache the result \u2014 subsequent calls must return the same object without recomputing. The skeleton is in place; fill in the lazy init logic.",
   "editableFiles": [
     "ReportGenerator.java"
   ],
   "hints": [
     "Keep a private field for the cached report, initially null",
     "In getReport(), check if the cache is null before calling compute()",
-    "compute() increments a counter — call it exactly once per ReportGenerator instance"
+    "compute() increments a counter \u2014 call it exactly once per ReportGenerator instance"
   ],
   "issues": [
     "Calling compute() on every getReport() invocation wastes resources when the result never changes",
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use Lazy Initialization so the expensive computation runs exactly once per ReportGenerator instance, on the first call to getReport(), and is cached for all subsequent calls.",
   "goals": [
-    "getReport() returns the correct report content",
-    "compute() is called exactly once no matter how many times getReport() is invoked",
-    "Two separate ReportGenerator instances each perform their own independent lazy init"
+    "Add a private nullable field to cache the computed report",
+    "In getReport(), check if the cache is null before calling compute()",
+    "Store the result in the cache and return the cached value on all subsequent calls"
   ]
 }

@@ -2,8 +2,43 @@ import { EditorState } from "@codemirror/state";
 import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
 import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirror/commands";
 import { java } from "@codemirror/lang-java";
-import { oneDark } from "@codemirror/theme-one-dark";
-import { indentOnInput, bracketMatching, foldGutter } from "@codemirror/language";
+import { HighlightStyle, indentOnInput, bracketMatching, foldGutter, syntaxHighlighting } from "@codemirror/language";
+import { tags as t } from "@lezer/highlight";
+
+const leetcodeTheme = EditorView.theme({
+  "&": { background: "#1e1e1e", color: "#d4d4d4" },
+  ".cm-content": { caretColor: "#aeafad" },
+  ".cm-cursor": { borderLeftColor: "#aeafad" },
+  ".cm-selectionBackground, ::selection": { background: "#264f78 !important" },
+  ".cm-gutters": { background: "#1e1e1e", color: "#858585", border: "none" },
+  ".cm-activeLineGutter": { background: "#2a2a2a" },
+  ".cm-activeLine": { background: "#2a2a2a" },
+  ".cm-lineNumbers .cm-gutterElement": { paddingRight: "1rem" },
+  ".cm-foldPlaceholder": { background: "#3a3a3a", color: "#858585", border: "none" },
+  ".cm-tooltip": { background: "#252526", border: "1px solid #3a3a3a" },
+  ".cm-matchingBracket": { background: "#3a3a3a", outline: "1px solid #888" },
+}, { dark: true });
+
+const leetcodeHighlight = HighlightStyle.define([
+  { tag: t.keyword,                  color: "#569cd6" },
+  { tag: t.controlKeyword,           color: "#c586c0" },
+  { tag: t.operator,                 color: "#d4d4d4" },
+  { tag: [t.string, t.special(t.string)], color: "#ce9178" },
+  { tag: t.number,                   color: "#b5cea8" },
+  { tag: t.bool,                     color: "#569cd6" },
+  { tag: t.null,                     color: "#569cd6" },
+  { tag: [t.comment, t.lineComment, t.blockComment], color: "#6a9955", fontStyle: "italic" },
+  { tag: t.className,                color: "#4ec9b0" },
+  { tag: t.typeName,                 color: "#4ec9b0" },
+  { tag: t.definition(t.variableName), color: "#9cdcfe" },
+  { tag: t.variableName,             color: "#9cdcfe" },
+  { tag: t.propertyName,             color: "#9cdcfe" },
+  { tag: t.function(t.variableName), color: "#dcdcaa" },
+  { tag: t.function(t.propertyName), color: "#dcdcaa" },
+  { tag: t.definition(t.function(t.variableName)), color: "#dcdcaa" },
+  { tag: t.punctuation,              color: "#d4d4d4" },
+  { tag: t.annotation,               color: "#dcdcaa" },
+]);
 import { marked } from "marked";
 
 const params = new URLSearchParams(location.search);
@@ -28,7 +63,8 @@ function buildExtensions(readonly = false) {
     indentOnInput(),
     bracketMatching(),
     java(),
-    oneDark,
+    leetcodeTheme,
+    syntaxHighlighting(leetcodeHighlight),
     keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
     EditorView.lineWrapping,
     EditorState.readOnly.of(readonly),

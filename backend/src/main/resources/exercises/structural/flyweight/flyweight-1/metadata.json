@@ -9,7 +9,7 @@
   "hints": [
     "TreeFactory keeps a map from species name to TreeType",
     "getTreeType() returns the existing instance if one exists for that species, otherwise creates and stores a new one",
-    "Tree and TreeType are provided — only TreeFactory needs implementing"
+    "Tree and TreeType are provided \u2014 only TreeFactory needs implementing"
   ],
   "issues": [
     "Without sharing, every tree in the forest stores its own copy of species, color, and texture, wasting memory",
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Flyweight pattern so all trees of the same species share a single TreeType instance, regardless of how many trees are planted.",
   "goals": [
-    "getTreeType() returns the same TreeType instance for the same species",
-    "getTreeType() creates a new TreeType only when the species has not been seen before",
-    "The number of TreeType objects never exceeds the number of distinct species"
+    "Create a TreeType class with species, color, and texture as intrinsic (shared) fields",
+    "Add a TreeTypeFactory (or a static map) that caches TreeType instances by species",
+    "In getTreeType(), return the existing instance if the species is known, or create and cache a new one"
   ]
 }

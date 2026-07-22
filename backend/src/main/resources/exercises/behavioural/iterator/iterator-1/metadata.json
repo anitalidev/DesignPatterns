@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Iterator pattern to provide sequential access to books without exposing the underlying array.",
   "goals": [
-    "hasNext() returns true while books remain",
-    "next() returns each book in order and advances the cursor",
-    "A fresh iterator() call starts from the beginning"
+    "Define an Iterator interface with hasNext() and next() methods",
+    "Implement BookIterator with an index that advances through the book list",
+    "Implement iterator() on BookShelf to return a fresh BookIterator starting from the beginning"
   ]
 }

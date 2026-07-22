@@ -1,77 +1,53 @@
 class TestRunner {
     static int passed = 0, failed = 0;
-
     static void test(String name, Runnable fn) {
-        try {
-            fn.run();
-            System.out.println("PASS: " + name);
-            passed++;
-        } catch (Exception | AssertionError e) {
-            System.out.println("FAIL: " + name + " | " + e.getMessage());
-            failed++;
-        }
+        try { fn.run(); System.out.println("PASS: " + name); passed++; }
+        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
-
-    static void assertEquals(Object expected, Object actual, String msg) {
-        if (!expected.equals(actual)) throw new AssertionError(msg + " — expected: " + expected + ", got: " + actual);
-    }
-
-    static void assertTrue(boolean cond, String msg) {
-        if (!cond) throw new AssertionError(msg);
-    }
+    static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
+    static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
 
     public static void main(String[] args) {
-        test("ReceptionistProxy implements Person", () -> {
-            Person proxy = new ReceptionistProxy(new Executive());
-            assertTrue(proxy != null, "proxy should be assignable to Person");
-        });
-
-        test("visitor with appointment is passed through to Executive", () -> {
-            Executive exec = new Executive();
-            ReceptionistProxy proxy = new ReceptionistProxy(exec);
-            proxy.addAppointment("Alice");
-            proxy.meet("Alice");
+        test("ReceptionistProxy implements Person", () ->
+            assertTrue(new ReceptionistProxy(new Executive()) != null, "proxy should be assignable to Person"));
+        test("visitor with appointment is passed through", () -> {
+            Executive exec = new Executive(); ReceptionistProxy proxy = new ReceptionistProxy(exec);
+            proxy.addAppointment("Alice"); proxy.meet("Alice");
             assertTrue(exec.getMeetings().contains("Alice"), "Alice should reach the Executive");
         });
-
         test("meet() returns Executive's response for approved visitor", () -> {
             ReceptionistProxy proxy = new ReceptionistProxy(new Executive());
             proxy.addAppointment("Alice");
-            String result = proxy.meet("Alice");
-            assertEquals("Executive is meeting Alice", result, "should return Executive's meeting message");
+            assertEquals("Executive is meeting Alice", proxy.meet("Alice"), "should return Executive's meeting message");
         });
-
         test("visitor without appointment is turned away", () -> {
-            Executive exec = new Executive();
-            ReceptionistProxy proxy = new ReceptionistProxy(exec);
-            proxy.meet("Bob");
-            assertTrue(exec.getMeetings().isEmpty(), "Bob should not reach the Executive");
+            Executive exec = new Executive(); ReceptionistProxy proxy = new ReceptionistProxy(exec);
+            proxy.meet("Bob"); assertTrue(exec.getMeetings().isEmpty(), "Bob should not reach the Executive");
         });
-
         test("refusal message includes the visitor's name", () -> {
             ReceptionistProxy proxy = new ReceptionistProxy(new Executive());
-            String result = proxy.meet("Bob");
-            assertTrue(result.contains("Bob"), "refusal message should mention Bob's name");
+            assertTrue(proxy.meet("Bob").contains("Bob"), "refusal message should mention Bob's name");
         });
-
         test("multiple appointments can be added", () -> {
-            Executive exec = new Executive();
-            ReceptionistProxy proxy = new ReceptionistProxy(exec);
-            proxy.addAppointment("Alice");
-            proxy.addAppointment("Carol");
-            proxy.meet("Alice");
-            proxy.meet("Carol");
+            Executive exec = new Executive(); ReceptionistProxy proxy = new ReceptionistProxy(exec);
+            proxy.addAppointment("Alice"); proxy.addAppointment("Carol");
+            proxy.meet("Alice"); proxy.meet("Carol");
             assertEquals(2, exec.getMeetings().size(), "both approved visitors should reach the Executive");
         });
-
-        test("approved visitor passes while unapproved is blocked in the same session", () -> {
-            Executive exec = new Executive();
-            ReceptionistProxy proxy = new ReceptionistProxy(exec);
-            proxy.addAppointment("Alice");
-            proxy.meet("Alice");
-            proxy.meet("Bob");
+        test("approved visitor passes while unapproved is blocked in same session", () -> {
+            Executive exec = new Executive(); ReceptionistProxy proxy = new ReceptionistProxy(exec);
+            proxy.addAppointment("Alice"); proxy.meet("Alice"); proxy.meet("Bob");
             assertEquals(1, exec.getMeetings().size(), "only Alice should reach the Executive");
-            assertTrue(exec.getMeetings().contains("Alice"), "Alice should be in meetings");
+        });
+        test("appointment check is case-sensitive", () -> {
+            Executive exec = new Executive(); ReceptionistProxy proxy = new ReceptionistProxy(exec);
+            proxy.addAppointment("Alice"); proxy.meet("alice");
+            assertTrue(exec.getMeetings().isEmpty(), "'alice' (lowercase) should not match appointment for 'Alice'");
+        });
+        test("Executive is not contacted when visitor is rejected", () -> {
+            Executive e = new Executive(); ReceptionistProxy proxy = new ReceptionistProxy(e);
+            proxy.meet("Intruder");
+            assertEquals(0, e.getMeetings().size(), "Executive should have zero meetings after rejection");
         });
 
         System.out.println("---");

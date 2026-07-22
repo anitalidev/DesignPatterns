@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Object Pool pattern to reuse a fixed set of Bullet objects across many shots, avoiding repeated allocation and enabling a hard cap on simultaneous projectiles.",
   "goals": [
-    "fire() returns an active Bullet from the pool, or null when the pool is exhausted",
-    "recycle() resets the bullet and makes it available for the next fire() call",
-    "The total number of Bullet objects never exceeds the pool size"
+    "Pre-populate a pool with Bullet objects up to the maximum pool size",
+    "In fire(), return an active Bullet from the pool, or null if none are available",
+    "In recycle(), reset the bullet's state and return it to the pool"
   ]
 }

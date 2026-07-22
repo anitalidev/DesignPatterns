@@ -7,7 +7,7 @@
     "TextEditor.java"
   ],
   "hints": [
-    "Memento stores a single String — the content at the time of saving",
+    "Memento stores a single String \u2014 the content at the time of saving",
     "History.push() saves a memento; History.pop() returns the most recent one (or null if empty)",
     "TextEditor.save() creates a Memento of the current content; restore() sets content to the memento's saved value"
   ],
@@ -17,8 +17,9 @@
   ],
   "overallGoal": "Use the Memento pattern so TextEditor can save snapshots of its content and restore them, with History acting as the caretaker.",
   "goals": [
-    "save() captures the current content in a Memento",
-    "restore() sets the editor's content to the memento's saved value",
-    "History returns mementos in LIFO order"
+    "Create a Memento class that stores a snapshot of the editor's content",
+    "Implement save() to return a new Memento capturing the current content",
+    "Implement restore() to set the editor's content from a given Memento",
+    "Implement History as a LIFO stack that pushes on save and pops on undo"
   ]
 }

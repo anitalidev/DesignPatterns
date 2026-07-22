@@ -12,13 +12,13 @@
     "UpperCaseDecorator calls toUpperCase() on the inner render() result"
   ],
   "issues": [
-    "Adding formatting combinations through subclassing causes a class explosion (BoldItalic, BoldUpperCase, BoldItalicUpperCase, …)",
+    "Adding formatting combinations through subclassing causes a class explosion (BoldItalic, BoldUpperCase, BoldItalicUpperCase, \u2026)",
     "Formatting cannot be added or removed at runtime with inheritance"
   ],
   "overallGoal": "Use the Decorator pattern to compose text formatting dynamically, so any combination of bold, italic, and uppercase can be achieved by stacking decorators without extra subclasses.",
   "goals": [
-    "Each decorator delegates to its inner Text and transforms the result",
-    "Decorators can be stacked in any order and each layer applies correctly",
-    "PlainText is unaffected when used without any decorators"
+    "Create a Text interface (or abstract class) with a getContent() method",
+    "Implement each decorator (e.g. BoldDecorator, ItalicDecorator) wrapping an inner Text and transforming its output",
+    "Ensure decorators can be stacked in any order by always delegating to the inner Text"
   ]
 }

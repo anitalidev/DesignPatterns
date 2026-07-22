@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Mediator pattern so users only know about the ChatRoom, and the ChatRoom handles all routing logic.",
   "goals": [
-    "Messages sent by a user reach all other registered users",
-    "The sender does not receive their own message",
-    "Users communicate only through ChatRoom, never directly with each other"
+    "Create a ChatRoom class that holds a list of registered User objects",
+    "Add a register(User) method to ChatRoom that adds the user to its list",
+    "In sendMessage(), loop through all users and deliver the message to everyone except the sender"
   ]
 }

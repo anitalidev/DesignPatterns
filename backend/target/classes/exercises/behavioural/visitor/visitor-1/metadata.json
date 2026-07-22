@@ -8,8 +8,8 @@
   ],
   "hints": [
     "accept() calls the matching visit method on the visitor: circle.accept(v) calls v.visitCircle(this)",
-    "AreaVisitor: circle = π*r², rectangle = w*h",
-    "PerimeterVisitor: circle = 2*π*r, rectangle = 2*(w+h)"
+    "AreaVisitor: circle = \u03c0*r\u00b2, rectangle = w*h",
+    "PerimeterVisitor: circle = 2*\u03c0*r, rectangle = 2*(w+h)"
   ],
   "issues": [
     "Without the Visitor pattern, adding a new operation (e.g. perimeter) requires modifying every shape class",
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Visitor pattern to add area and perimeter calculations to shapes without modifying the shape classes.",
   "goals": [
-    "accept() dispatches to the correct visit method on the visitor",
-    "AreaVisitor computes the correct area for circles and rectangles",
-    "PerimeterVisitor computes the correct perimeter for circles and rectangles"
+    "Define a ShapeVisitor interface with a visit() method overload for each shape type",
+    "Add an accept(ShapeVisitor) method to each shape that calls visitor.visit(this)",
+    "Implement AreaVisitor and PerimeterVisitor, computing the correct value for circles and rectangles"
   ]
 }

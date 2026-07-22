@@ -8,7 +8,7 @@
   ],
   "hints": [
     "clone() should return a new Enemy with the same field values",
-    "The weapons list must be copied — sharing the same list reference means mutations leak between copies",
+    "The weapons list must be copied \u2014 sharing the same list reference means mutations leak between copies",
     "EnemySpawner is provided; you only need to implement Enemy.clone()"
   ],
   "issues": [
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Prototype pattern so EnemySpawner can produce independent Enemy copies from a single configured prototype, with no shared mutable state between them.",
   "goals": [
-    "clone() returns a new Enemy instance with identical field values",
-    "Modifying a clone's weapons list does not affect the prototype",
-    "Each spawned enemy is an independent object"
+    "Implement Cloneable (or a custom clone() method) on Enemy",
+    "In clone(), create a new Enemy and deep-copy the weapons list so it is independent",
+    "Return the new Enemy instance from clone()"
   ]
 }

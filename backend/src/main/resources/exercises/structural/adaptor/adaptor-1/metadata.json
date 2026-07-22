@@ -2,7 +2,7 @@
   "id": "adaptor-1",
   "title": "Adapt a third-party analytics SDK",
   "difficulty": "Easy",
-  "description": "Your app tracks events through a Tracker interface with a single track(event, data) method. The vendor SDK you must use has a completely different API: Analytics.recordEvent(name, properties). Write an AnalyticsAdapter that implements Tracker and delegates to Analytics — without changing either the Tracker interface or the Analytics class.",
+  "description": "Your app tracks events through a Tracker interface with a single track(event, data) method. The vendor SDK you must use has a completely different API: Analytics.recordEvent(name, properties). Write an AnalyticsAdapter that implements Tracker and delegates to Analytics \u2014 without changing either the Tracker interface or the Analytics class.",
   "editableFiles": [
     "AnalyticsAdapter.java"
   ],
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Adapter pattern to let your app talk to the vendor SDK through the Tracker interface it already expects, keeping the rest of the codebase unaware of the vendor's API.",
   "goals": [
-    "AnalyticsAdapter implements Tracker",
-    "track() delegates to Analytics.recordEvent() with the correct arguments",
-    "The app can use AnalyticsAdapter wherever a Tracker is expected"
+    "Create an AnalyticsAdapter class that implements the Tracker interface",
+    "Hold an Analytics instance inside AnalyticsAdapter",
+    "In track(), translate the Tracker call into the correct analytics.recordEvent() call"
   ]
 }

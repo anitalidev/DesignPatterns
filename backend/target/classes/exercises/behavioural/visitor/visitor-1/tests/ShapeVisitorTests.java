@@ -26,27 +26,33 @@ class TestRunner {
         });
         test("Circle.accept() dispatches to visitCircle", () -> {
             final boolean[] called = {false};
-            ShapeVisitor v = new ShapeVisitor() {
+            new Circle(1).accept(new ShapeVisitor() {
                 public double visitCircle(Circle c)       { called[0] = true; return 0; }
                 public double visitRectangle(Rectangle r) { return 0; }
-            };
-            new Circle(1).accept(v);
+            });
             assertTrue(called[0], "accept() on Circle should call visitCircle");
         });
         test("Rectangle.accept() dispatches to visitRectangle", () -> {
             final boolean[] called = {false};
-            ShapeVisitor v = new ShapeVisitor() {
+            new Rectangle(1, 1).accept(new ShapeVisitor() {
                 public double visitCircle(Circle c)       { return 0; }
                 public double visitRectangle(Rectangle r) { called[0] = true; return 0; }
-            };
-            new Rectangle(1, 1).accept(v);
+            });
             assertTrue(called[0], "accept() on Rectangle should call visitRectangle");
         });
-        test("same visitor can handle multiple shapes in sequence", () -> {
+        test("same visitor handles multiple shapes in sequence", () -> {
             AreaVisitor av = new AreaVisitor();
-            double a1 = new Circle(1).accept(av);
-            double a2 = new Rectangle(2, 3).accept(av);
+            double a1 = new Circle(1).accept(av); double a2 = new Rectangle(2, 3).accept(av);
             assertTrue(approx(a1, Math.PI) && approx(a2, 6), "visitor should handle both shapes correctly");
+        });
+        test("AreaVisitor: radius 1 circle has area π", () -> {
+            assertTrue(approx(new Circle(1).accept(new AreaVisitor()), Math.PI), "unit circle area should be π");
+        });
+        test("AreaVisitor: 1x1 rectangle has area 1", () -> {
+            assertTrue(approx(new Rectangle(1, 1).accept(new AreaVisitor()), 1.0), "1x1 rectangle area should be 1");
+        });
+        test("PerimeterVisitor: 1x1 rectangle perimeter is 4", () -> {
+            assertTrue(approx(new Rectangle(1, 1).accept(new PerimeterVisitor()), 4.0), "1x1 rectangle perimeter should be 4");
         });
 
         System.out.println("---");

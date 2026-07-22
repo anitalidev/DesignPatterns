@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the State pattern to encapsulate each vending machine state in its own class, so transitions and invalid-action handling are localised.",
   "goals": [
-    "Valid action sequences transition the machine through Idle → HasCoin → Dispensing → Idle",
-    "Invalid actions (e.g. dispensing without a coin) return an error message without changing state",
-    "The machine delegates all actions to the current state object"
+    "Define a State interface with a method for each action (insertCoin, ejectCoin, dispense)",
+    "Implement IdleState, HasCoinState, and DispensingState, each handling actions and transitioning the machine",
+    "Have VendingMachine delegate every action to the current State object instead of using conditionals"
   ]
 }

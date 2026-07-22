@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Strategy pattern so PaymentProcessor delegates payment behaviour to whichever strategy it holds, and new payment methods can be added without touching the processor.",
   "goals": [
-    "Each strategy returns a confirmation message containing the amount",
-    "PaymentProcessor delegates to its current strategy",
-    "Swapping strategy at runtime changes the payment behaviour immediately"
+    "Define a PaymentStrategy interface with a pay(double amount) method that returns a confirmation string",
+    "Implement each payment method (e.g. CreditCard, PayPal) as a separate strategy class",
+    "Add setStrategy() to PaymentProcessor so the active strategy can be swapped at runtime"
   ]
 }

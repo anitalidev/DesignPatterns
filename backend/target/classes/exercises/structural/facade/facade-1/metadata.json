@@ -9,7 +9,7 @@
   "hints": [
     "ComputerFacade holds references to CPU, Memory, and HardDrive",
     "pressStart() calls each subsystem in the correct order: CPU first, then Memory, then HardDrive",
-    "The subsystem classes are provided — only ComputerFacade needs implementing"
+    "The subsystem classes are provided \u2014 only ComputerFacade needs implementing"
   ],
   "issues": [
     "Callers must know about three separate subsystems and the exact order to initialise them",
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Facade pattern to give callers a single pressStart() entry point that encapsulates the full boot sequence, hiding all subsystem details.",
   "goals": [
-    "pressStart() calls CPU.initialize(), Memory.load(), and HardDrive.spin() in that order",
-    "Callers interact only with ComputerFacade, never with the subsystems directly",
-    "Each subsystem step is invoked exactly once per pressStart() call"
+    "Create CPU, Memory, and HardDrive subsystem classes each with their own startup method",
+    "Add a ComputerFacade that holds an instance of each subsystem",
+    "Implement pressStart() to call CPU.initialize(), Memory.load(), and HardDrive.spin() in that order"
   ]
 }

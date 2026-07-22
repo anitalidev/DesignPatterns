@@ -7,7 +7,7 @@
     "SupportHandler.java"
   ],
   "hints": [
-    "SupportHandler is an abstract class — concrete handlers implement handle(Ticket)",
+    "SupportHandler is an abstract class \u2014 concrete handlers implement handle(Ticket)",
     "Each handler checks the ticket's severity against what it can handle",
     "If the severity is too high and there is no next handler, throw an IllegalStateException"
   ],
@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Chain of Responsibility pattern so each support tier only knows what it can handle and who to escalate to, keeping routing logic out of a central dispatcher.",
   "goals": [
-    "L1Support resolves severity-1 tickets",
-    "L2Support resolves severity-2 tickets",
-    "L3Support resolves severity-3 tickets; severity beyond any handler throws"
+    "Define an abstract SupportHandler with setNext() and a handle() method",
+    "Implement L1Support, L2Support, and L3Support each resolving their severity and forwarding the rest",
+    "Chain the handlers and throw an exception for any ticket no handler resolves"
   ]
 }

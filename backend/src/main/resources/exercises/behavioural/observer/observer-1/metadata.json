@@ -17,8 +17,8 @@
   ],
   "overallGoal": "Use the Observer pattern to decouple Store from its dependents, so any number of observers can react to stock changes without Store knowing who they are.",
   "goals": [
-    "Store knows nothing about its dependents beyond the Observer interface",
-    "New observers can be added or removed at runtime without changing Store",
-    "All registered observers are notified whenever stock changes"
+    "Define an Observer interface with an update(String event, Object data) method",
+    "Add a List<Observer> field to Store with addObserver() and removeObserver() methods",
+    "Replace the hardcoded calls in Store with a loop that notifies all registered observers"
   ]
 }

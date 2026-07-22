@@ -2,6 +2,8 @@ class AppConfig {
     private String theme = "light";
     private String language = "en";
 
+    public AppConfig() {}
+
     public void set(String key, String value) {
         switch (key) {
             case "theme":    theme = value; break;

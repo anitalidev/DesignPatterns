@@ -1,67 +1,47 @@
 class TestRunner {
     static int passed = 0, failed = 0;
-
     static void test(String name, Runnable fn) {
-        try {
-            fn.run();
-            System.out.println("PASS: " + name);
-            passed++;
-        } catch (Exception | AssertionError e) {
-            System.out.println("FAIL: " + name + " | " + e.getMessage());
-            failed++;
-        }
+        try { fn.run(); System.out.println("PASS: " + name); passed++; }
+        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
-
-    static void assertEquals(Object expected, Object actual, String msg) {
-        if (!expected.equals(actual)) throw new AssertionError(msg + " — expected: " + expected + ", got: " + actual);
-    }
-
-    static void assertTrue(boolean cond, String msg) {
-        if (!cond) throw new AssertionError(msg);
-    }
+    static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
+    static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
 
     public static void main(String[] args) {
-        test("getInstance() returns a non-null Logger", () -> {
-            Logger logger = Logger.getInstance("database");
-            assertTrue(logger != null, "getInstance() must not return null");
-        });
-
+        test("getInstance() returns a non-null Logger", () ->
+            assertTrue(Logger.getInstance("database") != null, "getInstance() must not return null"));
         test("getInstance() with the same name returns the same instance", () -> {
-            Logger a = Logger.getInstance("network");
-            Logger b = Logger.getInstance("network");
+            Logger a = Logger.getInstance("network"); Logger b = Logger.getInstance("network");
             assertTrue(a == b, "same name should return the identical Logger instance");
         });
-
-        test("getInstance() with different names returns different instances", () -> {
-            Logger db  = Logger.getInstance("db");
-            Logger net = Logger.getInstance("net");
-            assertTrue(db != net, "different names should return different Logger instances");
-        });
-
-        test("getModule() returns the correct module name", () -> {
-            Logger logger = Logger.getInstance("auth");
-            assertEquals("auth", logger.getModule(), "getModule() should return the name passed to getInstance()");
-        });
-
+        test("getInstance() with different names returns different instances", () ->
+            assertTrue(Logger.getInstance("db") != Logger.getInstance("net"), "different names → different instances"));
+        test("getModule() returns the correct module name", () ->
+            assertEquals("auth", Logger.getInstance("auth").getModule(), "getModule() should return the name passed in"));
         test("log() adds a message to this logger's list", () -> {
-            Logger logger = Logger.getInstance("cache");
-            logger.log("cache miss");
+            Logger logger = Logger.getInstance("cache"); logger.log("cache miss");
             assertTrue(logger.getMessages().contains("cache miss"), "message should appear in getMessages()");
         });
-
-        test("messages logged by one instance are visible from another getInstance() call with the same name", () -> {
+        test("messages logged are visible from another getInstance() call with the same name", () -> {
             Logger.getInstance("storage").log("write started");
-            Logger same = Logger.getInstance("storage");
-            assertTrue(same.getMessages().contains("write started"), "shared instance should see previously logged messages");
+            assertTrue(Logger.getInstance("storage").getMessages().contains("write started"),
+                "shared instance should see previously logged messages");
         });
-
         test("two loggers have independent message lists", () -> {
-            Logger ui  = Logger.getInstance("ui");
-            Logger api = Logger.getInstance("api");
-            ui.log("button clicked");
-            api.log("request sent");
-            assertTrue(!ui.getMessages().contains("request sent"), "ui logger should not see api messages");
+            Logger ui = Logger.getInstance("ui"); Logger api = Logger.getInstance("api");
+            ui.log("button clicked"); api.log("request sent");
+            assertTrue(!ui.getMessages().contains("request sent"),    "ui logger should not see api messages");
             assertTrue(!api.getMessages().contains("button clicked"), "api logger should not see ui messages");
+        });
+        test("multiple messages accumulate in the same logger", () -> {
+            Logger logger = Logger.getInstance("batch");
+            logger.log("step 1"); logger.log("step 2"); logger.log("step 3");
+            assertEquals(3, logger.getMessages().size(), "logger should accumulate all messages");
+        });
+        test("10 calls with the same name all return the same instance", () -> {
+            Logger first = Logger.getInstance("stress");
+            for (int i = 0; i < 9; i++)
+                assertTrue(Logger.getInstance("stress") == first, "call " + i + " should return same instance");
         });
 
         System.out.println("---");
