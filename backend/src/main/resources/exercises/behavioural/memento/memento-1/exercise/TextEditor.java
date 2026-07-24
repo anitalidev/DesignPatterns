@@ -6,6 +6,7 @@ class Memento {
     Memento(String content) {
         // TODO
     }
+
     public String getContent() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
@@ -26,8 +27,8 @@ class History {
 class TextEditor {
     private String content = "";
 
-    public void type(String text)       { content += text; }
-    public String getContent()          { return content; }
+    public void type(String text) { content += text; }
+    public String getContent() { return content; }
 
     public Memento save() {
         // TODO: return a Memento of the current content

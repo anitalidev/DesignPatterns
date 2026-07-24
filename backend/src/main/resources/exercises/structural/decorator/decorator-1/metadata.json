@@ -4,7 +4,9 @@
   "difficulty": "Medium",
   "description": "Text is an interface with a single render() method. PlainText is the base implementation. BoldDecorator, ItalicDecorator, and UpperCaseDecorator each wrap any Text and transform its output. Implement the three decorators so they can be stacked in any order.",
   "editableFiles": [
-    "TextDecorators.java"
+    "BoldDecorator.java",
+    "ItalicDecorator.java",
+    "UpperCaseDecorator.java"
   ],
   "hints": [
     "Each decorator stores a reference to the inner Text and calls its render() first",

@@ -1,49 +1,36 @@
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-// Provided — do not edit
-interface Command {
-    void execute();
-    void undo();
-}
-
-// Provided — do not edit
-class Light {
-    private boolean on = false;
-    public void turnOn()    { on = true; }
-    public void turnOff()   { on = false; }
-    public boolean isOn()   { return on; }
-}
-
-// TODO: implement LightOnCommand
-class LightOnCommand implements Command {
-    LightOnCommand(Light light) {
-        // TODO
-    }
-    public void execute() { throw new UnsupportedOperationException("Not yet implemented"); }
-    public void undo()    { throw new UnsupportedOperationException("Not yet implemented"); }
-}
-
-// TODO: implement LightOffCommand
-class LightOffCommand implements Command {
-    LightOffCommand(Light light) {
-        // TODO
-    }
-    public void execute() { throw new UnsupportedOperationException("Not yet implemented"); }
-    public void undo()    { throw new UnsupportedOperationException("Not yet implemented"); }
-}
-
-// TODO: implement RemoteControl
+// TODO: RemoteControl works, but it's tightly coupled to Light — adding any new
+// device means adding new methods here, and undo has to manually reverse each action.
+// Fix it so RemoteControl only depends on Command:
+//   - remove the Light field, the string history, and the device-specific press methods
+//   - add pressButton(Command command): call execute() and push the command onto a Deque<Command>
+//   - add pressUndo(): pop the last Command and call undo() on it; do nothing if history is empty
 class RemoteControl {
-    // TODO: add a history stack
+    private final Light light;
+    private final Deque<String> history = new ArrayDeque<>();
+
+    RemoteControl(Light light) { this.light = light; }
+
+    public void pressLightOn() {
+        light.turnOn();
+        history.push("on");
+    }
+
+    public void pressLightOff() {
+        light.turnOff();
+        history.push("off");
+    }
 
     public void pressButton(Command command) {
-        // TODO: execute the command and push it onto the history stack
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public void pressUndo() {
-        // TODO: pop the last command and call undo(); do nothing if history is empty
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (history.isEmpty()) return;
+        String last = history.pop();
+        if (last.equals("on"))  light.turnOff();
+        if (last.equals("off")) light.turnOn();
     }
 }

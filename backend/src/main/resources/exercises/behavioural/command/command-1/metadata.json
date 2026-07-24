@@ -2,23 +2,28 @@
   "id": "command-1",
   "title": "Smart home remote with undo",
   "difficulty": "Medium",
-  "description": "A smart home remote executes commands (turn a light on or off) and supports undo. Command is an interface with execute() and undo(). LightOnCommand and LightOffCommand wrap a Light and implement both methods. RemoteControl executes commands and keeps a history stack for undo. Implement the two command classes and RemoteControl.",
+  "description": "A smart home remote can already turn lights on and off and supports undo — but RemoteControl is tightly coupled to Light. It uses instanceof checks to decide what to do and tracks action names as strings to reverse them. Fix it so RemoteControl only depends on the Command interface, then implement LightOnCommand and LightOffCommand so the logic moves into the command classes where it belongs.",
   "editableFiles": [
+    "Command.java",
+    "LightOnCommand.java",
+    "LightOffCommand.java",
     "RemoteControl.java"
   ],
   "hints": [
-    "LightOnCommand.execute() calls light.turnOn(); undo() calls light.turnOff()",
-    "LightOffCommand is the mirror image",
-    "RemoteControl.pressButton() executes the command and pushes it onto a stack; pressUndo() pops and calls undo()"
+    "Once fixed, RemoteControl should have no reference to Light at all — only a Deque<Command> history",
+    "pressButton(Command) should call command.execute() and push the command onto history",
+    "pressUndo() should pop the last command and call undo() on it — no string checks needed",
+    "LightOnCommand.execute() calls light.turnOn(); undo() calls light.turnOff()"
   ],
   "issues": [
-    "Without the Command pattern, the remote must know about every device's specific methods, making it impossible to add undo generically",
-    "Adding a new device action requires changing the remote"
+    "RemoteControl uses instanceof to inspect each command type — adding any new command means editing RemoteControl",
+    "Undo tracks action names as strings instead of delegating back to the command, so the logic is duplicated"
   ],
-  "overallGoal": "Use the Command pattern so RemoteControl works with any command through the Command interface, and undo is automatic via the history stack.",
+  "overallGoal": "Use the Command pattern so RemoteControl works with any command through the Command interface without knowing about any specific device.",
   "goals": [
-    "Define a Command interface with execute() and undo() methods",
-    "Implement TurnOnCommand and TurnOffCommand, each toggling the Light's state and reversing it on undo",
-    "In pressUndo(), pop the last command from the history stack and call undo() on it"
+    "Remove the Light field from RemoteControl and replace the string history with a Deque<Command>",
+    "Implement LightOnCommand: store the Light, call turnOn() in execute() and turnOff() in undo()",
+    "Implement LightOffCommand: the mirror — call turnOff() in execute() and turnOn() in undo()",
+    "In pressButton(), call command.execute() and push onto history; in pressUndo(), pop and call undo()"
   ]
 }

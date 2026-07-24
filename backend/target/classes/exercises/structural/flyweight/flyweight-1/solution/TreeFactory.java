@@ -13,7 +13,7 @@ class TreeType {
     }
 
     public String getSpecies() { return species; }
-    public String getColor()   { return color; }
+    public String getColor() { return color; }
     public String getTexture() { return texture; }
 }
 
@@ -28,8 +28,8 @@ class Tree {
         this.type = type;
     }
 
-    public int      getX()    { return x; }
-    public int      getY()    { return y; }
+    public int      getX() { return x; }
+    public int      getY() { return y; }
     public TreeType getType() { return type; }
 }
 

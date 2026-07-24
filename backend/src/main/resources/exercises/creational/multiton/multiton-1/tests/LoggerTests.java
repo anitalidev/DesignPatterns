@@ -2,7 +2,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
     static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
@@ -42,6 +42,13 @@ class TestRunner {
             Logger first = Logger.getInstance("stress");
             for (int i = 0; i < 9; i++)
                 assertTrue(Logger.getInstance("stress") == first, "call " + i + " should return same instance");
+        });
+
+        test("constructor is private", () -> {
+            try {
+                java.lang.reflect.Constructor<Logger> c = Logger.class.getDeclaredConstructor(String.class);
+                assertTrue(java.lang.reflect.Modifier.isPrivate(c.getModifiers()), "Logger constructor must be private");
+            } catch (NoSuchMethodException e) { throw new AssertionError("Could not find Logger(String) constructor"); }
         });
 
         System.out.println("---");

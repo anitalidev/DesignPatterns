@@ -4,7 +4,11 @@
   "difficulty": "Easy",
   "description": "PaymentProcessor accepts a PaymentStrategy and delegates to it when pay() is called. Implement CreditCardStrategy, PayPalStrategy, and CryptoStrategy, each printing a distinct confirmation. The processor should be able to swap strategies at runtime without any changes to itself.",
   "editableFiles": [
-    "PaymentStrategy.java"
+    "PaymentStrategy.java",
+    "CreditCardStrategy.java",
+    "PayPalStrategy.java",
+    "CryptoStrategy.java",
+    "PaymentProcessor.java"
   ],
   "hints": [
     "PaymentStrategy is an interface with a single pay(double amount) method returning a String",

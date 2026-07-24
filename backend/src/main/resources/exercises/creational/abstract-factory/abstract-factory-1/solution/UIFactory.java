@@ -28,12 +28,12 @@ interface UIFactory {
 }
 
 class MacUIFactory implements UIFactory {
-    public Button createButton()     { return new MacButton(); }
+    public Button createButton() { return new MacButton(); }
     public Checkbox createCheckbox() { return new MacCheckbox(); }
 }
 
 class WindowsUIFactory implements UIFactory {
-    public Button createButton()     { return new WindowsButton(); }
+    public Button createButton() { return new WindowsButton(); }
     public Checkbox createCheckbox() { return new WindowsCheckbox(); }
 }
 

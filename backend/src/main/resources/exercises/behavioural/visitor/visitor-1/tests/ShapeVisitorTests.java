@@ -2,7 +2,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
     static boolean approx(double a, double b) { return Math.abs(a - b) < 0.0001; }
@@ -27,7 +27,7 @@ class TestRunner {
         test("Circle.accept() dispatches to visitCircle", () -> {
             final boolean[] called = {false};
             new Circle(1).accept(new ShapeVisitor() {
-                public double visitCircle(Circle c)       { called[0] = true; return 0; }
+                public double visitCircle(Circle c) { called[0] = true; return 0; }
                 public double visitRectangle(Rectangle r) { return 0; }
             });
             assertTrue(called[0], "accept() on Circle should call visitCircle");
@@ -35,7 +35,7 @@ class TestRunner {
         test("Rectangle.accept() dispatches to visitRectangle", () -> {
             final boolean[] called = {false};
             new Rectangle(1, 1).accept(new ShapeVisitor() {
-                public double visitCircle(Circle c)       { return 0; }
+                public double visitCircle(Circle c) { return 0; }
                 public double visitRectangle(Rectangle r) { called[0] = true; return 0; }
             });
             assertTrue(called[0], "accept() on Rectangle should call visitRectangle");

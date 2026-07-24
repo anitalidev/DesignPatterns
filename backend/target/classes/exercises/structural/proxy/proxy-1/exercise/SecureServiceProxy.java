@@ -1,34 +1,8 @@
-import java.util.ArrayList;
-import java.util.List;
-
-// Provided — do not edit
-class UnauthorizedException extends RuntimeException {
-    UnauthorizedException(String msg) { super(msg); }
-}
-
-// Provided — do not edit
-interface Service {
-    String getData();
-    void deleteAll();
-}
-
-// Provided — do not edit
-class AdminService implements Service {
-    private final List<String> callLog = new ArrayList<>();
-
-    public String getData() {
-        callLog.add("getData");
-        return "sensitive data";
-    }
-
-    public void deleteAll() {
-        callLog.add("deleteAll");
-    }
-
-    public List<String> getCallLog() { return callLog; }
-}
-
 // TODO: implement the protection proxy
+// Roles:
+//   ADMIN — full access: getData() and deleteAll()
+//   USER  — read-only:  getData() only; deleteAll() throws UnauthorizedException
+//   other — no access:  both methods throw UnauthorizedException
 class SecureServiceProxy implements Service {
     // TODO: store the real service and the caller's role
 
@@ -38,13 +12,13 @@ class SecureServiceProxy implements Service {
 
     @Override
     public String getData() {
-        // TODO: allow only ADMIN, otherwise throw UnauthorizedException
+        // TODO: allow ADMIN and USER; throw UnauthorizedException for any other role
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public void deleteAll() {
-        // TODO: allow only ADMIN, otherwise throw UnauthorizedException
+        // TODO: allow ADMIN only; throw UnauthorizedException for USER and any other role
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

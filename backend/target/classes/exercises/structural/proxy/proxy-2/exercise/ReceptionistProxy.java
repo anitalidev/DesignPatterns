@@ -1,24 +1,5 @@
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-// Provided — do not edit
-interface Person {
-    String meet(String visitorName);
-}
-
-// Provided — do not edit
-class Executive implements Person {
-    private final List<String> meetings = new ArrayList<>();
-
-    public String meet(String visitorName) {
-        meetings.add(visitorName);
-        return "Executive is meeting " + visitorName;
-    }
-
-    public List<String> getMeetings() { return meetings; }
-}
 
 // TODO: implement the receptionist proxy
 class ReceptionistProxy implements Person {

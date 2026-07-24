@@ -1,9 +1,3 @@
-// Provided — do not edit
-class Report {
-    final String content;
-    Report(String content) { this.content = content; }
-}
-
 class ReportGenerator {
     private final String title;
     int computeCallCount = 0; // visible for testing

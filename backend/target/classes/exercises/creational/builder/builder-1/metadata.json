@@ -2,12 +2,12 @@
   "id": "builder-1",
   "title": "Build an HTTP request step by step",
   "difficulty": "Easy",
-  "description": "HttpRequest is an immutable object that needs a method and URL at minimum, plus optional headers and a body. A skeleton HttpRequestBuilder exists but its setter methods and build() are unimplemented. Fill them in so callers can chain calls and get a valid HttpRequest back.",
+  "description": "HttpRequest is an immutable object that needs a method and URL at minimum, plus optional headers and a body. A skeleton HttpRequestBuilder exists but its setter methods and build() are unimplemented. Fill them in so callers can configure a builder and get a valid HttpRequest back.",
   "editableFiles": [
     "HttpRequestBuilder.java"
   ],
   "hints": [
-    "Each setter should store the value and return 'this' so calls can be chained",
+    "Each setter should just store the value \u2014 no need to return anything",
     "build() should throw IllegalStateException if method or url is null or blank",
     "HttpRequest is a plain data class \u2014 you don't need to change it"
   ],
@@ -17,7 +17,7 @@
   ],
   "overallGoal": "Use the Builder pattern to construct an HttpRequest incrementally, validating required fields only at build() time and keeping HttpRequest itself immutable.",
   "goals": [
-    "Make each setter on HttpRequestBuilder return 'this' to support chaining",
+    "Implement each setter on HttpRequestBuilder to store the given value",
     "In build(), throw IllegalStateException if method or url has not been set",
     "In build(), construct and return a fully populated HttpRequest"
   ]

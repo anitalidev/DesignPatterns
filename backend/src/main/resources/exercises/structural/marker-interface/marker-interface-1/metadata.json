@@ -4,6 +4,9 @@
   "difficulty": "Easy",
   "description": "Auditable is an empty marker interface. AuditLogger.log() records an entry only for objects that implement Auditable \u2014 all others are silently ignored. Mark Order and Payment as auditable, leave Product unmarked, then complete AuditLogger.log() to check the marker at runtime.",
   "editableFiles": [
+    "Auditable.java",
+    "Order.java",
+    "Payment.java",
     "AuditLogger.java"
   ],
   "hints": [

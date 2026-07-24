@@ -3,13 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-// Provided — do not edit
-class Connection {
-    private final int id;
-    Connection(int id) { this.id = id; }
-    public int getId() { return id; }
-}
-
 class ConnectionPool {
     private final int size;
 

@@ -4,7 +4,8 @@
   "title": "Iterator Pattern",
   "overview": "Provide a way to sequentially access elements of a collection without exposing its underlying representation.",
   "exerciseIds": [
-    "iterator-1"
+    "iterator-1",
+    "iterator-2"
   ],
   "useCases": [
     "You want to traverse a collection without exposing its internal representation",

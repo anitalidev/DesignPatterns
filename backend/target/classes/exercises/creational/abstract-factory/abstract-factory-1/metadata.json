@@ -4,7 +4,10 @@
   "difficulty": "Medium",
   "description": "A UI toolkit needs to create buttons and checkboxes that look native on each platform. The Mac and Windows component classes already exist. Wire up a UIFactory interface and two concrete factories \u2014 MacUIFactory and WindowsUIFactory \u2014 then complete the Application class that uses whichever factory it receives.",
   "editableFiles": [
-    "UIFactory.java"
+    "UIFactory.java",
+    "MacUIFactory.java",
+    "WindowsUIFactory.java",
+    "Application.java"
   ],
   "hints": [
     "UIFactory is an interface with createButton() and createCheckbox() methods",

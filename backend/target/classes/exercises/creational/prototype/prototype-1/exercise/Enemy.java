@@ -20,23 +20,10 @@ class Enemy {
     }
 
     public void addWeapon(String weapon) { weapons.add(weapon); }
-    public void setHealth(int health)    { this.health = health; }
+    public void setHealth(int health) { this.health = health; }
 
-    public String       getType()    { return type; }
-    public int          getHealth()  { return health; }
-    public int          getSpeed()   { return speed; }
+    public String       getType() { return type; }
+    public int          getHealth() { return health; }
+    public int          getSpeed() { return speed; }
     public List<String> getWeapons() { return weapons; }
-}
-
-// Provided — do not edit
-class EnemySpawner {
-    private final Enemy prototype;
-
-    EnemySpawner(Enemy prototype) {
-        this.prototype = prototype;
-    }
-
-    public Enemy spawn() {
-        return prototype.clone();
-    }
 }

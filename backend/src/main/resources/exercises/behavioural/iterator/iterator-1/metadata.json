@@ -4,6 +4,7 @@
   "difficulty": "Easy",
   "description": "BookShelf holds a fixed-size array of Books. Implement a BookIterator that traverses the shelf in order via hasNext() and next(). BookShelf.iterator() returns a fresh BookIterator. Callers should be able to iterate without knowing anything about the internal array.",
   "editableFiles": [
+    "BookIterator.java",
     "BookShelf.java"
   ],
   "hints": [

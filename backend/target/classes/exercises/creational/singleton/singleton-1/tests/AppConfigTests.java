@@ -2,7 +2,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
     static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
@@ -33,13 +33,20 @@ class TestRunner {
             assertEquals("en", AppConfig.getInstance().get("language"), "default language should be 'en'");
         });
         test("get() with unknown key returns null", () -> {
-            assertTrue(AppConfig.getInstance().get("nonexistent") == null, "unknown key should return null");
+            assertTrue(AppConfig.getInstance().get("nonexistent") == null, "unknown key should return null — got: " + AppConfig.getInstance().get("nonexistent"));
         });
         test("set language and theme independently", () -> {
             AppConfig cfg = AppConfig.getInstance();
             cfg.set("theme", "dark"); cfg.set("language", "de");
             assertEquals("dark", cfg.get("theme"), "theme should be dark");
             assertEquals("de",   cfg.get("language"), "language should be de");
+        });
+
+        test("constructor is private", () -> {
+            try {
+                java.lang.reflect.Constructor<AppConfig> c = AppConfig.class.getDeclaredConstructor();
+                assertTrue(java.lang.reflect.Modifier.isPrivate(c.getModifiers()), "AppConfig constructor must be private");
+            } catch (NoSuchMethodException e) { throw new AssertionError("Could not find AppConfig() constructor"); }
         });
 
         System.out.println("---");

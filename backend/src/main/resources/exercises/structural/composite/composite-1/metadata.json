@@ -4,7 +4,9 @@
   "difficulty": "Medium",
   "description": "File and Folder both implement FileSystemItem. File is a leaf \u2014 it has a fixed size. Folder is a composite \u2014 it holds child FileSystemItems and its getSize() is the sum of all children's sizes, recursively. Implement File and Folder so that a tree of any depth can be traversed uniformly through the FileSystemItem interface.",
   "editableFiles": [
-    "FileSystemItem.java"
+    "FileSystemItem.java",
+    "File.java",
+    "Folder.java"
   ],
   "hints": [
     "FileSystemItem declares getName() and getSize()",

@@ -16,7 +16,7 @@ class File implements FileSystemItem {
     }
 
     public String getName() { return name; }
-    public long getSize()   { return size; }
+    public long getSize() { return size; }
 }
 
 class Folder implements FileSystemItem {

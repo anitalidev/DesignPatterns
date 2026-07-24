@@ -37,6 +37,6 @@ class User {
         inbox.add(from + ": " + message);
     }
 
-    public String getName()        { return name; }
+    public String getName() { return name; }
     public List<String> getInbox() { return inbox; }
 }

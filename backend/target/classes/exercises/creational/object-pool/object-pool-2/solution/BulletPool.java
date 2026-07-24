@@ -8,11 +8,11 @@ class Bullet {
     private int x, y;
 
     void activate(int x, int y) { this.active = true; this.x = x; this.y = y; }
-    void reset()                 { this.active = false; this.x = 0; this.y = 0; }
+    void reset() { this.active = false; this.x = 0; this.y = 0; }
 
     public boolean isActive() { return active; }
-    public int getX()         { return x; }
-    public int getY()         { return y; }
+    public int getX() { return x; }
+    public int getY() { return y; }
 }
 
 class BulletPool {
@@ -41,5 +41,5 @@ class BulletPool {
     }
 
     public int availableCount() { return available.size(); }
-    public int activeCount()    { return active.size(); }
+    public int activeCount() { return active.size(); }
 }

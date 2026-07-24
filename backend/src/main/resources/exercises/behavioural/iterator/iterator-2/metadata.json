@@ -1,0 +1,26 @@
+{
+  "id": "iterator-2",
+  "title": "Traverse a binary tree in multiple ways",
+  "difficulty": "Medium",
+  "description": "A binary tree is made up of TreeNodes with left and right pointers (like LeetCode's TreeNode). Implement three iterators — LevelOrderIterator, InOrderIterator, and PreOrderIterator — each implementing a shared TreeIterator interface. All three expose the same hasNext() and next() methods, but traverse the tree in a completely different order. This exercise shows the key benefit of the Iterator pattern: callers can swap traversal strategy by swapping the iterator, without changing any of their own code.\n\nExtra: you might notice this feels similar to the Strategy pattern — and that's intentional. Iterator is essentially a Strategy specialised for traversal. Both patterns work by programming to an interface and swapping implementations. The difference is scope: Strategy varies any algorithm applied to data, while Iterator is narrowly focused on sequential access via hasNext() and next(). Many GoF patterns share this same structural idea.",
+  "editableFiles": [
+    "TreeIterator.java",
+    "LevelOrderIterator.java",
+    "PreOrderIterator.java"
+  ],
+  "hints": [
+    "LevelOrderIterator uses a Queue: offer children as you visit each node so they are processed level by level (FIFO)",
+    "PreOrderIterator uses a Stack: push right before left so that left is on top and visited first (LIFO)"
+  ],
+  "issues": [
+    "Without the Iterator pattern, adding a new traversal order means modifying the tree class or writing a new recursive method into every caller",
+    "Callers that want to switch traversal strategies have to change their own code rather than just swapping the iterator"
+  ],
+  "overallGoal": "Use the Iterator pattern to define multiple independent traversal strategies for the same tree. The key insight: the caller (e.g. collect()) stays identical regardless of which iterator is passed in — only the iterator changes.",
+  "goals": [
+    "Define a TreeIterator interface with hasNext() and next() so all traversal types share the same contract",
+    "Implement LevelOrderIterator using a Queue for breadth-first, level-by-level traversal",
+    "Implement PreOrderIterator using a Stack for root → left → right traversal",
+    "Observe that the same consuming code works for all three iterators — swapping traversal strategy requires no changes to the caller"
+  ]
+}

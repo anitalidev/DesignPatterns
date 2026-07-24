@@ -2,7 +2,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
 

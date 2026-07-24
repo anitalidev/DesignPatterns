@@ -1,24 +1,25 @@
 {
   "id": "observer-1",
-  "title": "Decouple a tightly coupled Store",
+  "title": "Build a Weather Station",
   "difficulty": "Easy",
-  "description": "Store tracks stock levels and directly calls specific objects (a logger, a notifier) whenever stock changes. Each dependent is hardcoded into Store, so the class knows exactly who reacts to its state.",
+  "description": "A weather station measures temperature and needs to push updates to any number of displays. Instead of the station knowing about each display directly, observers register themselves and get notified automatically when the temperature changes.",
   "editableFiles": [
-    "Store.java"
+    "WeatherStation.java",
+    "TemperatureDisplay.java"
   ],
   "hints": [
-    "Define an Observer interface with an update(String event, Object data) method",
-    "Add a List<Observer> field to Store and addObserver(Observer o) / removeObserver(Observer o) methods",
-    "When stock changes, call each observer's update() instead of hard-coding specific actions"
+    "WeatherStation needs a List<Observer> to track who is registered",
+    "addObserver() adds to the list, removeObserver() removes from it",
+    "In setTemperature(), loop through the list and call o.update(temp) for each observer"
   ],
   "issues": [
-    "Store directly calls specific dependent objects when its state changes",
-    "Adding a new reaction to a stock change requires editing Store itself"
+    "The station has no way to notify displays when temperature changes",
+    "Displays have no way to register interest in temperature updates"
   ],
-  "overallGoal": "Use the Observer pattern to decouple Store from its dependents, so any number of observers can react to stock changes without Store knowing who they are.",
+  "overallGoal": "Implement the Observer pattern so WeatherStation can push temperature updates to any number of TemperatureDisplay observers without knowing about them directly.",
   "goals": [
-    "Define an Observer interface with an update(String event, Object data) method",
-    "Add a List<Observer> field to Store with addObserver() and removeObserver() methods",
-    "Replace the hardcoded calls in Store with a loop that notifies all registered observers"
+    "Add a List<Observer> to WeatherStation and implement addObserver() and removeObserver()",
+    "In setTemperature(), notify every registered observer by calling o.update(temp)",
+    "Implement TemperatureDisplay to record each update and expose getLatest() and getReadingCount()"
   ]
 }

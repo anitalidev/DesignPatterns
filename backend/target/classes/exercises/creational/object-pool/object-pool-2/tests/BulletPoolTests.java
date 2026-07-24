@@ -2,7 +2,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
     static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
@@ -15,7 +15,7 @@ class TestRunner {
         });
         test("fire() returns an active Bullet", () -> {
             Bullet b = new BulletPool(3).fire(10, 20);
-            assertTrue(b != null && b.isActive(), "fired bullet should be non-null and active");
+            assertTrue(b != null && b.isActive(), "expected non-null active bullet — got: " + (b == null ? "null" : "inactive"));
         });
         test("fire() sets the bullet's position", () -> {
             Bullet b = new BulletPool(3).fire(10, 20);
@@ -28,7 +28,7 @@ class TestRunner {
         });
         test("fire() returns null when pool is exhausted", () -> {
             BulletPool pool = new BulletPool(2); pool.fire(0,0); pool.fire(0,0);
-            assertTrue(pool.fire(0, 0) == null, "fire() should return null when exhausted");
+            assertTrue(pool.fire(0, 0) == null, "fire() should return null when exhausted — got: non-null");
         });
         test("recycle() resets the bullet", () -> {
             BulletPool pool = new BulletPool(3); Bullet b = pool.fire(5, 5); pool.recycle(b);
@@ -42,7 +42,7 @@ class TestRunner {
         test("recycled bullet can be fired again", () -> {
             BulletPool pool = new BulletPool(1); Bullet first = pool.fire(1, 1); pool.recycle(first);
             Bullet second = pool.fire(2, 2);
-            assertTrue(second != null && second.isActive(), "re-fired bullet should be active");
+            assertTrue(second != null && second.isActive(), "expected non-null active bullet — got: " + (second == null ? "null" : "inactive"));
             assertEquals(2, second.getX(), "re-fired bullet x should be updated");
         });
         test("total Bullet objects never exceed pool size", () -> {

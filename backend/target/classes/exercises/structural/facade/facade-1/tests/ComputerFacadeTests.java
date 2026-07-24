@@ -5,7 +5,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
     static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
@@ -21,23 +21,23 @@ class TestRunner {
         });
         test("CPU.initialize() is called", () -> {
             List<String> log = new ArrayList<>(); buildFacade(log).pressStart();
-            assertTrue(log.contains("CPU.initialize"), "CPU.initialize() should be called");
+            assertTrue(log.contains("CPU.initialize"), "CPU.initialize() should be called — log was: " + log);
         });
         test("Memory.load() is called", () -> {
             List<String> log = new ArrayList<>(); buildFacade(log).pressStart();
-            assertTrue(log.contains("Memory.load"), "Memory.load() should be called");
+            assertTrue(log.contains("Memory.load"), "Memory.load() should be called — log was: " + log);
         });
         test("HardDrive.spin() is called", () -> {
             List<String> log = new ArrayList<>(); buildFacade(log).pressStart();
-            assertTrue(log.contains("HardDrive.spin"), "HardDrive.spin() should be called");
+            assertTrue(log.contains("HardDrive.spin"), "HardDrive.spin() should be called — log was: " + log);
         });
         test("CPU.initialize() runs before Memory.load()", () -> {
             List<String> log = new ArrayList<>(); buildFacade(log).pressStart();
-            assertTrue(log.indexOf("CPU.initialize") < log.indexOf("Memory.load"), "CPU before Memory");
+            assertTrue(log.indexOf("CPU.initialize") < log.indexOf("Memory.load"), "CPU before Memory — log was: " + log);
         });
         test("Memory.load() runs before HardDrive.spin()", () -> {
             List<String> log = new ArrayList<>(); buildFacade(log).pressStart();
-            assertTrue(log.indexOf("Memory.load") < log.indexOf("HardDrive.spin"), "Memory before HardDrive");
+            assertTrue(log.indexOf("Memory.load") < log.indexOf("HardDrive.spin"), "Memory before HardDrive — log was: " + log);
         });
         test("each subsystem is called exactly once per pressStart()", () -> {
             List<String> log = new ArrayList<>(); buildFacade(log).pressStart();

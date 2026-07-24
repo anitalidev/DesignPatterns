@@ -19,11 +19,11 @@ class Enemy {
     }
 
     public void addWeapon(String weapon) { weapons.add(weapon); }
-    public void setHealth(int health)    { this.health = health; }
+    public void setHealth(int health) { this.health = health; }
 
-    public String       getType()    { return type; }
-    public int          getHealth()  { return health; }
-    public int          getSpeed()   { return speed; }
+    public String       getType() { return type; }
+    public int          getHealth() { return health; }
+    public int          getSpeed() { return speed; }
     public List<String> getWeapons() { return weapons; }
 }
 

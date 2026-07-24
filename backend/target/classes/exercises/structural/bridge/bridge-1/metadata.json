@@ -4,7 +4,8 @@
   "difficulty": "Medium",
   "description": "A RemoteControl abstraction provides togglePower() and setVolume(int) to the user. It holds a reference to a Device implementation (TV or Radio) and delegates all state changes to it. An AdvancedRemote extends RemoteControl with a mute() shortcut. Wire up the bridge so remotes and devices can be combined freely without subclassing every combination.",
   "editableFiles": [
-    "RemoteControl.java"
+    "RemoteControl.java",
+    "AdvancedRemote.java"
   ],
   "hints": [
     "Device is an interface \u2014 TV and Radio are provided for you",

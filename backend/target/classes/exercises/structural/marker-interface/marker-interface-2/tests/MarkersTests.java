@@ -6,7 +6,7 @@ class TestRunner {
             fn.run();
             System.out.println("PASS: " + name);
             passed++;
-        } catch (Exception | AssertionError e) {
+        } catch (Throwable e) {
             System.out.println("FAIL: " + name + " | " + e.getMessage());
             failed++;
         }

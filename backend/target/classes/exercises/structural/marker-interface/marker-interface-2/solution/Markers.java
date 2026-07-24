@@ -10,20 +10,20 @@ class UserSession implements Auditable, Cacheable {
     private final String userId;
     UserSession(String userId) { this.userId = userId; }
     public String getUserId() { return userId; }
-    public String toString()  { return "UserSession(" + userId + ")"; }
+    public String toString() { return "UserSession(" + userId + ")"; }
 }
 
 class AuditEvent implements Auditable {
     private final String action;
     AuditEvent(String action) { this.action = action; }
     public String getAction() { return action; }
-    public String toString()  { return "AuditEvent(" + action + ")"; }
+    public String toString() { return "AuditEvent(" + action + ")"; }
 }
 
 class StaticAsset implements Cacheable {
     private final String path;
     StaticAsset(String path) { this.path = path; }
-    public String getPath()  { return path; }
+    public String getPath() { return path; }
     public String toString() { return "StaticAsset(" + path + ")"; }
 }
 

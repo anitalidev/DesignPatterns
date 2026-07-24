@@ -4,7 +4,12 @@
   "difficulty": "Medium",
   "description": "Circle and Rectangle implement Shape, which has an accept(ShapeVisitor) method. ShapeVisitor has visitCircle() and visitRectangle() methods. AreaVisitor and PerimeterVisitor each implement ShapeVisitor and compute their respective values. Implement both visitors and the accept() methods on each shape.",
   "editableFiles": [
-    "ShapeVisitor.java"
+    "ShapeVisitor.java",
+    "Shape.java",
+    "Circle.java",
+    "Rectangle.java",
+    "AreaVisitor.java",
+    "PerimeterVisitor.java"
   ],
   "hints": [
     "accept() calls the matching visit method on the visitor: circle.accept(v) calls v.visitCircle(this)",

@@ -10,7 +10,7 @@ class Logger {
 
     // TODO: add a list to hold this logger's messages
 
-    private Logger(String module) {
+    public Logger(String module) {
         this.module = module;
         // TODO: initialise the message list
     }

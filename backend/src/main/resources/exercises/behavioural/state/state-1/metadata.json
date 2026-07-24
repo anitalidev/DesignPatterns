@@ -4,7 +4,10 @@
   "difficulty": "Medium",
   "description": "A vending machine moves through three states: Idle (waiting for a coin), HasCoin (coin inserted, ready to dispense), and Dispensing (product is dispensing). Each state handles insertCoin(), selectProduct(), and dispense() differently. Implement the three state classes so the machine transitions correctly and rejects invalid actions.",
   "editableFiles": [
-    "VendingMachine.java"
+    "VendingMachine.java",
+    "IdleState.java",
+    "HasCoinState.java",
+    "DispensingState.java"
   ],
   "hints": [
     "Each state class holds a reference to the VendingMachine so it can call setState()",

@@ -79,8 +79,11 @@ public class FilesystemExerciseRepository implements ExerciseRepository {
 
             String exerciseDescription = meta.has("description") ? meta.get("description").asText() : null;
 
-            Map<String, String> files = readJavaFiles(variantDir.resolve("exercise"));
+            Map<String, String> rawFiles = readJavaFiles(variantDir.resolve("exercise"));
             List<String> editableFiles = readStringList(meta, "editableFiles");
+            Map<String, String> files = new LinkedHashMap<>();
+            for (String name : editableFiles) { if (rawFiles.containsKey(name)) files.put(name, rawFiles.get(name)); }
+            rawFiles.forEach((name, code) -> files.putIfAbsent(name, code));
             Map<String, String> testFiles = readJavaFiles(variantDir.resolve("tests"));
 
             List<String> hints = readStringList(meta, "hints");

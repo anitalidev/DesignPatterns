@@ -4,7 +4,7 @@ class TestRunner {
     static int passed = 0, failed = 0;
     static void test(String name, Runnable fn) {
         try { fn.run(); System.out.println("PASS: " + name); passed++; }
-        catch (Exception | AssertionError e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
+        catch (Throwable e) { System.out.println("FAIL: " + name + " | " + e.getMessage()); failed++; }
     }
     static void assertEquals(Object e, Object a, String m) { if (!e.equals(a)) throw new AssertionError(m + " — expected: " + e + ", got: " + a); }
     static void assertTrue(boolean c, String m) { if (!c) throw new AssertionError(m); }
@@ -22,15 +22,15 @@ class TestRunner {
         });
         test("clone copies the weapons list", () -> {
             Enemy copy = new Enemy("Orc", 100, 5, List.of("axe", "shield")).clone();
-            assertTrue(copy.getWeapons().contains("axe") && copy.getWeapons().contains("shield"), "clone should have all weapons");
+            assertTrue(copy.getWeapons().contains("axe") && copy.getWeapons().contains("shield"), "clone should have all weapons — got weapons: " + copy.getWeapons());
         });
         test("adding a weapon to a clone does not affect the prototype", () -> {
             Enemy proto = new Enemy("Orc", 100, 5, List.of("axe")); proto.clone().addWeapon("sword");
-            assertTrue(!proto.getWeapons().contains("sword"), "prototype weapons should not change when clone is modified");
+            assertTrue(!proto.getWeapons().contains("sword"), "prototype weapons should not change when clone is modified — got weapons: " + proto.getWeapons());
         });
         test("adding a weapon to the prototype does not affect an existing clone", () -> {
             Enemy proto = new Enemy("Orc", 100, 5, List.of("axe")); Enemy copy = proto.clone(); proto.addWeapon("bow");
-            assertTrue(!copy.getWeapons().contains("bow"), "clone weapons should not change when prototype is modified");
+            assertTrue(!copy.getWeapons().contains("bow"), "clone weapons should not change when prototype is modified — got weapons: " + copy.getWeapons());
         });
         test("each spawn() produces an independent enemy", () -> {
             Enemy proto = new Enemy("Goblin", 50, 8, List.of("dagger")); EnemySpawner spawner = new EnemySpawner(proto);
