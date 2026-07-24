@@ -4,7 +4,9 @@
   "difficulty": "Medium",
   "description": "Support tickets have a severity level (1 = basic, 2 = technical, 3 = critical). L1Support handles severity 1, L2Support handles severity 2, L3Support handles severity 3. Each handler resolves tickets it can handle and escalates the rest. Implement the three handlers so they form a chain.",
   "editableFiles": [
-    "SupportHandler.java"
+    "L1Support.java",
+    "L2Support.java",
+    "L3Support.java"
   ],
   "hints": [
     "SupportHandler is an abstract class \u2014 concrete handlers implement handle(Ticket)",

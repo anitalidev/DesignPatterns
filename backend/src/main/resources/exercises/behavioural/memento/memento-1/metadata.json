@@ -4,6 +4,8 @@
   "difficulty": "Medium",
   "description": "TextEditor lets the user type text and supports undo via saved snapshots. Memento captures the editor's content at a point in time. History manages a stack of Mementos. Implement Memento, History, and TextEditor.save()/restore() so the editor can step back through previous states.",
   "editableFiles": [
+    "Memento.java",
+    "History.java",
     "TextEditor.java"
   ],
   "hints": [

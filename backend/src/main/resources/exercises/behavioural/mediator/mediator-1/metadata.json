@@ -4,7 +4,8 @@
   "difficulty": "Medium",
   "description": "In a chat room, users should not send messages directly to each other. Instead every message goes through a ChatRoom mediator that broadcasts it to all other participants. User.send() passes the message to the chat room; User.receive() is called by the chat room to deliver a message. Implement ChatRoom and complete User.send().",
   "editableFiles": [
-    "ChatRoom.java"
+    "ChatRoom.java",
+    "User.java"
   ],
   "hints": [
     "ChatRoom keeps a list of registered User objects",

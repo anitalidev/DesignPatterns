@@ -4,7 +4,9 @@
   "difficulty": "Medium",
   "description": "Expenses are approved by the first handler in the chain whose limit covers the amount: Manager (up to $500), Director (up to $5000), CEO (any amount). Each handler holds a reference to the next handler and passes the request on if it cannot approve it. Implement the three handlers so they can be chained together.",
   "editableFiles": [
-    "ExpenseHandler.java"
+    "Manager.java",
+    "Director.java",
+    "CEO.java"
   ],
   "hints": [
     "ExpenseHandler is an abstract class with a setNext() method and an approve() method to implement",
